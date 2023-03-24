@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/time-machine.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="本文是一个Python强大的计算库，NumPy（以下简称np）的入门介绍。在本文中，你会了解到：  什么是numpy？ 为什么要用numpy？ 从python内置list到numpy，有什么不同？ 怎么安装与学习numpy？  因为网上numpy基础教程非常多，而且基本都覆盖了核心内容。因此，我不会再重复介绍numpy的一些基本操作，我只会留一些链接在第四部分。相反，我会从一些high-level">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Numpy快速入门总览">
+<meta property="og:url" content="http://example.com/2023/03/22/Numpy-intro/index.html">
+<meta property="og:site_name" content="Future&#39;s blog">
+<meta property="og:description" content="本文是一个Python强大的计算库，NumPy（以下简称np）的入门介绍。在本文中，你会了解到：  什么是numpy？ 为什么要用numpy？ 从python内置list到numpy，有什么不同？ 怎么安装与学习numpy？  因为网上numpy基础教程非常多，而且基本都覆盖了核心内容。因此，我不会再重复介绍numpy的一些基本操作，我只会留一些链接在第四部分。相反，我会从一些high-level">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-03-22T15:37:40.000Z">
+<meta property="article:modified_time" content="2023-03-22T15:47:39.701Z">
+<meta property="article:author" content="Future">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/03/22/Numpy-intro/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Numpy快速入门总览 | Future's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Future's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/22/Numpy-intro/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Numpy快速入门总览
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-03-22 23:37:40 / Modified: 23:47:39" itemprop="dateCreated datePublished" datetime="2023-03-22T23:37:40+08:00">2023-03-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/QuickIntro/" itemprop="url" rel="index"><span itemprop="name">QuickIntro</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文是一个Python强大的计算库，NumPy（以下简称np）的入门介绍。在本文中，你会了解到：</p>
+<ol>
+<li>什么是numpy？</li>
+<li>为什么要用numpy？</li>
+<li>从python内置list到numpy，有什么不同？</li>
+<li>怎么安装与学习numpy？</li>
+</ol>
+<p>因为网上numpy基础教程非常多，而且基本都覆盖了核心内容。因此，我不会再重复介绍numpy的一些基本操作，我只会留一些链接在第四部分。相反，我会从一些high-level的角度，介绍numpy，给读者构建一个大体印象。</p>
+<h2 id="1-什么是numpy？"><a href="#1-什么是numpy？" class="headerlink" title="1. 什么是numpy？"></a>1. 什么是numpy？</h2><p>根据numpy官网（ <a target="_blank" rel="noopener" href="https://numpy.org/doc/stable/user/whatisnumpy.html">https://numpy.org/doc/stable/user/whatisnumpy.html</a> ）的介绍，numpy是一个python的科学计算库（如其名，numpy&#x3D;numeric python）。他提供了多维数组等实用对象，和大量对数组的快速操作与算法。</p>
+<blockquote>
+<p>NumPy is the fundamental package for scientific computing in Python. It is a Python library that provides a multidimensional array object, various derived objects (such as masked arrays and matrices), and an assortment of routines for fast operations on arrays.</p>
+</blockquote>
+<h2 id="2-为什么要用numpy？"><a href="#2-为什么要用numpy？" class="headerlink" title="2. 为什么要用numpy？"></a>2. 为什么要用numpy？</h2><h3 id="2-1-方便"><a href="#2-1-方便" class="headerlink" title="2.1 方便"></a>2.1 方便</h3><p>python的内置list仅提供了一些简单操作，如append增加元素，sort排序元素等。如果要做一些复杂运算，就会略显吃力。numpy集成了大量的数学、数组操作函数，<strong>不需要自己造轮子</strong>了。例如直接使用<code>np.corr()</code>就可以计算相关系数，直接使用<code>np.linalg.inv()</code>就可以计算矩阵的逆矩阵，直接调用<code>np.fft</code>模块可以进行一些傅立叶变换相关的操作。</p>
+<h3 id="2-2-快速高效"><a href="#2-2-快速高效" class="headerlink" title="2.2 快速高效"></a>2.2 快速高效</h3><p>高效是numpy的核心亮点之一。我想可以分为程序运行高效和程序员编程高效。</p>
+<p>运行高效：因为python是一种解释型语言，其<strong>运行速度比c&#x2F;c++语言会慢几十倍</strong>左右。numpy的底层代码（见 <a target="_blank" rel="noopener" href="https://github.com/numpy/numpy">https://github.com/numpy/numpy</a> ）都是使用c语言写的，并被高度优化过。因此其相同任务运行速度远快于python的list，和c++水平大抵相同。举个例子，两个2,000,000长的向量相加，纯用python list和for循环需要0.173s，而使用numpy则只需要0.008s。</p>
+<p>编程高效：numpy里的许多运算符也被重载过，进行一般四则运算也很方便。如两个<code>np.ndarray</code> a, b, 可以直接通过加号<code>a+b</code>实现向量的逐位相加，而若是两个list a,b, <code>a+b</code>只是将两个列表拼接起来。另外，numpy也实现了<code>-</code>, <code>*</code>, <code>&amp;</code>进行逐位相减、逐位向乘、逐位与的操作。下面是例子展示。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># a, b are list</span></span><br><span class="line">a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">b = [<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]</span><br><span class="line">a+b</span><br><span class="line"><span class="comment">#OUTPUT: [1, 2, 3, 3, 2, 1]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># a, b are ndarray</span></span><br><span class="line">a = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line">b = np.array([<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>])</span><br><span class="line">a+b</span><br><span class="line"><span class="comment">#OUTPUT: np.array([4, 4, 4])</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-3-Python数据科学之基础"><a href="#2-3-Python数据科学之基础" class="headerlink" title="2.3 Python数据科学之基础"></a>2.3 Python数据科学之基础</h3><p>许多python的科学计算、数据科学库都是以numpy为数据容器的基础根基的。例如sklearn（机器学习库）中的算法使用numpy来实现，用户传入的均为<code>numpy.ndarray</code>数据；matplotlib（画图库）中接收<code>numpy.ndarray</code>数组绘图，等等。因此numpy是要用python玩数据科学等领域的基础。学会numpy，可以做以下事情：</p>
+<ol>
+<li><p>复现论文中的算法</p>
+</li>
+<li><p>研究一些数据科学库的源码，实现细节</p>
+</li>
+<li><p>掌握一个以python为接口的高性能计算的核心工具，做任何想做的事情</p>
+</li>
+<li><p>……</p>
+</li>
+</ol>
+<h2 id="3-从python-list到numpy"><a href="#3-从python-list到numpy" class="headerlink" title="3. 从python list到numpy"></a>3. 从python list到numpy</h2><p>从python的内置list列表到numpy的ndarray有一些“同”也有一些“不同”。这里简单进行一个介绍，以使读者可以对numpy数组有一个更清晰的大体影响。</p>
+<p><code>numpy.ndarray</code>对象更像是其他编程语言（如C++&#x2F;Java）里的数组（这样的数组结构才可以做到快速操作）。一旦构建，就要声明数组大小形状和数据类型。例如在C++中声明一个二维10*10的整型数组可以是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> array[<span class="number">10</span>][<span class="number">10</span>];</span><br></pre></td></tr></table></figure>
+
+<p>而与之对应，在numpy里声明这样一个数组是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array = np.ndarray(shape=(<span class="number">10</span>, <span class="number">10</span>), dtype=<span class="built_in">int</span>)</span><br></pre></td></tr></table></figure>
+
+<p>而python中的list实现本质是一个动态数组，其长度会根据运行时来决定。</p>
+<p>接下来，我便由此列几点numpy数组和list的不同：</p>
+<ul>
+<li>改变大小。</li>
+</ul>
+<p>因为list是动态数组，其长度会根据运行时来决定，因此list有append、pop等方法改变列表长短。而<code>numpy.ndarray</code>数组则“<strong>一旦构建，就有固定的大小</strong>”。在运行时不能改变大小（有几个元素），只能改变形状（如每行每列有几个元素）。<code>np.append()</code>方法虽说叫append，但是其本质也是要构建一个新的数组，而不是在原来的上做添加。</p>
+<ul>
+<li>统一数据类型。</li>
+</ul>
+<p>一个python list中可以存放不同类型，例如<code>[1, 1.2f, &#39;str&#39;]</code>。</p>
+<p>一个numpy数组具有统一的数据类型，这使得其indexing<strong>索引、存储效率远高于</strong>list。一个数组内只能是一个类型，例如<code>np.int32</code>, <code>int</code>, <code>np.float32</code>, <code>float</code>等。如果需要存储不同类型，则需要将类型设为<code>object</code>。但是这样许多numpy函数便不支持使用了。</p>
+<p>但是作为python语言的模块，numpy的设计还是非常清晰易懂的。大体上就是创建数组对象，然后对其进行运算或函数操作。语法上也非常相近。例如，numpy也支持list的切片索引（如<code>a[::2]</code>，且其功能玩法更多）。</p>
+<h2 id="4-怎么安装与学习numpy？"><a href="#4-怎么安装与学习numpy？" class="headerlink" title="4. 怎么安装与学习numpy？"></a>4. 怎么安装与学习numpy？</h2><h3 id="4-1-安装"><a href="#4-1-安装" class="headerlink" title="4.1 安装"></a>4.1 安装</h3><p>网上的教程非常多，涵盖Windows，macOS和Linux系统。只需在网上找到相关教程即可。使用anaconda、miniconda、pip安装都可以。</p>
+<h3 id="4-2-学习"><a href="#4-2-学习" class="headerlink" title="4.2 学习"></a>4.2 学习</h3><p>以个人经验来看，numpy的学习胜在多用。只要用得多，自然而然就熟练、学会了。numpy已经包含了大部分需要用的函数，<strong>如有对应需求，一定要先去网上搜索</strong>看看有无相关函数（现在还有chatGPT之类的可以问了）。</p>
+<p>对于新手朋友我在这里推荐几个学习资源链接：</p>
+<ul>
+<li><p>NumPy官网 官方文档 <a target="_blank" rel="noopener" href="https://numpy.org/doc/stable/index.html">https://numpy.org/doc/stable/index.html</a></p>
+</li>
+<li><p>【一个10分钟的numpy入门教程】<strong>（十分推荐）</strong> <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Wy4y1h7ii/?share_source=copy_web&vd_source=0c067fd928325f3684e2a932b9539e44">https://www.bilibili.com/video/BV1Wy4y1h7ii/?share_source=copy_web&amp;vd_source=0c067fd928325f3684e2a932b9539e44</a></p>
+</li>
+<li><p>NumPy 教程 菜鸟教程<strong>（文字+例子，较全面）</strong>: <a target="_blank" rel="noopener" href="https://www.runoob.com/numpy/numpy-tutorial.html">https://www.runoob.com/numpy/numpy-tutorial.html</a></p>
+</li>
+<li><p>全网最全Numpy图解教程 知乎<strong>（有很多图，生动形象）</strong><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/528144539">https://zhuanlan.zhihu.com/p/528144539</a></p>
+</li>
+<li><p>百度 Google搜索 （以“numpy xxxxxx”提问，基本上都会有想要的回答的）</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/21/Redirect-other-webpages/" rel="prev" title="我在其他平台发的文章链接">
+      <i class="fa fa-chevron-left"></i> 我在其他平台发的文章链接
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/03/23/cpp-declare-1/" rel="next" title="C/C++ 复杂类型声明规则（1）-螺旋法则">
+      C/C++ 复杂类型声明规则（1）-螺旋法则 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AFnumpy%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">1. 什么是numpy？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8numpy%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">2. 为什么要用numpy？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%96%B9%E4%BE%BF"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 方便</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%BF%AB%E9%80%9F%E9%AB%98%E6%95%88"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 快速高效</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Python%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6%E4%B9%8B%E5%9F%BA%E7%A1%80"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 Python数据科学之基础</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E4%BB%8Epython-list%E5%88%B0numpy"><span class="nav-number">3.</span> <span class="nav-text">3. 从python list到numpy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%80%8E%E4%B9%88%E5%AE%89%E8%A3%85%E4%B8%8E%E5%AD%A6%E4%B9%A0numpy%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">4. 怎么安装与学习numpy？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%AE%89%E8%A3%85"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%AD%A6%E4%B9%A0"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 学习</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Future</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Future</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
