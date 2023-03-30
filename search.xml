@@ -97,27 +97,6 @@
       </categories>
   </entry>
   <entry>
-    <title>我在其他平台发的文章链接</title>
-    <url>/2023/03/21/Redirect-other-webpages/</url>
-    <content><![CDATA[<p>这里会摆放我在其他平台上写的文章的链接（因为我懒得搬过来了），欢迎点击阅读。</p>
-<ul>
-<li><p>原生word仿制latex伪代码块，数学建模、作业报告均适用！【带图手把手教学】 <a href="https://zhuanlan.zhihu.com/p/472381746">https://zhuanlan.zhihu.com/p/472381746</a></p>
-</li>
-<li><p>个人炼丹炉配置经验分享（上）：利用校园网LAN启动、智能插座远程启动并远程桌面连接 <a href="https://zhuanlan.zhihu.com/p/460263000">https://zhuanlan.zhihu.com/p/460263000</a></p>
-</li>
-<li><p>个人炼丹炉配置经验分享（下）：利用JupyterLab实现何时何地都可远程炼丹 <a href="https://zhuanlan.zhihu.com/p/461491632">https://zhuanlan.zhihu.com/p/461491632</a></p>
-</li>
-<li><p>【新手向】Python x VS Code 简单debug与调试 <a href="https://zhuanlan.zhihu.com/p/357874811">https://zhuanlan.zhihu.com/p/357874811</a></p>
-</li>
-<li><p>【新手向】Python x VS Code debug按钮 与 进阶debug介绍 <a href="https://zhuanlan.zhihu.com/p/359283509">https://zhuanlan.zhihu.com/p/359283509</a></p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Others</category>
-      </categories>
-  </entry>
-  <entry>
     <title>C/C++ 复杂类型声明规则（1）-螺旋法则</title>
     <url>/2023/03/23/cpp-declare-1/</url>
     <content><![CDATA[<p>“C&#x2F;C++ 复杂类型声明规则” 将分为两节。第一节介绍螺旋法则声明规范，第二节介绍const的修饰关系。这两节内容，我都尝试以一种不用死记硬背，而是理解的方式去掌握。</p>
@@ -196,6 +175,68 @@
 <p>当读的时候，看到<code>[]</code>意为一个数组， <code>()</code>意为是一个函数，那么在主体的左侧肯定配套还会有一个返回值（当然，这个返回值也可能是一个复杂复合类型）。 <code>*</code>如果单独出现，意为指向，如果和类型出现，如<code>int*</code>，那就可以理解为指向int。</p>
 <p>这里顺便推荐一个可以辅助阅读的网站：<a href="https://cdecl.org/">https://cdecl.org/</a> 。这个网站可以将表达式翻译成人话（英语），帮助大家的理解。但是总体来说只要会了螺旋法则，啥声明都能理解确切含义。</p>
 ]]></content>
+      <categories>
+        <category>Techniques</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>我在其他平台发的文章链接</title>
+    <url>/2023/03/21/Redirect-other-webpages/</url>
+    <content><![CDATA[<p>这里会摆放我在其他平台上写的文章的链接（因为我懒得搬过来了），欢迎点击阅读。</p>
+<ul>
+<li><p>原生word仿制latex伪代码块，数学建模、作业报告均适用！【带图手把手教学】 <a href="https://zhuanlan.zhihu.com/p/472381746">https://zhuanlan.zhihu.com/p/472381746</a></p>
+</li>
+<li><p>个人炼丹炉配置经验分享（上）：利用校园网LAN启动、智能插座远程启动并远程桌面连接 <a href="https://zhuanlan.zhihu.com/p/460263000">https://zhuanlan.zhihu.com/p/460263000</a></p>
+</li>
+<li><p>个人炼丹炉配置经验分享（下）：利用JupyterLab实现何时何地都可远程炼丹 <a href="https://zhuanlan.zhihu.com/p/461491632">https://zhuanlan.zhihu.com/p/461491632</a></p>
+</li>
+<li><p>【新手向】Python x VS Code 简单debug与调试 <a href="https://zhuanlan.zhihu.com/p/357874811">https://zhuanlan.zhihu.com/p/357874811</a></p>
+</li>
+<li><p>【新手向】Python x VS Code debug按钮 与 进阶debug介绍 <a href="https://zhuanlan.zhihu.com/p/359283509">https://zhuanlan.zhihu.com/p/359283509</a></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Others</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>C/C++ 复杂类型声明规则（2）-识读const关键字</title>
+    <url>/2023/03/24/cpp-declare-2/</url>
+    <content><![CDATA[<p>“C&#x2F;C++ 复杂类型声明规则” 将分为两节。第一节介绍螺旋法则声明规范，第二节介绍const的修饰关系。</p>
+<p>本节主要解决以下问题：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> *a;  <span class="comment">// a可变嘛? *a可变嘛?</span></span><br><span class="line"><span class="type">int</span> * <span class="type">const</span> a; <span class="comment">// a可变嘛? *a可变嘛?</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> * <span class="type">const</span> a; <span class="comment">// a可变嘛? *a可变嘛?</span></span><br></pre></td></tr></table></figure>
+
+<p>这两节内容，我都尝试以一种不用死记硬背，而是理解的方式去掌握。</p>
+<p>本文参考自【初中生也能看懂的C&#x2F;C++类型声明规则教学，很简单的！】 <a href="https://www.bilibili.com/video/BV1mB4y1L7HB/">https://www.bilibili.com/video/BV1mB4y1L7HB/</a> 。里面通过一些例子介绍了螺旋法则和对const关键词的判读。我将在此基础上加上我对其的解释，使其变得更加通俗易懂。</p>
+<p>基本解决思路：<strong>const 只修饰右边最近的东西。</strong></p>
+<p>例如<code>const r</code>, 说明<code>r</code>这个变量是const的，不能动。<code>const *r</code>，意为<code>const (*r)</code>，说明<code>*r</code>，r指向的东西，是const的。r自身可以变化。</p>
+<p>再例如，<code>const int r</code>, 说明这个int是const的。这个整数是常量。<code>r</code>是一个整型常量。</p>
+<p>举一些例子：</p>
+<h3 id="例子1"><a href="#例子1" class="headerlink" title="例子1"></a>例子1</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="type">const</span> a1 = <span class="number">5</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> a2 = <span class="number">6</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，两个其实是等价的。对于第一个，<code>a1</code>被const修饰了，所以<code>a1</code>不能变。<code>a1</code>是一个整型变量。所以连起来，<code>a1</code>是一个常量整型变量。对于第二个，可以理解成<code>a2</code>是一个const int，<code>a2</code>是一个常量整型变量。</p>
+<p><strong>所以，不同的声明形式，意义可能相同。</strong></p>
+<h3 id="例子2"><a href="#例子2" class="headerlink" title="例子2"></a>例子2</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="type">const</span> *p1 = &amp;a1;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> *p2 = &amp;a1;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，两个其实也是等价的。对于第一个，<code>*p1</code>被const修饰了，所以<code>*p1</code>不能变。即<code>p1</code>指向的是一个整型常量。对于第二个，可以理解成<code>p2</code>指向一个const int，<code>p2</code>指向的是一个常量整型变量。对于这两个来说，<code>p1</code> <code>p2</code>自己可以变，但是他们指向的不能变。</p>
+<p><strong>一个声明里的多个const，意义可能相同。例如：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> <span class="type">const</span> *p3</span><br></pre></td></tr></table></figure>
+
+<p>这个例子里虽然有两个const，但其实还是只修饰了一个<code>*p3</code>。<code>p3</code>自身没有被const修饰，可以变。</p>
+<h3 id="例子3"><a href="#例子3" class="headerlink" title="例子3"></a>例子3</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> *<span class="type">const</span> r2;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，<code>r2</code>直接被const修饰，所以<code>r2</code>不能变。<code>r2</code>指向一个int，那个int没有额外修饰，所以那个int是可以变的。总之，<code>r2</code>是不能变的，但是<code>r2</code>指向的int是可以变的。</p>
+<h3 id="例子4"><a href="#例子4" class="headerlink" title="例子4"></a>例子4</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> *<span class="type">const</span> r3;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，<code>r3</code>直接被const修饰，所以<code>r3</code>不能变。<code>r3</code>指向一个const int，那个int没有额外修饰，所以那个int是可以变的。总之，<code>r3</code>是不能变的，<code>r3</code>指向的int也不可以变的。</p>
+<h3 id="例子5"><a href="#例子5" class="headerlink" title="例子5"></a>例子5</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> **r5;</span><br></pre></td></tr></table></figure>
+
+<p><code>r5</code>指向一个指向int的指针。这个被指向的指针指向的int是被const所修饰的。所以<code>r5</code>可以变，<code>r5</code>指向的那个（指向int的指针）也是可以变的，但是<code>r5</code>指向的指针指向的int没得变。</p>
+<h3 id="例子6"><a href="#例子6" class="headerlink" title="例子6"></a>例子6</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="type">const</span> * <span class="type">const</span> * <span class="type">const</span> r6;</span><br></pre></td></tr></table></figure>
+
+<p>上面那个例子的升级版。<code>r6</code>指向一个指向int的指针。<code>r6</code>被const修饰，<code>r6</code>不能变。<code>r6</code>指向的（指向int的指针）被const修饰，即<code>*r6</code>不能变。<code>r6</code>指向的指针指向的int，<code>**r6</code>也被const修饰，也不能变。</p>
+<h3 id><a href="#" class="headerlink" title></a></h3>]]></content>
       <categories>
         <category>Techniques</category>
       </categories>
@@ -283,44 +324,31 @@
 ]]></content>
   </entry>
   <entry>
-    <title>C/C++ 复杂类型声明规则（2）-识读const关键字</title>
-    <url>/2023/03/24/cpp-declare-2/</url>
-    <content><![CDATA[<p>“C&#x2F;C++ 复杂类型声明规则” 将分为两节。第一节介绍螺旋法则声明规范，第二节介绍const的修饰关系。</p>
-<p>本节主要解决以下问题：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> *a;  <span class="comment">// a可变嘛? *a可变嘛?</span></span><br><span class="line"><span class="type">int</span> * <span class="type">const</span> a; <span class="comment">// a可变嘛? *a可变嘛?</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> * <span class="type">const</span> a; <span class="comment">// a可变嘛? *a可变嘛?</span></span><br></pre></td></tr></table></figure>
+    <title>Convert Python Dictionary to Source Code of Latex and Markdown</title>
+    <url>/2023/03/30/dict-to-latex-md/</url>
+    <content><![CDATA[<p>The code is generated by [ChatGPT].</p>
+<p>Here are two common functions, that can convert the python built-in dictionary into the format of latex&#x2F;markdown unnumbered list, so that we can copy it into the latex&#x2F;markdown. Example can be:</p>
+<p>The input python dictionary is:</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">my_dict = &#123;</span><br><span class="line">    <span class="string">&quot;fruits&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;apples&quot;</span>: <span class="string">&quot;red&quot;</span>,</span><br><span class="line">        <span class="string">&quot;bananas&quot;</span>: <span class="string">&quot;yellow&quot;</span>,</span><br><span class="line">        <span class="string">&quot;grapes&quot;</span>: <span class="string">&quot;purple&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;vegetables&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;carrots&quot;</span>: <span class="string">&quot;orange&quot;</span>,</span><br><span class="line">        <span class="string">&quot;spinach&quot;</span>: <span class="string">&quot;green&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;meat&quot;</span>: <span class="string">&quot;beef&quot;</span>,</span><br><span class="line">    <span class="string">&quot;dairy&quot;</span>: <span class="string">&quot;milk&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这两节内容，我都尝试以一种不用死记硬背，而是理解的方式去掌握。</p>
-<p>本文参考自【初中生也能看懂的C&#x2F;C++类型声明规则教学，很简单的！】 <a href="https://www.bilibili.com/video/BV1mB4y1L7HB/">https://www.bilibili.com/video/BV1mB4y1L7HB/</a> 。里面通过一些例子介绍了螺旋法则和对const关键词的判读。我将在此基础上加上我对其的解释，使其变得更加通俗易懂。</p>
-<p>基本解决思路：<strong>const 只修饰右边最近的东西。</strong></p>
-<p>例如<code>const r</code>, 说明<code>r</code>这个变量是const的，不能动。<code>const *r</code>，意为<code>const (*r)</code>，说明<code>*r</code>，r指向的东西，是const的。r自身可以变化。</p>
-<p>再例如，<code>const int r</code>, 说明这个int是const的。这个整数是常量。<code>r</code>是一个整型常量。</p>
-<p>举一些例子：</p>
-<h3 id="例子1"><a href="#例子1" class="headerlink" title="例子1"></a>例子1</h3><figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="type">const</span> a1 = <span class="number">5</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> a2 = <span class="number">6</span>;</span><br></pre></td></tr></table></figure>
+<p>The result for markdown is:</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="bullet">-</span> fruits</span><br><span class="line"><span class="bullet">  -</span> apples</span><br><span class="line"><span class="bullet">  -</span> bananas</span><br><span class="line"><span class="bullet">  -</span> grapes</span><br><span class="line"><span class="bullet">-</span> vegetables</span><br><span class="line"><span class="bullet">  -</span> carrots</span><br><span class="line"><span class="bullet">  -</span> spinach</span><br><span class="line"><span class="bullet">-</span> meat</span><br><span class="line"><span class="bullet">  -</span> beef</span><br><span class="line"><span class="bullet">-</span> dairy</span><br><span class="line"><span class="bullet">  -</span> milk</span><br></pre></td></tr></table></figure>
 
-<p>在这里，两个其实是等价的。对于第一个，<code>a1</code>被const修饰了，所以<code>a1</code>不能变。<code>a1</code>是一个整型变量。所以连起来，<code>a1</code>是一个常量整型变量。对于第二个，可以理解成<code>a2</code>是一个const int，<code>a2</code>是一个常量整型变量。</p>
-<p><strong>所以，不同的声明形式，意义可能相同。</strong></p>
-<h3 id="例子2"><a href="#例子2" class="headerlink" title="例子2"></a>例子2</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="type">const</span> *p1 = &amp;a1;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> *p2 = &amp;a1;</span><br></pre></td></tr></table></figure>
+<p>and result for LaTeX is:</p>
+<figure class="highlight latex"><table><tr><td class="code"><pre><span class="line"><span class="keyword">\item</span> fruits</span><br><span class="line"><span class="keyword">\begin</span>&#123;itemize&#125;</span><br><span class="line">  <span class="keyword">\item</span> apples: red</span><br><span class="line">  <span class="keyword">\item</span> bananas: yellow</span><br><span class="line">  <span class="keyword">\item</span> grapes: purple</span><br><span class="line"><span class="keyword">\end</span>&#123;itemize&#125;</span><br><span class="line"><span class="keyword">\item</span> vegetables</span><br><span class="line"><span class="keyword">\begin</span>&#123;itemize&#125;</span><br><span class="line">  <span class="keyword">\item</span> carrots: orange</span><br><span class="line">  <span class="keyword">\item</span> spinach: green</span><br><span class="line"><span class="keyword">\end</span>&#123;itemize&#125;</span><br><span class="line"><span class="keyword">\item</span> meat: beef</span><br><span class="line"><span class="keyword">\item</span> dairy: milk</span><br></pre></td></tr></table></figure>
 
-<p>在这里，两个其实也是等价的。对于第一个，<code>*p1</code>被const修饰了，所以<code>*p1</code>不能变。即<code>p1</code>指向的是一个整型常量。对于第二个，可以理解成<code>p2</code>指向一个const int，<code>p2</code>指向的是一个常量整型变量。对于这两个来说，<code>p1</code> <code>p2</code>自己可以变，但是他们指向的不能变。</p>
-<p><strong>一个声明里的多个const，意义可能相同。例如：</strong></p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> <span class="type">const</span> *p3</span><br></pre></td></tr></table></figure>
 
-<p>这个例子里虽然有两个const，但其实还是只修饰了一个<code>*p3</code>。<code>p3</code>自身没有被const修饰，可以变。</p>
-<h3 id="例子3"><a href="#例子3" class="headerlink" title="例子3"></a>例子3</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> *<span class="type">const</span> r2;</span><br></pre></td></tr></table></figure>
 
-<p>在这里，<code>r2</code>直接被const修饰，所以<code>r2</code>不能变。<code>r2</code>指向一个int，那个int没有额外修饰，所以那个int是可以变的。总之，<code>r2</code>是不能变的，但是<code>r2</code>指向的int是可以变的。</p>
-<h3 id="例子4"><a href="#例子4" class="headerlink" title="例子4"></a>例子4</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> *<span class="type">const</span> r3;</span><br></pre></td></tr></table></figure>
+<p>Function explanation: it is as simple as it shows. We use the recursion strategy here. When we are going to print a sub-dictionary, we recursively call the function, with more (two) spaces indented.</p>
+<h2 id="Dict-to-latex-unnumbered-list"><a href="#Dict-to-latex-unnumbered-list" class="headerlink" title="Dict to latex unnumbered list"></a>Dict to latex unnumbered list</h2><figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">dict_to_latex</span>(<span class="params">d, level=<span class="number">0</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Converts a dictionary to a string in LaTeX format for an unnumbered list.</span></span><br><span class="line"><span class="string">    Nested dictionaries are considered as second level items.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">    - d (dict): The dictionary to be converted.</span></span><br><span class="line"><span class="string">    - level (int): The current nesting level (defaults to 0).</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    - A string in LaTeX format for an unnumbered list.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    latex_str = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> k, v <span class="keyword">in</span> d.items():</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(k, <span class="built_in">str</span>):</span><br><span class="line">            k = k.replace(<span class="string">&#x27;_&#x27;</span>, <span class="string">&#x27;\_&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(v, <span class="built_in">str</span>):</span><br><span class="line">            v = v.replace(<span class="string">&#x27;_&#x27;</span>, <span class="string">&#x27;\_&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(v, <span class="built_in">dict</span>):</span><br><span class="line">            latex_str += <span class="string">f&quot;<span class="subst">&#123;<span class="string">&#x27;  &#x27;</span>*level&#125;</span>\\item <span class="subst">&#123;k&#125;</span>\n\\begin&#123;&#123;itemize&#125;&#125;\n<span class="subst">&#123;dict_to_latex(v, level+<span class="number">1</span>)&#125;</span>\\end&#123;&#123;itemize&#125;&#125;\n&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            latex_str += <span class="string">f&quot;<span class="subst">&#123;<span class="string">&#x27;  &#x27;</span>*level&#125;</span>\\item <span class="subst">&#123;k&#125;</span>: <span class="subst">&#123;v&#125;</span>\n&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> latex_str</span><br></pre></td></tr></table></figure>
 
-<p>在这里，<code>r3</code>直接被const修饰，所以<code>r3</code>不能变。<code>r3</code>指向一个const int，那个int没有额外修饰，所以那个int是可以变的。总之，<code>r3</code>是不能变的，<code>r3</code>指向的int也不可以变的。</p>
-<h3 id="例子5"><a href="#例子5" class="headerlink" title="例子5"></a>例子5</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> **r5;</span><br></pre></td></tr></table></figure>
+<p>Note that we should avoid the <code>_</code> in our string. So we need first convert it into escape character, <code>\_</code>.</p>
+<p>The result of the string should be wrapped by a <code>\begin&#123;itemize&#125; \end&#123;itemize&#125;</code>.</p>
+<h2 id="Dict-to-markdown-unnumbered-list"><a href="#Dict-to-markdown-unnumbered-list" class="headerlink" title="Dict to markdown unnumbered list"></a>Dict to markdown unnumbered list</h2><figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">dict_to_markdown</span>(<span class="params">d, level=<span class="number">0</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Converts a dictionary to a string in Markdown format for an unnumbered list.</span></span><br><span class="line"><span class="string">    Nested dictionaries are considered as second level items.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">    - d (dict): The dictionary to be converted.</span></span><br><span class="line"><span class="string">    - level (int): The current nesting level (defaults to 0).</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    - A string in Markdown format for an unnumbered list.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    md_str = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> k, v <span class="keyword">in</span> d.items():</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(v, <span class="built_in">dict</span>):</span><br><span class="line">            md_str += <span class="string">f&quot;<span class="subst">&#123;<span class="string">&#x27;  &#x27;</span>*level&#125;</span>- <span class="subst">&#123;k&#125;</span>\n<span class="subst">&#123;dict_to_markdown(v, level+<span class="number">1</span>)&#125;</span>&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            md_str += <span class="string">f&quot;<span class="subst">&#123;<span class="string">&#x27;  &#x27;</span>*level&#125;</span>- <span class="subst">&#123;k&#125;</span>: <span class="subst">&#123;v&#125;</span>\n&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> md_str</span><br></pre></td></tr></table></figure>
 
-<p><code>r5</code>指向一个指向int的指针。这个被指向的指针指向的int是被const所修饰的。所以<code>r5</code>可以变，<code>r5</code>指向的那个（指向int的指针）也是可以变的，但是<code>r5</code>指向的指针指向的int没得变。</p>
-<h3 id="例子6"><a href="#例子6" class="headerlink" title="例子6"></a>例子6</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> <span class="type">const</span> * <span class="type">const</span> * <span class="type">const</span> r6;</span><br></pre></td></tr></table></figure>
-
-<p>上面那个例子的升级版。<code>r6</code>指向一个指向int的指针。<code>r6</code>被const修饰，<code>r6</code>不能变。<code>r6</code>指向的（指向int的指针）被const修饰，即<code>*r6</code>不能变。<code>r6</code>指向的指针指向的int，<code>**r6</code>也被const修饰，也不能变。</p>
-<h3 id><a href="#" class="headerlink" title></a></h3>]]></content>
-      <categories>
-        <category>Techniques</category>
-      </categories>
+]]></content>
+      <tags>
+        <tag>Techniques</tag>
+      </tags>
   </entry>
 </search>
