@@ -301,6 +301,122 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/02/common-latex-templates/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/02/common-latex-templates/" class="post-title-link" itemprop="url">Common LaTeX Blocks Templates</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-05-02 16:19:21" itemprop="dateCreated datePublished" datetime="2023-05-02T16:19:21+08:00">2023-05-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-05-06 01:03:15" itemprop="dateModified" datetime="2023-05-06T01:03:15+08:00">2023-05-06</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Set-geometries"><a href="#Set-geometries" class="headerlink" title="Set geometries"></a>Set geometries</h2><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\usepackage</span>&#123;geometry&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">\geometry</span>&#123;a4paper, top = 1.25in, bottom = 1.25in, left = 1.25in, right = 1.25in, headheight = 1.25in&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Figures"><a href="#Figures" class="headerlink" title="Figures"></a>Figures</h2><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\usepackage</span>&#123;float&#125;</span><br><span class="line"><span class="keyword">\usepackage</span>&#123;subcaption&#125;</span><br><span class="line"><span class="keyword">\usepackage</span>&#123;graphicx&#125; </span><br></pre></td></tr></table></figure>
+
+<img src="/2023/05/02/common-latex-templates/figures.png" alt="figures" style="zoom:60%;">
+
+<h3 id="Single-Figure"><a href="#Single-Figure" class="headerlink" title="Single Figure:"></a>Single Figure:</h3><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;figure&#125;[H]</span><br><span class="line">    <span class="keyword">\centering</span></span><br><span class="line">    <span class="keyword">\includegraphics</span>[width=0.35<span class="keyword">\textwidth</span>]&#123;blankfig.png&#125;</span><br><span class="line">    <span class="keyword">\caption</span>&#123;XXXXXX&#125;</span><br><span class="line">    <span class="comment">% \label&#123;XXXX&#125;</span></span><br><span class="line"><span class="keyword">\end</span>&#123;figure&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Subfigures"><a href="#Subfigures" class="headerlink" title="Subfigures:"></a>Subfigures:</h3><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;figure&#125;[H]</span><br><span class="line">     <span class="keyword">\centering</span></span><br><span class="line">     <span class="keyword">\begin</span>&#123;subfigure&#125;[b]&#123;0.47<span class="keyword">\textwidth</span>&#125;</span><br><span class="line">         <span class="keyword">\centering</span></span><br><span class="line">         <span class="keyword">\includegraphics</span>[width=<span class="keyword">\textwidth</span>]&#123;blankfig.png&#125;</span><br><span class="line">         <span class="keyword">\caption</span>&#123;xxxx&#125;</span><br><span class="line">         <span class="comment">% \label&#123;xxxx&#125;</span></span><br><span class="line">     <span class="keyword">\end</span>&#123;subfigure&#125;</span><br><span class="line">     <span class="comment">% \hfill</span></span><br><span class="line">     <span class="keyword">\begin</span>&#123;subfigure&#125;[b]&#123;0.47<span class="keyword">\textwidth</span>&#125;</span><br><span class="line">         <span class="keyword">\centering</span></span><br><span class="line">         <span class="keyword">\includegraphics</span>[width=<span class="keyword">\textwidth</span>]&#123;blankfig.png&#125;</span><br><span class="line">         <span class="keyword">\caption</span>&#123;xxxx&#125;</span><br><span class="line">         <span class="comment">% \label&#123;xxxx&#125;</span></span><br><span class="line">     <span class="keyword">\end</span>&#123;subfigure&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">\caption</span>&#123;XXXX&#125;</span><br><span class="line">    <span class="comment">% \label&#123;xxxx&#125;</span></span><br><span class="line"><span class="keyword">\end</span>&#123;figure&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Parallel-Figures"><a href="#Parallel-Figures" class="headerlink" title="Parallel Figures"></a>Parallel Figures</h3><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;figure&#125;[H]<span class="comment">%[htp]</span></span><br><span class="line"><span class="keyword">\centering</span></span><br><span class="line">    <span class="keyword">\begin</span>&#123;minipage&#125;[t]&#123;0.47<span class="keyword">\textwidth</span>&#125;</span><br><span class="line">        <span class="keyword">\centering</span></span><br><span class="line">        <span class="keyword">\includegraphics</span>[width=1<span class="keyword">\textwidth</span>]&#123;blankfig.png&#125;</span><br><span class="line">        <span class="keyword">\caption</span>&#123;XXXX&#125;</span><br><span class="line">    <span class="comment">% \label&#123;XXXX&#125;</span></span><br><span class="line">    <span class="keyword">\end</span>&#123;minipage&#125;</span><br><span class="line">    <span class="keyword">\begin</span>&#123;minipage&#125;[t]&#123;0.47<span class="keyword">\textwidth</span>&#125;</span><br><span class="line">        <span class="keyword">\centering</span></span><br><span class="line">        <span class="keyword">\includegraphics</span>[width=1<span class="keyword">\textwidth</span>]&#123;blankfig.png&#125;</span><br><span class="line">        <span class="keyword">\caption</span>&#123;XXXX&#125;</span><br><span class="line">        <span class="comment">% \label&#123;XXXX&#125;</span></span><br><span class="line">    <span class="keyword">\end</span>&#123;minipage&#125;</span><br><span class="line"><span class="keyword">\end</span>&#123;figure&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Pseudo-codes"><a href="#Pseudo-codes" class="headerlink" title="Pseudo-codes"></a>Pseudo-codes</h2><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\usepackage</span>[ruled, vlined, linesnumbered]&#123;algorithm2e&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="/2023/05/02/common-latex-templates/pseudo-codes.png" alt="pseudo-codes" style="zoom:60%;">
+
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;algorithm&#125;[H]</span><br><span class="line">	<span class="keyword">\caption</span>&#123;Residual&#x27;s Distribution Simulation&#125;</span><br><span class="line">	<span class="keyword">\BlankLine</span></span><br><span class="line">    <span class="keyword">\SetAlgoLined</span></span><br><span class="line">	<span class="keyword">\KwIn</span>&#123;Number of sample needed (<span class="built_in">$</span>num<span class="built_in">_</span>&#123;sample&#125;<span class="built_in">$</span>), <span class="built_in">$</span>w<span class="built_in">_</span>1<span class="built_in">$</span>,<span class="built_in">$</span>w<span class="built_in">_</span>2<span class="built_in">$</span>,<span class="built_in">$</span>w<span class="built_in">_</span>3<span class="built_in">$</span>,<span class="built_in">$</span><span class="keyword">\mu</span><span class="built_in">_</span>1<span class="built_in">$</span>,<span class="built_in">$</span><span class="keyword">\mu</span><span class="built_in">_</span>2<span class="built_in">$</span>,<span class="built_in">$</span><span class="keyword">\mu</span><span class="built_in">_</span>3<span class="built_in">$</span>,<span class="built_in">$</span><span class="keyword">\sigma</span><span class="built_in">_</span>1<span class="built_in">$</span>,<span class="built_in">$</span><span class="keyword">\sigma</span><span class="built_in">_</span>2<span class="built_in">$</span>,<span class="built_in">$</span><span class="keyword">\sigma</span><span class="built_in">_</span>3<span class="built_in">$</span>.&#125;</span><br><span class="line">	<span class="keyword">\KwOut</span>&#123;A sequence of random variables <span class="built_in">$</span><span class="keyword">\&#123;</span>X<span class="built_in">_</span>i<span class="keyword">\&#125;</span><span class="built_in">_</span>&#123;i = 1&#125;<span class="built_in">^</span>&#123;num<span class="built_in">_</span>&#123;sample&#125;&#125;<span class="built_in">$</span> following target distribution.&#125; </span><br><span class="line"></span><br><span class="line">	<span class="keyword">\BlankLine</span></span><br><span class="line">    i = 0<span class="keyword">\\</span></span><br><span class="line">    <span class="keyword">\While</span>&#123;<span class="built_in">$</span> i &lt; num<span class="built_in">_</span>&#123;sample&#125; <span class="built_in">$</span>&#125;&#123;</span><br><span class="line">        <span class="built_in">$</span>v<span class="built_in">_</span>i<span class="built_in">$</span> <span class="built_in">$</span><span class="keyword">\sim</span> <span class="keyword">\mathcal</span>&#123;U&#125;[0,1]<span class="built_in">$</span><span class="keyword">\\</span></span><br><span class="line">        <span class="keyword">\uIf</span>&#123;<span class="built_in">$</span>0&lt;v<span class="built_in">_</span>i <span class="keyword">\leq</span> w<span class="built_in">_</span>1<span class="built_in">$</span>&#125;&#123;</span><br><span class="line">            <span class="built_in">$</span>X<span class="built_in">_</span>i <span class="keyword">\sim</span> <span class="keyword">\mathcal</span>&#123;N&#125;(<span class="keyword">\mu</span><span class="built_in">_</span>1,<span class="keyword">\sigma</span><span class="built_in">_</span>1<span class="built_in">^</span>2)<span class="built_in">$</span> <span class="keyword">\;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">\uElseIf</span>&#123;<span class="built_in">$</span>w<span class="built_in">_</span>1&lt;v<span class="built_in">_</span>i<span class="keyword">\leq</span> w<span class="built_in">_</span>2<span class="built_in">$</span>&#125;&#123;</span><br><span class="line">            <span class="built_in">$</span>X<span class="built_in">_</span>i <span class="keyword">\sim</span> <span class="keyword">\mathcal</span>&#123;N&#125;(<span class="keyword">\mu</span><span class="built_in">_</span>2,<span class="keyword">\sigma</span><span class="built_in">_</span>2<span class="built_in">^</span>2)<span class="built_in">$</span> <span class="keyword">\;</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">\Else</span>&#123;</span><br><span class="line">            <span class="built_in">$</span>X<span class="built_in">_</span>i <span class="keyword">\sim</span> <span class="keyword">\mathcal</span>&#123;N&#125;(<span class="keyword">\mu</span><span class="built_in">_</span>3,<span class="keyword">\sigma</span><span class="built_in">_</span>3<span class="built_in">^</span>2)<span class="built_in">$</span> <span class="keyword">\;</span></span><br><span class="line">        &#125;</span><br><span class="line">        i = i + 1</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">\Return</span>&#123;<span class="built_in">$</span><span class="keyword">\&#123;</span>X<span class="built_in">_</span>i<span class="keyword">\&#125;</span><span class="built_in">_</span>&#123;i = 1&#125;<span class="built_in">^</span>&#123;num<span class="built_in">_</span>&#123;sample&#125;&#125;<span class="built_in">$</span>    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">\BlankLine</span></span><br><span class="line"><span class="keyword">\end</span>&#123;algorithm&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Tables"><a href="#Tables" class="headerlink" title="Tables"></a>Tables</h2><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\usepackage</span>&#123;tabularx&#125;</span><br><span class="line"><span class="keyword">\usepackage</span>&#123;booktabs&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="/2023/05/02/common-latex-templates/tables.png" alt="tables" style="zoom:60%;">
+
+<h3 id="Narrow-table"><a href="#Narrow-table" class="headerlink" title="Narrow table"></a>Narrow table</h3><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;table&#125;[H]</span><br><span class="line">    <span class="keyword">\centering</span><span class="keyword">\small</span></span><br><span class="line">    <span class="keyword">\setlength</span>&#123;<span class="keyword">\tabcolsep</span>&#125;&#123;3mm&#125;&#123;</span><br><span class="line">        <span class="keyword">\caption</span>&#123;XXXX&#125;</span><br><span class="line">        <span class="keyword">\begin</span>&#123;tabular&#125;&#123;cccc&#125;</span><br><span class="line">            <span class="keyword">\specialrule</span>&#123;0.05em&#125;&#123;3pt&#125;&#123;3pt&#125;</span><br><span class="line">            <span class="keyword">\toprule</span></span><br><span class="line">            X <span class="built_in">&amp;</span> X <span class="built_in">&amp;</span> X <span class="built_in">&amp;</span> X  <span class="keyword">\\</span></span><br><span class="line">            <span class="keyword">\midrule</span></span><br><span class="line">            XXX <span class="built_in">&amp;</span> 0.928 <span class="built_in">&amp;</span> 0.2935 <span class="built_in">&amp;</span> 1.000 <span class="keyword">\\</span></span><br><span class="line">            XXX <span class="built_in">&amp;</span> 0.747 <span class="built_in">&amp;</span> 0.0526 <span class="built_in">&amp;</span> 1.301 <span class="keyword">\\</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">\specialrule</span>&#123;0.05em&#125;&#123;3pt&#125;&#123;3pt&#125; </span><br><span class="line">        <span class="keyword">\bottomrule</span></span><br><span class="line">        <span class="keyword">\label</span>&#123;tab:compare2&#125;</span><br><span class="line">    	<span class="keyword">\end</span>&#123;tabular&#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">\end</span>&#123;table&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Text-width-table"><a href="#Text-width-table" class="headerlink" title="Text-width table"></a>Text-width table</h3><p>The width may be adjusted manually.</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\begin</span>&#123;table&#125;[H]</span><br><span class="line"><span class="keyword">\centering</span></span><br><span class="line">    <span class="keyword">\caption</span>&#123;Experiment results for different &quot;joins&quot;&#125;</span><br><span class="line">    <span class="keyword">\label</span>&#123;X&#125;</span><br><span class="line">    <span class="keyword">\begin</span>&#123;tabularx&#125;&#123;<span class="keyword">\textwidth</span>&#125;&#123;X X X&#125;</span><br><span class="line">    <span class="keyword">\toprule</span></span><br><span class="line">    Header 1 <span class="built_in">&amp;</span> Header 2 <span class="built_in">&amp;</span> Header 3 <span class="keyword">\\</span></span><br><span class="line">    <span class="keyword">\midrule</span></span><br><span class="line">    Data 1   <span class="built_in">&amp;</span> Data 2   <span class="built_in">&amp;</span> Data 3   <span class="keyword">\\</span></span><br><span class="line">    Data 4   <span class="built_in">&amp;</span> Data 5   <span class="built_in">&amp;</span> Data 6   <span class="keyword">\\</span></span><br><span class="line">    <span class="keyword">\bottomrule</span></span><br><span class="line">    <span class="keyword">\end</span>&#123;tabularx&#125;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">\end</span>&#123;table&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Listing"><a href="#Listing" class="headerlink" title="Listing"></a>Listing</h2><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\usepackage</span>&#123;listings&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="/2023/05/02/common-latex-templates/listings.png" alt="listings" style="zoom:60%;">
+
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">% outside of document</span></span><br><span class="line"><span class="keyword">\lstset</span>&#123;</span><br><span class="line">    language=SQL,    </span><br><span class="line">    basicstyle = <span class="keyword">\tiny</span><span class="keyword">\ttfamily</span>,</span><br><span class="line">    breaklines=true,</span><br><span class="line">    numberstyle=<span class="keyword">\tiny</span>,keywordstyle=<span class="keyword">\color</span>&#123;blue!70&#125;,</span><br><span class="line">    commentstyle=<span class="keyword">\color</span>&#123;red!50!green!50!blue!50&#125;,frame=shadowbox,</span><br><span class="line">    columns=flexible,</span><br><span class="line">    rulesepcolor=<span class="keyword">\color</span>&#123;red!20!green!20!blue!20&#125;,basicstyle=<span class="keyword">\ttfamily</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">% inside of document</span></span><br><span class="line"><span class="keyword">\begin</span>&#123;lstlisting&#125;</span><br><span class="line">    SELECT u.province, c.chip<span class="built_in">_</span>name AS ChipName, SUM(p.budget) AS revenue</span><br><span class="line">    FROM user AS u NATURAL JOIN package AS p, chip AS c</span><br><span class="line">    WHERE p.package<span class="built_in">_</span>id=c.package<span class="built_in">_</span>id AND province IN (<span class="comment">%s)</span></span><br><span class="line">    GROUP BY c.chip<span class="built_in">_</span>name</span><br><span class="line">    ORDER BY SUM(p.budget) DESC; </span><br><span class="line"><span class="keyword">\end</span>&#123;lstlisting&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="/2023/05/02/common-latex-templates/listing2.png" alt="listing2" style="zoom:60%;">
+
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">% outside of document</span></span><br><span class="line"><span class="keyword">\lstset</span>&#123;</span><br><span class="line">  language=Python,</span><br><span class="line">  basicstyle=<span class="keyword">\small</span><span class="keyword">\ttfamily</span>,</span><br><span class="line">  commentstyle=<span class="keyword">\color</span>&#123;gray&#125;,</span><br><span class="line">  keywordstyle=<span class="keyword">\color</span>&#123;blue&#125;<span class="keyword">\bfseries</span>,</span><br><span class="line">  stringstyle=<span class="keyword">\color</span>&#123;red&#125;,</span><br><span class="line">  showstringspaces=false,</span><br><span class="line">  numbers=left,</span><br><span class="line">  numberstyle=<span class="keyword">\tiny</span><span class="keyword">\color</span>&#123;gray&#125;,</span><br><span class="line">  stepnumber=1,</span><br><span class="line">  numbersep=10pt,</span><br><span class="line">  tabsize=4,</span><br><span class="line">  showspaces=false,</span><br><span class="line">  showtabs=false,</span><br><span class="line">  breaklines=true,</span><br><span class="line">  breakatwhitespace=true,</span><br><span class="line">  aboveskip=<span class="keyword">\bigskipamount</span>,</span><br><span class="line">  belowskip=<span class="keyword">\bigskipamount</span>,</span><br><span class="line">  frame=single</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">% inside of document</span></span><br><span class="line"><span class="keyword">\begin</span>&#123;lstlisting&#125;</span><br><span class="line">    print(&quot;hello world!&quot;)</span><br><span class="line">    for qid in range(hs.shape[0]):</span><br><span class="line">    if qid &lt; 1:</span><br><span class="line">        lvl = 0</span><br><span class="line">    elif qid &gt;= 1 and qid &lt; 3:</span><br><span class="line">        lvl = 1</span><br><span class="line">    elif qid &gt;= 3 and qid &lt; 6:</span><br><span class="line">        lvl = 2</span><br><span class="line">    elif qid &gt;= 6 and qid &lt; 11:</span><br><span class="line">        lvl = 3</span><br><span class="line"><span class="keyword">\end</span>&#123;lstlisting&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/27/pytorch-C-packages-installation-failed-problems/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1128,96 +1244,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/21/mpl-cheatsheets/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Future">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Future's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/21/mpl-cheatsheets/" class="post-title-link" itemprop="url">Matplotlib 快速参考表</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-03-21 18:37:08" itemprop="dateCreated datePublished" datetime="2023-03-21T18:37:08+08:00">2023-03-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-03-24 11:49:05" itemprop="dateModified" datetime="2023-03-24T11:49:05+08:00">2023-03-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/QRH/" itemprop="url" rel="index"><span itemprop="name">QRH</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Cheatsheet"><a href="#Cheatsheet" class="headerlink" title="Cheatsheet"></a>Cheatsheet</h3><p>来自mpl官网的 <a target="_blank" rel="noopener" href="https://matplotlib.org/cheatsheets/cheatsheets.pdf">https://matplotlib.org/cheatsheets/cheatsheets.pdf</a> 的官方cheatsheet，但是pdf不方便即时查看，遂导出成图片，可以存到相册。图片可以单击后放大查看。</p>
-<p>p1:</p>
-<p><img src="/2023/03/21/mpl-cheatsheets/mpl-cheatsheets-1.png" alt="Cheatsheet"></p>
-<p>p2:</p>
-<p><img src="/2023/03/21/mpl-cheatsheets/mpl-cheatsheets-2.png" alt="Cheatsheet"></p>
-<p>这里面覆盖了大部分使用mpl时会用到的函数，详细使用方法可见官网（<a target="_blank" rel="noopener" href="https://matplotlib.org/%EF%BC%89%E3%80%82">https://matplotlib.org/）。</a></p>
-<p>本文后续将会挑一些进行额外解释。</p>
-<h3 id="colormap"><a href="#colormap" class="headerlink" title="colormap"></a>colormap</h3><p>colormap是把图变好看的灵魂。属于<code>matplotlib.colors.Colormap()</code>类. 这个类实现了<code>__call__()</code>方法，因此可以传入一个介于0-1之间的数，其返回一个四元组，表示一个RGBA颜色。这个元组可以被mpl的各类画图函数接收。</p>
-<p>基础用法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">cmap = plt.get_cmap(<span class="string">&#x27;magma&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(cmap(<span class="number">0</span>))</span><br><span class="line"><span class="built_in">print</span>(cmap(<span class="number">0.5</span>))</span><br><span class="line"><span class="built_in">print</span>(cmap(<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># OUTPUT:</span></span><br><span class="line">(<span class="number">0.001462</span>, <span class="number">0.000466</span>, <span class="number">0.013866</span>, <span class="number">1.0</span>)</span><br><span class="line">(<span class="number">0.716387</span>, <span class="number">0.214982</span>, <span class="number">0.47529</span>, <span class="number">1.0</span>)</span><br><span class="line">(<span class="number">0.002258</span>, <span class="number">0.001295</span>, <span class="number">0.018331</span>, <span class="number">1.0</span>)</span><br></pre></td></tr></table></figure>
-
-<p>实践用法：画一条渐变的线。官网有例子 <a target="_blank" rel="noopener" href="https://matplotlib.org/stable/gallery/lines_bars_and_markers/multicolored_line.html#sphx-glr-gallery-lines-bars-and-markers-multicolored-line-py">https://matplotlib.org/stable/gallery/lines_bars_and_markers/multicolored_line.html#sphx-glr-gallery-lines-bars-and-markers-multicolored-line-py</a>, 我这是另一种实现方法。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">cmap = plt.get_cmap(<span class="string">&#x27;magma&#x27;</span>)</span><br><span class="line"></span><br><span class="line">t = np.linspace(<span class="number">0</span>, <span class="number">10</span>, <span class="number">100</span>)</span><br><span class="line">xt = np.sin(t)</span><br><span class="line">normalized_t = t / t.<span class="built_in">max</span>() <span class="comment"># make it into [0, 1]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(t)-<span class="number">1</span>): <span class="comment"># draw piece by piece</span></span><br><span class="line">    plt.plot(t[i:i+<span class="number">2</span>], xt[i:i+<span class="number">2</span>], color=cmap(normalized_t[i]))</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p>效果：</p>
-<p><img src="/2023/03/21/mpl-cheatsheets/cmap.png" alt="Cheatsheet"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1287,7 +1313,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
