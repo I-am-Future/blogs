@@ -63,7 +63,7 @@
     <url>/2023/05/27/Pytorch-Practical-Basics-2/</url>
     <content><![CDATA[]]></content>
       <categories>
-        <category>Techniques</category>
+        <category>Deep Learning</category>
       </categories>
   </entry>
   <entry>
@@ -159,7 +159,7 @@
 
 ]]></content>
       <categories>
-        <category>Techniques</category>
+        <category>Deep Learning</category>
       </categories>
   </entry>
   <entry>
@@ -226,13 +226,16 @@
 <p>Change the CUDA directory to the one you actually want to use.</p>
 ]]></content>
       <categories>
-        <category>Techniques</category>
+        <category>Deep Learning</category>
       </categories>
   </entry>
   <entry>
     <title>Conda common commands</title>
     <url>/2023/05/07/Conda-common-commands/</url>
     <content><![CDATA[]]></content>
+      <categories>
+        <category>QRH</category>
+      </categories>
   </entry>
   <entry>
     <title>CUDA No process found but GPU memory occupied</title>
@@ -255,7 +258,7 @@
 <p>That will kill the process on the GPU. After killing the processes, you will find the GPU memory is freed. If still occupied, this may be caused by other users. You need to ask other users&#x2F;administrators to kill it manually.</p>
 ]]></content>
       <categories>
-        <category>Techniques</category>
+        <category>Problem Solving</category>
       </categories>
   </entry>
   <entry>
@@ -383,7 +386,7 @@
 <p>(But be careful that don’t remove the source code!!!)</p>
 ]]></content>
       <categories>
-        <category>Techniques</category>
+        <category>Problem Solving</category>
       </categories>
   </entry>
   <entry>
@@ -423,7 +426,7 @@
 <p>In this way, we get separate data structure, that contains all <code>data</code> and <code>target</code> respectively.  </p>
 ]]></content>
       <categories>
-        <category>Techniques</category>
+        <category>Deep Learning</category>
       </categories>
   </entry>
   <entry>
