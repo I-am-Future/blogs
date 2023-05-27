@@ -301,6 +301,74 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/27/Pytorch-Practical-Basics-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/27/Pytorch-Practical-Basics-2/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 2--Tensor arithmetic functions</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-05-27 13:32:58 / Modified: 13:33:56" itemprop="dateCreated datePublished" datetime="2023-05-27T13:32:58+08:00">2023-05-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/27/Pytorch-Practical-Basics-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -315,7 +383,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/05/27/Pytorch-Practical-Basics-1/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 1--Tensor basics (creation, attributes)</a>
+            <a href="/2023/05/27/Pytorch-Practical-Basics-1/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 1--Tensor basics (attributes, creation)</a>
         </h2>
 
         <div class="post-meta">
@@ -327,7 +395,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-05-27 11:47:00 / Modified: 13:26:54" itemprop="dateCreated datePublished" datetime="2023-05-27T11:47:00+08:00">2023-05-27</time>
+              <time title="Created: 2023-05-27 11:47:00 / Modified: 13:32:28" itemprop="dateCreated datePublished" datetime="2023-05-27T11:47:00+08:00">2023-05-27</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -484,6 +552,22 @@
 
               <time title="Created: 2023-05-07 13:47:38" itemprop="dateCreated datePublished" datetime="2023-05-07T13:47:38+08:00">2023-05-07</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-05-27 13:56:43" itemprop="dateModified" datetime="2023-05-27T13:56:43+08:00">2023-05-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
+                </span>
+            </span>
 
           
 
@@ -496,7 +580,66 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <p>In this article, I list some work I do when setting up new Linux server account.</p>
+<h2 id="1-Install-conda"><a href="#1-Install-conda" class="headerlink" title="1. Install conda"></a>1. Install conda</h2><p>Please refer to the official docs:</p>
+<p><a target="_blank" rel="noopener" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html">https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html</a></p>
+<h2 id="2-Setup-ssh-key-password-free-login"><a href="#2-Setup-ssh-key-password-free-login" class="headerlink" title="2. Setup ssh key (password-free login)"></a>2. Setup ssh key (password-free login)</h2><p>Modified from <a target="_blank" rel="noopener" href="https://github.com/bokesyo/CSC4005_2022Fall_Demo/blob/main/docs/Instruction%20on%20Passwordlessly%20Connecting%20to%20Cluster%20by%20Setting%20Up%20SSH%20Key%20Authentification.md">here</a>.</p>
+<p>(Replace <code>&#123;KeyName&#125;</code> to any name you like)</p>
+<h3 id="1-Generate-SSH-Key-Pair-on-Your-Local-Machine"><a href="#1-Generate-SSH-Key-Pair-on-Your-Local-Machine" class="headerlink" title="1. Generate SSH Key Pair on Your Local Machine"></a>1. Generate SSH Key Pair on Your Local Machine</h3><p>(macOS)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Execute the following commands on your local machine</span></span><br><span class="line"><span class="built_in">cd</span> ~/.ssh</span><br><span class="line">ssh-keygen -t rsa -b 1024 -f <span class="string">&quot;&#123;KeyName&#125;&quot;</span> -C <span class="string">&quot;&#123;Put Any Comment You Like&#125;&quot;</span></span><br><span class="line">ssh-add -K ./&#123;KeyName&#125;</span><br></pre></td></tr></table></figure>
+<p>To check if you make it right, type the following command and you should see a string as the output.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/&#123;KeyName&#125;.pub</span><br></pre></td></tr></table></figure>
+
+<p>(Windows)</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Execute the following commands on your local machine</span></span><br><span class="line"><span class="built_in">cd</span> C:\Users\&#123;UserName&#125;\.ssh</span><br><span class="line">ssh<span class="literal">-keygen</span> <span class="literal">-t</span> rsa <span class="literal">-b</span> <span class="number">1024</span> <span class="operator">-f</span> <span class="string">&quot;&#123;KeyName&#125;&quot;</span> <span class="literal">-C</span> <span class="string">&quot;&#123;Put Any Comment You Like&#125;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>To check if you make it right, double click the key file and you should see a string.</p>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>Execute ssh-keygen on your own computer instead of the cluster.</li>
+<li>It is fine to use the SSH key file generated before (eg. id_rsa.pub), if you have.</li>
+<li>ssh-keygen will ask you to set a paraphrase, which improves the security of using SSH key authentication. Type “Enter” for no paraphrase.</li>
+</ul>
+<p><strong>Parameters for ssh-keygen command:</strong></p>
+<ul>
+<li><strong>-t</strong>: type for ssh key generation. Here we use rsa</li>
+<li><strong>-b</strong>: bits</li>
+<li><strong>-f</strong>: name of your ssh key file. You are recommended to set this parameter in case it<br>is conflict with the ssh key file you generated before.</li>
+<li><strong>-C</strong>: comments to distinguish the ssh key file from others</li>
+</ul>
+<h3 id="2-Transfer-Your-SSH-Public-Key-File-to-the-Server"><a href="#2-Transfer-Your-SSH-Public-Key-File-to-the-Server" class="headerlink" title="2. Transfer Your SSH Public Key File to the Server"></a>2. Transfer Your SSH Public Key File to the Server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Execute the following commands on your local machine</span></span><br><span class="line">scp ~/.ssh/&#123;KeyName&#125;.pub &#123;Your Account Name&#125;@&#123;Server ip&#125;:~</span><br></pre></td></tr></table></figure>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>This command will ask you for password for data transfer. Please make sure that you type in the correct password. If you are Windows user and you want to copy &amp; paste the password for convenience, try “Ctrl + Shift + V” if you fail to paste the password with “Ctrl + V”.</li>
+</ul>
+<h3 id="3-Configure-authorized-keys-on-the-Server"><a href="#3-Configure-authorized-keys-on-the-Server" class="headerlink" title="3. Configure authorized_keys on the Server"></a>3. Configure authorized_keys on the Server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Login the cluster with password</span></span><br><span class="line">ssh &#123;Your Account Name&#125;@&#123;Server ip&#125;</span><br><span class="line"><span class="comment">## All the following commands should be executed on the cluster</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/.ssh</span><br><span class="line"><span class="built_in">cat</span> ./&#123;KeyName&#125;.pub &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line"><span class="built_in">rm</span> -f ~/&#123;KeyName&#125;.pub</span><br><span class="line"><span class="built_in">chmod</span> 700 ~/.ssh</span><br><span class="line"><span class="built_in">chmod</span> 600 ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+<p>To check if you make it right, execute the following command and you should see a string as the output that is the same as in Step-1.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-Prepare-for-SSH-Connection-with-Key-Authentication"><a href="#4-Prepare-for-SSH-Connection-with-Key-Authentication" class="headerlink" title="4. Prepare for SSH Connection with Key Authentication"></a>4. Prepare for SSH Connection with Key Authentication</h3><p>Add the following content to <code>~/.ssh/config</code> file on your local machine:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Host &#123;Any Name You Like&#125;</span><br><span class="line">    HostName &#123;ip&#125;</span><br><span class="line">    IdentityFile ~/.ssh/&#123;KeyName&#125;</span><br><span class="line">    User &#123;Your Account Name&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>It is recommended to configure with the Remote SSH extension on VS Code. Please refer to <a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/remote/ssh">Remote Development using SSH</a> for more information.</li>
+</ul>
+<h3 id="5-Login-the-Server-Password-free-with-SSH-key-Authentication"><a href="#5-Login-the-Server-Password-free-with-SSH-key-Authentication" class="headerlink" title="5. Login the Server Password-free with SSH key Authentication"></a>5. Login the Server Password-free with SSH key Authentication</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;Your Account Name&#125;@&#123;Server ip&#125;</span><br></pre></td></tr></table></figure>
+<p>or</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;Your Student ID&#125;@&#123;Any Name You Like&#125; <span class="comment"># above in Sec. 4</span></span><br></pre></td></tr></table></figure>
+
+<p>or </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;Any Name You Like&#125; <span class="comment"># above in Sec. 4</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-Set-some-alias"><a href="#3-Set-some-alias" class="headerlink" title="3. Set some alias"></a>3. Set some alias</h2><p>Add the following to the end of <code>~/.bashrc</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> cf=<span class="string">&quot;ls -l | grep &quot;</span>^-<span class="string">&quot; | wc -l&quot;</span></span><br><span class="line"><span class="built_in">alias</span> ns=<span class="string">&quot;nvidia-smi&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>The first alias, <code>cf</code> means count files, can count number of visible files (excluding directories) under the current working directory.</p>
+<p>The second alias, <code>ns</code> is short for <code>nvidia-smi</code> to check for the GPU information.</p>
+<h2 id="4-Configure-the-CUDA-compiler-version"><a href="#4-Configure-the-CUDA-compiler-version" class="headerlink" title="4. Configure the CUDA compiler version"></a>4. Configure the CUDA compiler version</h2><p>Add the following to the end of <code>~/.bashrc</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/usr/local/cuda-11.1/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
+
+<p>Change the CUDA directory to the one you actually want to use.</p>
+
       
     </div>
 
@@ -1078,94 +1221,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/30/dict-to-latex-md/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Future">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Future's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/30/dict-to-latex-md/" class="post-title-link" itemprop="url">Convert Python Dictionary to Source Code of Latex and Markdown</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-03-30 17:13:32 / Modified: 23:57:22" itemprop="dateCreated datePublished" datetime="2023-03-30T17:13:32+08:00">2023-03-30</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>The code is generated by [ChatGPT].</p>
-<p>Here are two common functions, that can convert the python built-in dictionary into the format of latex&#x2F;markdown unnumbered list, so that we can copy it into the latex&#x2F;markdown. Example can be:</p>
-<p>The input python dictionary is:</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">my_dict = &#123;</span><br><span class="line">    <span class="string">&quot;fruits&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;apples&quot;</span>: <span class="string">&quot;red&quot;</span>,</span><br><span class="line">        <span class="string">&quot;bananas&quot;</span>: <span class="string">&quot;yellow&quot;</span>,</span><br><span class="line">        <span class="string">&quot;grapes&quot;</span>: <span class="string">&quot;purple&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;vegetables&quot;</span>: &#123;</span><br><span class="line">        <span class="string">&quot;carrots&quot;</span>: <span class="string">&quot;orange&quot;</span>,</span><br><span class="line">        <span class="string">&quot;spinach&quot;</span>: <span class="string">&quot;green&quot;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&quot;meat&quot;</span>: <span class="string">&quot;beef&quot;</span>,</span><br><span class="line">    <span class="string">&quot;dairy&quot;</span>: <span class="string">&quot;milk&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>The result for markdown is:</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> fruits</span><br><span class="line"><span class="bullet">  -</span> apples</span><br><span class="line"><span class="bullet">  -</span> bananas</span><br><span class="line"><span class="bullet">  -</span> grapes</span><br><span class="line"><span class="bullet">-</span> vegetables</span><br><span class="line"><span class="bullet">  -</span> carrots</span><br><span class="line"><span class="bullet">  -</span> spinach</span><br><span class="line"><span class="bullet">-</span> meat</span><br><span class="line"><span class="bullet">  -</span> beef</span><br><span class="line"><span class="bullet">-</span> dairy</span><br><span class="line"><span class="bullet">  -</span> milk</span><br></pre></td></tr></table></figure>
-
-<p>and result for LaTeX is:</p>
-<figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">\item</span> fruits</span><br><span class="line"><span class="keyword">\begin</span>&#123;itemize&#125;</span><br><span class="line">  <span class="keyword">\item</span> apples: red</span><br><span class="line">  <span class="keyword">\item</span> bananas: yellow</span><br><span class="line">  <span class="keyword">\item</span> grapes: purple</span><br><span class="line"><span class="keyword">\end</span>&#123;itemize&#125;</span><br><span class="line"><span class="keyword">\item</span> vegetables</span><br><span class="line"><span class="keyword">\begin</span>&#123;itemize&#125;</span><br><span class="line">  <span class="keyword">\item</span> carrots: orange</span><br><span class="line">  <span class="keyword">\item</span> spinach: green</span><br><span class="line"><span class="keyword">\end</span>&#123;itemize&#125;</span><br><span class="line"><span class="keyword">\item</span> meat: beef</span><br><span class="line"><span class="keyword">\item</span> dairy: milk</span><br></pre></td></tr></table></figure>
-
-
-
-<p>Function explanation: it is as simple as it shows. We use the recursion strategy here. When we are going to print a sub-dictionary, we recursively call the function, with more (two) spaces indented.</p>
-<h2 id="Dict-to-latex-unnumbered-list"><a href="#Dict-to-latex-unnumbered-list" class="headerlink" title="Dict to latex unnumbered list"></a>Dict to latex unnumbered list</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">dict_to_latex</span>(<span class="params">d, level=<span class="number">0</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Converts a dictionary to a string in LaTeX format for an unnumbered list.</span></span><br><span class="line"><span class="string">    Nested dictionaries are considered as second level items.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">    - d (dict): The dictionary to be converted.</span></span><br><span class="line"><span class="string">    - level (int): The current nesting level (defaults to 0).</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    - A string in LaTeX format for an unnumbered list.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    latex_str = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> k, v <span class="keyword">in</span> d.items():</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(k, <span class="built_in">str</span>):</span><br><span class="line">            k = k.replace(<span class="string">&#x27;_&#x27;</span>, <span class="string">&#x27;\_&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(v, <span class="built_in">str</span>):</span><br><span class="line">            v = v.replace(<span class="string">&#x27;_&#x27;</span>, <span class="string">&#x27;\_&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(v, <span class="built_in">dict</span>):</span><br><span class="line">            latex_str += <span class="string">f&quot;<span class="subst">&#123;<span class="string">&#x27;  &#x27;</span>*level&#125;</span>\\item <span class="subst">&#123;k&#125;</span>\n\\begin&#123;&#123;itemize&#125;&#125;\n<span class="subst">&#123;dict_to_latex(v, level+<span class="number">1</span>)&#125;</span>\\end&#123;&#123;itemize&#125;&#125;\n&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            latex_str += <span class="string">f&quot;<span class="subst">&#123;<span class="string">&#x27;  &#x27;</span>*level&#125;</span>\\item <span class="subst">&#123;k&#125;</span>: <span class="subst">&#123;v&#125;</span>\n&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> latex_str</span><br></pre></td></tr></table></figure>
-
-<p>Note that we should avoid the <code>_</code> in our string. So we need first convert it into escape character, <code>\_</code>.</p>
-<p>The result of the string should be wrapped by a <code>\begin&#123;itemize&#125; \end&#123;itemize&#125;</code>.</p>
-<h2 id="Dict-to-markdown-unnumbered-list"><a href="#Dict-to-markdown-unnumbered-list" class="headerlink" title="Dict to markdown unnumbered list"></a>Dict to markdown unnumbered list</h2><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">dict_to_markdown</span>(<span class="params">d, level=<span class="number">0</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Converts a dictionary to a string in Markdown format for an unnumbered list.</span></span><br><span class="line"><span class="string">    Nested dictionaries are considered as second level items.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">    - d (dict): The dictionary to be converted.</span></span><br><span class="line"><span class="string">    - level (int): The current nesting level (defaults to 0).</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    - A string in Markdown format for an unnumbered list.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    md_str = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> k, v <span class="keyword">in</span> d.items():</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(v, <span class="built_in">dict</span>):</span><br><span class="line">            md_str += <span class="string">f&quot;<span class="subst">&#123;<span class="string">&#x27;  &#x27;</span>*level&#125;</span>- <span class="subst">&#123;k&#125;</span>\n<span class="subst">&#123;dict_to_markdown(v, level+<span class="number">1</span>)&#125;</span>&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            md_str += <span class="string">f&quot;<span class="subst">&#123;<span class="string">&#x27;  &#x27;</span>*level&#125;</span>- <span class="subst">&#123;k&#125;</span>: <span class="subst">&#123;v&#125;</span>\n&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> md_str</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1235,7 +1290,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
