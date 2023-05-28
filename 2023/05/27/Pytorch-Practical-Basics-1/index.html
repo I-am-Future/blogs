@@ -29,7 +29,7 @@
 <meta property="og:description" content="This series would not be a general PyTorch introduction or detailed tutorials. Instead, this would be a very practical introduction to some common basics needed for Implementing Hand-Written Modules.">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-05-27T03:47:00.000Z">
-<meta property="article:modified_time" content="2023-05-27T08:48:20.647Z">
+<meta property="article:modified_time" content="2023-05-28T14:36:56.478Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 
@@ -207,10 +207,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-05-27 11:47:00 / Modified: 16:48:20" itemprop="dateCreated datePublished" datetime="2023-05-27T11:47:00+08:00">2023-05-27</time>
+              <time title="Created: 2023-05-27 11:47:00" itemprop="dateCreated datePublished" datetime="2023-05-27T11:47:00+08:00">2023-05-27</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-05-28 22:36:56" itemprop="dateModified" datetime="2023-05-28T22:36:56+08:00">2023-05-28</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -285,7 +291,9 @@
 
 
 <h2 id="Tensor-creation"><a href="#Tensor-creation" class="headerlink" title="Tensor creation"></a>Tensor creation</h2><p>PyTorch tensors plays key role in writing deep learning programs. Usually, tensor are from two types: data and auxiliary variables (e.g., masks).</p>
-<p>For the data tensor, they are usually converted from other packages, such as <code>numpy</code>. We have several methods to convert it to <code>torch.tensor</code>.</p>
+<ol>
+<li>For the data tensor, they are usually converted from other packages, such as <code>numpy</code>. We have several methods to convert it to <code>torch.tensor</code>.</li>
+</ol>
 <ul>
 <li><p><code>torch.tensor(arr)</code> Returns a deep copy of <code>arr</code>, i.e., the storage data is independent with <code>arr</code>.. (Very memory and time consuming, not recommended for most cases)</p>
 </li>
@@ -294,7 +302,13 @@
 <li><p><code>torch.as_tensor(arr, dtype=..., device=...)</code> If <code>dtype</code> and <code>device</code> is same as <code>arr</code>, then it behaves like <code>torch.from_numpy()</code> function, shallow copy. Otherwise, it acts like <code>torch.tensor()</code>, deep copy. So using the function is recommended.</p>
 </li>
 </ul>
-<p>For the auxiliary variables, PyTorch provides some common methods:</p>
+<ol start="2">
+<li>For the auxiliary variables, PyTorch provides some common methods:</li>
+</ol>
+<ul>
+<li>Linear:</li>
+</ul>
+<p>We have <code>torch.linspace</code> and <code>torch.arange</code>. They are easy to understand. Please see the docs <a href>linspace</a> and <a href>arange</a>.</p>
 <ul>
 <li>Random:</li>
 </ul>
@@ -339,8 +353,8 @@
       <i class="fa fa-chevron-left"></i> My Setup to New Linux Server Account
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/05/27/Pytorch-Practical-Basics-2/" rel="next" title="PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (arithmetic functions)">
-      PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (arithmetic functions) <i class="fa fa-chevron-right"></i>
+    <a href="/2023/05/27/Pytorch-Practical-Basics-2/" rel="next" title="PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (arithmetic functions, "axis" and indexing)">
+      PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (arithmetic functions, "axis" and indexing) <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>

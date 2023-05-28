@@ -215,7 +215,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-03-23 13:54:07" itemprop="dateModified" datetime="2023-03-23T13:54:07+08:00">2023-03-23</time>
+                <time title="Modified: 2023-05-27 16:43:42" itemprop="dateModified" datetime="2023-05-27T16:43:42+08:00">2023-05-27</time>
               </span>
 
           
@@ -315,7 +315,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/05/27/Pytorch-Practical-Basics-2/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (arithmetic functions)</a>
+            <a href="/2023/05/27/Pytorch-Practical-Basics-2/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (arithmetic functions, "axis" and indexing)</a>
         </h2>
 
         <div class="post-meta">
@@ -325,10 +325,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-05-27 13:32:58 / Modified: 16:46:24" itemprop="dateCreated datePublished" datetime="2023-05-27T13:32:58+08:00">2023-05-27</time>
+              <time title="Created: 2023-05-27 13:32:58" itemprop="dateCreated datePublished" datetime="2023-05-27T13:32:58+08:00">2023-05-27</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-05-28 23:20:26" itemprop="dateModified" datetime="2023-05-28T23:20:26+08:00">2023-05-28</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -350,7 +356,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <p>In this section, we will briefly talk about the arithmetic functions in the PyTorch. Then, we will introduce the <code>axis</code> parameter in most of these functions in detail. Finally, we talk about indexing the tensor, which is very tricky in manipulating the tensors as well. </p>
+<h2 id="Arithmetic-functions"><a href="#Arithmetic-functions" class="headerlink" title="Arithmetic functions"></a>Arithmetic functions</h2><h3 id="Key-What-is-the-“axis”-parameter"><a href="#Key-What-is-the-“axis”-parameter" class="headerlink" title="Key: What is the “axis” parameter?"></a>Key: What is the “axis” parameter?</h3><img src="/2023/05/27/Pytorch-Practical-Basics-2/dim0.gif" alt="dim0" style="zoom: 67%;">
+
+<img src="/2023/05/27/Pytorch-Practical-Basics-2/dim1.gif" alt="dim1" style="zoom: 67%;">
+
+<img src="/2023/05/27/Pytorch-Practical-Basics-2/dim2.gif" alt="dim2" style="zoom: 67%;">
+
+
+
+<h2 id="Indexing"><a href="#Indexing" class="headerlink" title="Indexing"></a>Indexing</h2>
       
     </div>
 
@@ -393,10 +408,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-05-27 11:47:00 / Modified: 16:48:20" itemprop="dateCreated datePublished" datetime="2023-05-27T11:47:00+08:00">2023-05-27</time>
+              <time title="Created: 2023-05-27 11:47:00" itemprop="dateCreated datePublished" datetime="2023-05-27T11:47:00+08:00">2023-05-27</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-05-28 22:36:56" itemprop="dateModified" datetime="2023-05-28T22:36:56+08:00">2023-05-28</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -471,7 +492,9 @@
 
 
 <h2 id="Tensor-creation"><a href="#Tensor-creation" class="headerlink" title="Tensor creation"></a>Tensor creation</h2><p>PyTorch tensors plays key role in writing deep learning programs. Usually, tensor are from two types: data and auxiliary variables (e.g., masks).</p>
-<p>For the data tensor, they are usually converted from other packages, such as <code>numpy</code>. We have several methods to convert it to <code>torch.tensor</code>.</p>
+<ol>
+<li>For the data tensor, they are usually converted from other packages, such as <code>numpy</code>. We have several methods to convert it to <code>torch.tensor</code>.</li>
+</ol>
 <ul>
 <li><p><code>torch.tensor(arr)</code> Returns a deep copy of <code>arr</code>, i.e., the storage data is independent with <code>arr</code>.. (Very memory and time consuming, not recommended for most cases)</p>
 </li>
@@ -480,7 +503,13 @@
 <li><p><code>torch.as_tensor(arr, dtype=..., device=...)</code> If <code>dtype</code> and <code>device</code> is same as <code>arr</code>, then it behaves like <code>torch.from_numpy()</code> function, shallow copy. Otherwise, it acts like <code>torch.tensor()</code>, deep copy. So using the function is recommended.</p>
 </li>
 </ul>
-<p>For the auxiliary variables, PyTorch provides some common methods:</p>
+<ol start="2">
+<li>For the auxiliary variables, PyTorch provides some common methods:</li>
+</ol>
+<ul>
+<li>Linear:</li>
+</ul>
+<p>We have <code>torch.linspace</code> and <code>torch.arange</code>. They are easy to understand. Please see the docs <a href>linspace</a> and <a href>arange</a>.</p>
 <ul>
 <li>Random:</li>
 </ul>
