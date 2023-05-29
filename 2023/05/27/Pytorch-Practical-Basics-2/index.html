@@ -21,18 +21,18 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="In this section, we will briefly talk about the arithmetic functions in the PyTorch. Then, we will introduce the axis parameter in most of these functions in detail. Finally, we talk about indexing th">
+  <meta name="description" content="In this section, we will briefly talk about the arithmetic functions in the PyTorch. Then, we will introduce the axis parameter in most of these functions in detail.  Finally, we talk about indexing t">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (arithmetic functions, &quot;axis&quot; and indexing)">
+<meta property="og:title" content="PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (Tensor functions, &quot;axis&quot; and indexing)">
 <meta property="og:url" content="http://example.com/2023/05/27/Pytorch-Practical-Basics-2/index.html">
 <meta property="og:site_name" content="Future&#39;s blog">
-<meta property="og:description" content="In this section, we will briefly talk about the arithmetic functions in the PyTorch. Then, we will introduce the axis parameter in most of these functions in detail. Finally, we talk about indexing th">
+<meta property="og:description" content="In this section, we will briefly talk about the arithmetic functions in the PyTorch. Then, we will introduce the axis parameter in most of these functions in detail.  Finally, we talk about indexing t">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2023/05/27/Pytorch-Practical-Basics-2/dim0.gif">
 <meta property="og:image" content="http://example.com/2023/05/27/Pytorch-Practical-Basics-2/dim1.gif">
 <meta property="og:image" content="http://example.com/2023/05/27/Pytorch-Practical-Basics-2/dim2.gif">
 <meta property="article:published_time" content="2023-05-27T05:32:58.000Z">
-<meta property="article:modified_time" content="2023-05-28T15:20:26.067Z">
+<meta property="article:modified_time" content="2023-05-29T05:29:04.366Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2023/05/27/Pytorch-Practical-Basics-2/dim0.gif">
@@ -50,7 +50,7 @@
   };
 </script>
 
-  <title>PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (arithmetic functions, "axis" and indexing) | Future's blog</title>
+  <title>PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (Tensor functions, "axis" and indexing) | Future's blog</title>
   
 
 
@@ -201,7 +201,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (arithmetic functions, "axis" and indexing)
+          PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (Tensor functions, "axis" and indexing)
         </h1>
 
         <div class="post-meta">
@@ -219,7 +219,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-28 23:20:26" itemprop="dateModified" datetime="2023-05-28T23:20:26+08:00">2023-05-28</time>
+                <time title="Modified: 2023-05-29 13:29:04" itemprop="dateModified" datetime="2023-05-29T13:29:04+08:00">2023-05-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -242,16 +242,94 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>In this section, we will briefly talk about the arithmetic functions in the PyTorch. Then, we will introduce the <code>axis</code> parameter in most of these functions in detail. Finally, we talk about indexing the tensor, which is very tricky in manipulating the tensors as well. </p>
-<h2 id="Arithmetic-functions"><a href="#Arithmetic-functions" class="headerlink" title="Arithmetic functions"></a>Arithmetic functions</h2><h3 id="Key-What-is-the-“axis”-parameter"><a href="#Key-What-is-the-“axis”-parameter" class="headerlink" title="Key: What is the “axis” parameter?"></a>Key: What is the “axis” parameter?</h3><img src="/2023/05/27/Pytorch-Practical-Basics-2/dim0.gif" alt="dim0" style="zoom: 67%;">
+        <p>In this section, we will briefly talk about the arithmetic functions in the PyTorch. Then, we will introduce the <code>axis</code> parameter in most of these functions in detail. </p>
+<p>Finally, we talk about indexing the tensor, which is very tricky in manipulating the tensors as well. </p>
+<h2 id="Tensor-functions"><a href="#Tensor-functions" class="headerlink" title="Tensor functions"></a>Tensor functions</h2><p>PyTorch supports many arithmetic functions for tensor. They are vectorized and acts very similar to <code>numpy</code>. (So if you are not familiar with <code>numpy</code>, learn it first). In the following, I’ll introduce some functions with the official docs.</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/torch.html#pointwise-ops">binary arithmetic functions</a>, such as <code>+, -, *, /, @</code> etc. Entry-wise operations, supports <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/notes/broadcasting.html">broadcasting</a>.</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/torch.html#pointwise-ops">binary logical functions</a>, such as <code>torch.bitwise_and()</code>, <code>torch.bitwise_or</code>…</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/torch.html#pointwise-ops">math functions</a>, such as <code>exp, log, sigmoid</code> etc.</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/torch.html#comparison-ops">comparison functions</a>, such as <code>torch.eq</code>, <code>torch.ge</code>. The <code>==</code> and <code>&gt;=</code> operators are overloaded, so they have the same effect.</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/torch.html#reduction-ops">reduction functions</a>. They are usually very useful. e.g., <code>mean</code>, <code>median</code>, <code>argmax</code>, <code>sum</code>… They do the corresponding operations on a specific dimension, requiring the “dim” parameter (See below). </p>
+</li>
+<li><p>…… For more functions, please visit the <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/torch.html#module-torch">docs</a>.</p>
+</li>
+</ul>
+<h3 id="Key-What-is-the-“dim”-parameter"><a href="#Key-What-is-the-“dim”-parameter" class="headerlink" title="Key: What is the “dim” parameter?"></a>Key: What is the “dim” parameter?</h3><p>For the reduction functions such as <code>argmax</code>, we need to pass a parameter called <code>dim</code>. What does it mean?</p>
+<ul>
+<li><p>The default value or <code>dim</code> is <code>None</code>, indicates that do the <code>argmax</code> for all the entries. </p>
+</li>
+<li><p>On the other hand, if we specifies the <code>dim</code> parameter, that means, we apply the function <code>argmax</code> on each vector along a specific “axis”. For all of the example below, we use a <code>4x3x4</code> 3D tensor.</p>
+</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># create a 4x3x4 tensor</span></span><br><span class="line">a = torch.randn(<span class="number">4</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br></pre></td></tr></table></figure>
 
+
+
+<ol>
+<li>Then, in the first case, we do:</li>
+</ol>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a1 = torch.argmax(a, dim=<span class="number">0</span>)</span><br><span class="line">a1.shape</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.Size([<span class="number">3</span>, <span class="number">4</span>])</span><br></pre></td></tr></table></figure>
+
+<p>See the gif below. If we set <code>dim=0</code>, that means, we apply the <code>argmax</code> function on each yellow vector (they are in the direction of dim0). The original tensor’s shape is 4x3x4, we reduce on the dim0, so now it’s 3x4, containing all results from <code>argmax</code> on the yellow vectors. </p>
+<img src="/2023/05/27/Pytorch-Practical-Basics-2/dim0.gif" alt="dim0" style="zoom: 67%;">
+
+
+
+<ol start="2">
+<li>Then, in the second case, we do:</li>
+</ol>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a2 = torch.argmax(a, dim=<span class="number">1</span>)</span><br><span class="line">a2.shape</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.Size([<span class="number">4</span>, <span class="number">4</span>])</span><br></pre></td></tr></table></figure>
+
+<p>See the gif below. If we set <code>dim=1</code>, that means, we apply the <code>argmax</code> function on each yellow vector (they are in the direction of dim1). The original tensor’s shape is 4x3x4, we reduce on the dim1, so now we will have a result with 4x4 shape. </p>
 <img src="/2023/05/27/Pytorch-Practical-Basics-2/dim1.gif" alt="dim1" style="zoom: 67%;">
 
+
+
+<ol start="3">
+<li>Then, in the third case, we do:</li>
+</ol>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a3 = torch.argmax(a, dim=<span class="number">2</span>)</span><br><span class="line">a3.shape</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.Size([<span class="number">4</span>, <span class="number">3</span>])</span><br></pre></td></tr></table></figure>
+
+<p>See the gif below. If we set <code>dim=2</code>, that means, we apply the <code>argmax</code> function on each yellow vector (they are in the direction of dim2). The original tensor’s shape is 4x3x4, we reduce on the dim2, so now we will have a result with 4x3 shape. </p>
 <img src="/2023/05/27/Pytorch-Practical-Basics-2/dim2.gif" alt="dim2" style="zoom: 67%;">
 
+<h3 id="As-member-function"><a href="#As-member-function" class="headerlink" title="As member function"></a>As member function</h3><p>Many functions mentioned above has member function style. For example, the following pairs are equivalent.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a = torch.randn(<span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line"><span class="comment"># pair1</span></span><br><span class="line">_ = torch.<span class="built_in">sum</span>(a)</span><br><span class="line">_ = a.<span class="built_in">sum</span>()</span><br><span class="line"><span class="comment"># pair2</span></span><br><span class="line">_ = torch.argmax(a, dim=<span class="number">0</span>)</span><br><span class="line">_ = a.argmax(dim=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="In-place-function"><a href="#In-place-function" class="headerlink" title="In-place function"></a>In-place function</h3><p>The functions mentioned above returns a new result tensor, keeping the original one same. In some cases, we can do in-place operation on the tensor. The in-place functions are terminated with a <code>_</code>. </p>
+<p>For example, the following pairs are equivalent.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a = torch.randn(<span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line"><span class="comment"># pair 1</span></span><br><span class="line">a = torch.cos(a)</span><br><span class="line">a = a.cos()</span><br><span class="line">a.cos_()</span><br><span class="line"><span class="comment"># pair 2</span></span><br><span class="line">a = torch.clamp(a, <span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">a = a.clamp(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">a.clamp_(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">a.clamp(<span class="number">1</span>, <span class="number">2</span>) <span class="comment"># ERROR: must assign to someone! otherwise no effect!</span></span><br></pre></td></tr></table></figure>
 
 
-<h2 id="Indexing"><a href="#Indexing" class="headerlink" title="Indexing"></a>Indexing</h2>
+
+
+
+<h2 id="Indexing"><a href="#Indexing" class="headerlink" title="Indexing"></a>Indexing</h2><p>Indexing is very powerful in torch. They are very similar to the one in <code>numpy</code>.  Learn <code>numpy</code> first if you are not familiar with it.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">a = torch.randn(<span class="number">4</span>, <span class="number">3</span>)</span><br><span class="line"><span class="comment"># a is</span></span><br><span class="line">tensor([[ <span class="number">1.1351</span>,  <span class="number">0.7592</span>, -<span class="number">3.5945</span>],</span><br><span class="line">        [ <span class="number">0.0192</span>,  <span class="number">0.1052</span>,  <span class="number">0.9603</span>],</span><br><span class="line">        [-<span class="number">0.5672</span>, -<span class="number">0.5706</span>,  <span class="number">1.5980</span>],</span><br><span class="line">        [ <span class="number">0.1115</span>, -<span class="number">0.0392</span>,  <span class="number">1.4112</span>]])</span><br></pre></td></tr></table></figure>
+
+<p>The indexing supports many types, you can pass:</p>
+<ul>
+<li><p>An integer. <code>a[1, 2]</code> returns just one value 0-D tensor <code>tensor(0.9603)</code>, one element at (row 1, col 2).</p>
+</li>
+<li><p>A Slice. <code>a[1::2, 2]</code> returns 1-D tensor <code>tensor([0.9603, 1.4112])</code>, two elements at (row 1, col 2) and (row 3, col 2).</p>
+</li>
+<li><p>A colon. colon means everything on this dim.<code>a[:, 2]</code> returns 1-D tensor <code>tensor([-3.5945,  0.9603,  1.5980,  1.4112])</code>, a column of 4 elements at col 2.</p>
+</li>
+<li><p>A None. None is used to create a new dim on the given axis. E.g., <code>a[:, None, :]</code> has the shape of <code>torch.Size([4, 1, 3])</code>. A further example:</p>
+</li>
+</ul>
+<p>​		<code>a[:, 2]</code> returns 1-D vector <code>tensor([-3.5945,  0.9603,  1.5980,  1.4112])</code> of col 2.</p>
+<p>​		<code>a[:, 2, None]</code> returns 2-D vector <code>tensor([[-3.5945],  [0.9603],  [1.5980],  [1.4112]])</code> of col 2, which the original shape is kept.</p>
+<ul>
+<li><p>A <code>...</code> (Ellipsis). Ellipsis can be used as multiple <code>:</code>. E.g., </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a = torch.arange(<span class="number">16</span>).reshape(<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line"><span class="comment"># The following returns the same value</span></span><br><span class="line">a[..., <span class="number">1</span>]</span><br><span class="line">a[:, :, :, <span class="number">1</span>]</span><br></pre></td></tr></table></figure></li>
+</ul>
+
     </div>
 
     
@@ -328,7 +406,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Arithmetic-functions"><span class="nav-number">1.</span> <span class="nav-text">Arithmetic functions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Key-What-is-the-%E2%80%9Caxis%E2%80%9D-parameter"><span class="nav-number">1.1.</span> <span class="nav-text">Key: What is the “axis” parameter?</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Indexing"><span class="nav-number">2.</span> <span class="nav-text">Indexing</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tensor-functions"><span class="nav-number">1.</span> <span class="nav-text">Tensor functions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Key-What-is-the-%E2%80%9Cdim%E2%80%9D-parameter"><span class="nav-number">1.1.</span> <span class="nav-text">Key: What is the “dim” parameter?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#As-member-function"><span class="nav-number">1.2.</span> <span class="nav-text">As member function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#In-place-function"><span class="nav-number">1.3.</span> <span class="nav-text">In-place function</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Indexing"><span class="nav-number">2.</span> <span class="nav-text">Indexing</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
