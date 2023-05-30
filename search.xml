@@ -62,6 +62,11 @@
 ]]></content>
   </entry>
   <entry>
+    <title>CMake-QRH</title>
+    <url>/2023/05/30/CMake-QRH/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (Tensor functions, &quot;axis&quot; and indexing)</title>
     <url>/2023/05/27/Pytorch-Practical-Basics-2/</url>
     <content><![CDATA[<p>In this section, we will briefly talk about the arithmetic functions in the PyTorch. Then, we will introduce the <code>axis</code> parameter in most of these functions in detail. </p>
