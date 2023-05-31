@@ -25,9 +25,10 @@
       </categories>
   </entry>
   <entry>
-    <title>Conda common commands</title>
+    <title>Conda Common Commands Quick Reference</title>
     <url>/2023/05/07/Conda-common-commands/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><p>Please refer to the official <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html">docs</a>. </p>
+]]></content>
       <categories>
         <category>QRH</category>
       </categories>
@@ -663,16 +664,16 @@
       </categories>
   </entry>
   <entry>
-    <title>Matplotlib 快速参考表</title>
+    <title>Matplotlib Quick Reference</title>
     <url>/2023/03/21/mpl-cheatsheets/</url>
     <content><![CDATA[<h3 id="Cheatsheet"><a href="#Cheatsheet" class="headerlink" title="Cheatsheet"></a>Cheatsheet</h3><p>来自mpl官网的 <a href="https://matplotlib.org/cheatsheets/cheatsheets.pdf">https://matplotlib.org/cheatsheets/cheatsheets.pdf</a> 的官方cheatsheet，但是pdf不方便即时查看，遂导出成图片，可以存到相册。图片可以单击后放大查看。</p>
-<p>p1:</p>
+<p>page1:</p>
 <p><img src="/2023/03/21/mpl-cheatsheets/mpl-cheatsheets-1.png" alt="Cheatsheet"></p>
-<p>p2:</p>
+<p>page2:</p>
 <p><img src="/2023/03/21/mpl-cheatsheets/mpl-cheatsheets-2.png" alt="Cheatsheet"></p>
 <p>这里面覆盖了大部分使用mpl时会用到的函数，详细使用方法可见官网（<a href="https://matplotlib.org/%EF%BC%89%E3%80%82">https://matplotlib.org/）。</a></p>
 <p>本文后续将会挑一些进行额外解释。</p>
-<h3 id="colormap"><a href="#colormap" class="headerlink" title="colormap"></a>colormap</h3><p>colormap是把图变好看的灵魂。属于<code>matplotlib.colors.Colormap()</code>类. 这个类实现了<code>__call__()</code>方法，因此可以传入一个介于0-1之间的数，其返回一个四元组，表示一个RGBA颜色。这个元组可以被mpl的各类画图函数接收。</p>
+<h3 id="colormap-class"><a href="#colormap-class" class="headerlink" title="colormap class"></a>colormap class</h3><p>colormap是把图变好看的灵魂。属于<code>matplotlib.colors.Colormap()</code>类. 这个类实现了<code>__call__()</code>方法，因此可以传入一个介于0-1之间的数，其返回一个四元组，表示一个RGBA颜色。这个元组可以被mpl的各类画图函数接收。</p>
 <p>基础用法：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">cmap = plt.get_cmap(<span class="string">&#x27;magma&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(cmap(<span class="number">0</span>))</span><br><span class="line"><span class="built_in">print</span>(cmap(<span class="number">0.5</span>))</span><br><span class="line"><span class="built_in">print</span>(cmap(<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># OUTPUT:</span></span><br><span class="line">(<span class="number">0.001462</span>, <span class="number">0.000466</span>, <span class="number">0.013866</span>, <span class="number">1.0</span>)</span><br><span class="line">(<span class="number">0.716387</span>, <span class="number">0.214982</span>, <span class="number">0.47529</span>, <span class="number">1.0</span>)</span><br><span class="line">(<span class="number">0.002258</span>, <span class="number">0.001295</span>, <span class="number">0.018331</span>, <span class="number">1.0</span>)</span><br></pre></td></tr></table></figure>
 
@@ -831,7 +832,7 @@
 <p>A typical simple <code>CMakeLists.txt</code> contains the following (assuming we have two source files in the current directory, <code>main.cpp</code> and <code>hello.cpp</code>):</p>
 <figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.12</span>) <span class="comment"># describe the minimum cmake version</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">project</span>(hellocmake LANGUAGES CXX)    <span class="comment"># describe the project name, and lan</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp hello.cpp)</span><br></pre></td></tr></table></figure>
 
-<p>The <code>add_executable</code> function’s signature is <code>add_executable(target, [src files...])</code>, meaning use all <code>src files</code> to compile the <code>target</code>.</p>
+<p>The <code>add_executable</code> function’s signature is <code>add_executable(target, [src files...])</code>, meaning to use all <code>src files</code> to compile the <code>target</code>.</p>
 <p>To build the program, run in the shell:</p>
 <figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">cmake -B build</span><br><span class="line">cmake --build build</span><br><span class="line"><span class="comment"># run with</span></span><br><span class="line">./build/&lt;program_name&gt;</span><br></pre></td></tr></table></figure>
 
@@ -840,13 +841,11 @@
 
 
 
-
-
 <h2 id="Compile-a-Library-amp-Link-it"><a href="#Compile-a-Library-amp-Link-it" class="headerlink" title="Compile a Library &amp; Link it"></a>Compile a Library &amp; Link it</h2><p><a href="https://github.com/parallel101/course/tree/master/01/06">See code here</a></p>
 <figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="comment"># compile static OR dynamic library</span></span><br><span class="line"><span class="keyword">add_library</span>(hellolib STATIC hello.cpp)</span><br><span class="line"><span class="keyword">add_library</span>(hellolib SHARED hello.cpp)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp)</span><br><span class="line"></span><br><span class="line"><span class="keyword">target_link_libraries</span>(a.out PUBLIC hellolib)</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>The <code>add_library</code> function’s signature is <code>add_library(target, STATIC/SHARED [src files...])</code>, meaning use all <code>src files</code> to compile the static&#x2F;dynamic <code>target</code> library.</li>
+<li>The <code>add_library</code> function’s signature is <code>add_library(target, STATIC/SHARED [src files...])</code>, meaning to use all <code>src files</code> to compile the static&#x2F;dynamic <code>target</code> library.</li>
 <li>Then, <code>target_link_libraries(a.out PUBLIC hellolib)</code> links the <code>hellolib</code>‘s source to the <code>a.out</code>.</li>
 </ul>
 <h2 id="Compile-a-subdirectory"><a href="#Compile-a-subdirectory" class="headerlink" title="Compile a subdirectory"></a>Compile a subdirectory</h2><p><a href="https://github.com/parallel101/course/tree/master/01/10">See code here</a></p>
