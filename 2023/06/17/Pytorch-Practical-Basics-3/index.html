@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/time-machine.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="PyTorch Practical Hand-Written Modules Basics 3–Tensor-wise operationsIn this section we will talk about some PyTorch functions that operates the tensors.  torch.Tensor.expandTensor.expand(*sizes) -&amp;g">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pytorch-Practical-Basics-3">
+<meta property="og:url" content="http://example.com/2023/06/17/Pytorch-Practical-Basics-3/index.html">
+<meta property="og:site_name" content="Future&#39;s blog">
+<meta property="og:description" content="PyTorch Practical Hand-Written Modules Basics 3–Tensor-wise operationsIn this section we will talk about some PyTorch functions that operates the tensors.  torch.Tensor.expandTensor.expand(*sizes) -&amp;g">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-06-17T10:07:05.000Z">
+<meta property="article:modified_time" content="2023-06-17T13:34:25.063Z">
+<meta property="article:author" content="Future">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/06/17/Pytorch-Practical-Basics-3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Pytorch-Practical-Basics-3 | Future's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Future's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/06/17/Pytorch-Practical-Basics-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Pytorch-Practical-Basics-3
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-06-17 18:07:05 / Modified: 21:34:25" itemprop="dateCreated datePublished" datetime="2023-06-17T18:07:05+08:00">2023-06-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="PyTorch-Practical-Hand-Written-Modules-Basics-3–Tensor-wise-operations"><a href="#PyTorch-Practical-Hand-Written-Modules-Basics-3–Tensor-wise-operations" class="headerlink" title="PyTorch Practical Hand-Written Modules Basics 3–Tensor-wise operations"></a>PyTorch Practical Hand-Written Modules Basics 3–Tensor-wise operations</h1><p>In this section we will talk about some PyTorch functions that operates the tensors. </p>
+<h2 id="torch-Tensor-expand"><a href="#torch-Tensor-expand" class="headerlink" title="torch.Tensor.expand"></a>torch.Tensor.expand</h2><p><code>Tensor.expand(*sizes) -&gt; Tensor</code></p>
+<p>The <code>expand</code> function returns a new view of the <code>self</code> tensor, with singleton dimensions expanded to a larger size. (“singleton dimensions” means the dimension with shape 1)</p>
+<p><strong>Basic Usage</strong></p>
+<p>Passing -1 as the size for a dimension means not changing the size of that dimension.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x = torch.tensor([[<span class="number">1</span>], [<span class="number">2</span>], [<span class="number">3</span>]]) <span class="comment"># torch.Size([3, 1])</span></span><br><span class="line"><span class="built_in">print</span>(x)</span><br><span class="line"><span class="built_in">print</span>(x.expand(<span class="number">3</span>, <span class="number">4</span>))   <span class="comment"># torch.Size([3, 4])</span></span><br><span class="line"><span class="built_in">print</span>(x.expand(-<span class="number">1</span>, <span class="number">4</span>))  <span class="comment"># torch.Size([3, 4])</span></span><br><span class="line"><span class="built_in">print</span>(x.expand(<span class="number">3</span>, -<span class="number">1</span>))  <span class="comment"># torch.Size([3, 1])</span></span><br><span class="line"><span class="built_in">print</span>(x.expand(-<span class="number">1</span>, -<span class="number">1</span>)) <span class="comment"># torch.Size([3, 1])</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">tensor([[<span class="number">1</span>],</span><br><span class="line">        [<span class="number">2</span>],</span><br><span class="line">        [<span class="number">3</span>]])</span><br><span class="line">tensor([[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>],</span><br><span class="line">        [<span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>],</span><br><span class="line">        [<span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>]])</span><br><span class="line">tensor([[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>],</span><br><span class="line">        [<span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>],</span><br><span class="line">        [<span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>]])</span><br><span class="line">tensor([[<span class="number">1</span>],</span><br><span class="line">        [<span class="number">2</span>],</span><br><span class="line">        [<span class="number">3</span>]])</span><br><span class="line">tensor([[<span class="number">1</span>],</span><br><span class="line">        [<span class="number">2</span>],</span><br><span class="line">        [<span class="number">3</span>]])</span><br></pre></td></tr></table></figure>
+
+<p><strong>Wrong Usage</strong></p>
+<p>Only the dimension with shape 1 can be expanded:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = torch.tensor([[<span class="number">1</span>], [<span class="number">2</span>], [<span class="number">3</span>]]) <span class="comment"># torch.Size([3, 1])</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(x.expand(<span class="number">2</span>, <span class="number">2</span>))   <span class="comment"># ERROR! can&#x27;t expand axis 0 shape from 3 (not 1)</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Why use it?</strong></p>
+<p>The return is only a view, not a new tensor. <strong>Therefore, if you only want to only read (not write) to an expanded tensor, use expand() will save much GPU memory.</strong> Note that modifying on the expanded tensor would make modification on the original as well. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = torch.tensor([[<span class="number">1</span>], [<span class="number">2</span>], [<span class="number">3</span>]]) <span class="comment"># torch.Size([3, 1])</span></span><br><span class="line">x.expand(<span class="number">3</span>, <span class="number">4</span>)[<span class="number">0</span>, <span class="number">1</span>] = <span class="number">100</span></span><br><span class="line"><span class="built_in">print</span>(x)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">tensor([[<span class="number">100</span>],</span><br><span class="line">        [  <span class="number">2</span>],</span><br><span class="line">        [  <span class="number">3</span>]])</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="torch-Tensor-repeat"><a href="#torch-Tensor-repeat" class="headerlink" title="torch.Tensor.repeat"></a>torch.Tensor.repeat</h2><p><code>Tensor.repeat(*sizes) -&gt; Tensor)</code></p>
+<p>Repeats this tensor along the specified dimensions. Also, this is a deep copy.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = torch.tensor([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]) <span class="comment"># torch.Size([3])</span></span><br><span class="line"><span class="built_in">print</span>(x.repeat(<span class="number">4</span>, <span class="number">2</span>)) <span class="comment"># torch.Size([4, 6])</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">tensor([[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</span><br><span class="line">        [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</span><br><span class="line">        [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</span><br><span class="line">        [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]])</span><br></pre></td></tr></table></figure>
+
+<p><strong>More than the given ndimension</strong></p>
+<p>If the <code>size</code> has <strong>more</strong> dimension than the self tensor, like the example below, the <code>x</code> only have shape 3x1, while we have more than two input parameters, then additional dimensions will be added at the front. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">x = torch.tensor([[<span class="number">1</span>], [<span class="number">2</span>], [<span class="number">3</span>]]) <span class="comment"># torch.Size([3, 1])</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(x.repeat(<span class="number">4</span>, <span class="number">2</span>, <span class="number">1</span>).shape)    </span><br><span class="line"><span class="comment"># torch.Size([4, 6, 1])  first 1: same. last 2 dim: [3,1]*[2,1]=[6,1]</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(x.repeat(<span class="number">4</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">1</span>).shape)    </span><br><span class="line"><span class="comment"># torch.Size([4, 2, 3, 1])  first 2: same. last 2 dim: [3,1]*[1,1]=[3,1]</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(x.repeat(<span class="number">1</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">1</span>).shape)    </span><br><span class="line"><span class="comment"># torch.Size([1, 4, 6, 1])  first 2: same. last 2 dim: [3,1]*[2,1]=[6,1]</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(x.repeat(<span class="number">1</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">2</span>).shape)    </span><br><span class="line"><span class="comment"># torch.Size([1, 1, 12, 2])  first 2: same. last 2 dim: [3,1]*[4,2]=[12,2]</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="torch-Tensor-transpose"><a href="#torch-Tensor-transpose" class="headerlink" title="torch.Tensor.transpose"></a>torch.Tensor.transpose</h2><p><code>torch.transpose(input, dim0, dim1) -&gt; Tensor</code></p>
+<p><code>torch.Tensor.transpose(dim0, dim1) -&gt; Tensor</code></p>
+<p>Returns a tensor that is a transposed version of <code>input</code>. The given dimensions <code>dim0</code> and <code>dim1</code> are swapped. </p>
+<p>Therefore, like the examples below, <code>x.transpose(0, 1)</code> and <code>x.transpose(1, 0)</code> are same. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"><span class="built_in">print</span>(x) <span class="comment"># shape: torch.Size([2, 3])</span></span><br><span class="line"><span class="built_in">print</span>(x.transpose(<span class="number">0</span>, <span class="number">1</span>)) <span class="comment"># shape: torch.Size([3, 2])</span></span><br><span class="line"><span class="built_in">print</span>(x.transpose(<span class="number">1</span>, <span class="number">0</span>)) <span class="comment"># shape: torch.Size([3, 2])</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">y = torch.randn(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(y) <span class="comment"># shape: torch.Size([2, 3, 4])</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(y.transpose(<span class="number">0</span>, <span class="number">1</span>)) <span class="comment"># shape: torch.Size([3, 2, 4])</span></span><br><span class="line"><span class="built_in">print</span>(y.transpose(<span class="number">1</span>, <span class="number">0</span>)) <span class="comment"># shape: torch.Size([3, 2, 4])</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(y.transpose(<span class="number">0</span>, <span class="number">2</span>)) <span class="comment"># shape: torch.Size([4, 3, 2])</span></span><br><span class="line"><span class="built_in">print</span>(y.transpose(<span class="number">2</span>, <span class="number">0</span>)) <span class="comment"># shape: torch.Size([4, 3, 2])</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="torch-Tensor-permute"><a href="#torch-Tensor-permute" class="headerlink" title="torch.Tensor.permute"></a>torch.Tensor.permute</h2><p><code>torch.Tensor.permute(dims) -&gt; Tensor</code></p>
+<p><code>torch.permute(input, dims) -&gt; Tensor</code></p>
+<p>This function reorder the dimensions. See the example below. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">y = torch.randn(<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>) <span class="comment"># Shape: torch.Size([2, 3, 4])</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(y.permute(<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>)) <span class="comment"># Shape: torch.Size([2, 3, 4])</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(y.permute(<span class="number">0</span>, <span class="number">2</span>, <span class="number">1</span>)) <span class="comment"># Shape: torch.Size([2, 4, 3])</span></span><br></pre></td></tr></table></figure>
+
+<p>Let’s have a close look to the third line as an example. </p>
+<ul>
+<li><p>The first argument <code>0</code> means that the new tensor’s first dimension is the original dimension at <code>0</code>, so the shape is 2.</p>
+</li>
+<li><p>The second argument <code>2</code> means that the new tensor’s second dimension is the original dimension at <code>2</code>, so the shape is 4. </p>
+</li>
+<li><p>The third argument <code>1</code> means that the new tensor’s third dimension is the original dimension at <code>1</code>, so the shape is 3.</p>
+</li>
+</ul>
+<p>Finally, the result shape is <code>torch.Size([2, 4, 3])</code>. </p>
+<h2 id="torch-Tensor-view-x2F-torch-Tensor-reshape"><a href="#torch-Tensor-view-x2F-torch-Tensor-reshape" class="headerlink" title="torch.Tensor.view &#x2F; torch.Tensor.reshape"></a>torch.Tensor.view &#x2F; torch.Tensor.reshape</h2><p><code>Tensor.view(*shape) -&gt; Tensor</code></p>
+<p><code>Tensor.reshape(*shape) -&gt; Tensor</code></p>
+<p>Reshape the Tensor. For function <code>view()</code>, if the <code>shape</code> satisfies some conditions (see <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.Tensor.view.html">here</a>), deep copy can be avoided. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">4</span>, <span class="number">3</span>)</span><br><span class="line"><span class="built_in">print</span>(x) <span class="comment"># Shape: torch.Size([4, 3])</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(x.reshape(<span class="number">3</span>, <span class="number">4</span>)) <span class="comment"># Shape: torch.Size([3, 4])</span></span><br><span class="line"><span class="built_in">print</span>(x.reshape(-<span class="number">1</span>, <span class="number">4</span>)) <span class="comment"># Shape: torch.Size([3, 4])</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">4</span>, <span class="number">3</span>)</span><br><span class="line"><span class="built_in">print</span>(x) <span class="comment"># Shape: torch.Size([4, 3])</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(x.view(<span class="number">3</span>, <span class="number">4</span>)) <span class="comment"># Shape: torch.Size([3, 4])</span></span><br><span class="line"><span class="built_in">print</span>(x.view(-<span class="number">1</span>, <span class="number">4</span>)) <span class="comment"># Shape: torch.Size([3, 4])</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="torch-cat"><a href="#torch-cat" class="headerlink" title="torch.cat"></a>torch.cat</h2><p><code>torch.cat(tensors, dim=0, out=None) -&gt; Tensor</code></p>
+<p>Concatenates the given sequence of <code>tensors</code> in the given dimension. All tensors must either have the same shape (except in the concatenating dimension) or be empty. For how to determine the <code>dim</code>, please refer to my </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"><span class="built_in">print</span>(x) <span class="comment"># Shape: torch.Size([2, 3])</span></span><br><span class="line"></span><br><span class="line">y = torch.randn(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"><span class="built_in">print</span>(y) <span class="comment"># Shape: torch.Size([2, 3])</span></span><br><span class="line"></span><br><span class="line">z = torch.cat((x, y), dim=<span class="number">0</span>)</span><br><span class="line"><span class="built_in">print</span>(z) <span class="comment"># Shape: torch.Size([4, 3]) [2+2, 3]</span></span><br><span class="line"></span><br><span class="line">z = torch.cat((x, y), dim=<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(z) <span class="comment"># Shape: torch.Size([2, 6]) [2, 3+3]</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="torch-stack"><a href="#torch-stack" class="headerlink" title="torch.stack"></a>torch.stack</h2><p><code>torch.stack(tensors, dim=0, out=None) -&gt; Tensor</code></p>
+<p>Concatenates a sequence of tensors along a new dimension. See example below. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">2</span>, <span class="number">3</span>) <span class="comment"># Shape: torch.Size([2, 3])</span></span><br><span class="line">y = torch.randn(<span class="number">2</span>, <span class="number">3</span>) <span class="comment"># Shape: torch.Size([2, 3])</span></span><br><span class="line"></span><br><span class="line">z = torch.stack((x, y), dim=<span class="number">0</span>)</span><br><span class="line"><span class="built_in">print</span>(z) <span class="comment"># Shape: torch.Size([*2, 2, 3]) The first 2 is the new dimension</span></span><br><span class="line"></span><br><span class="line">z = torch.stack((x, y), dim=<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(z) <span class="comment"># Shape: torch.Size([2, *2, 3]) The second 2 is the new dimension</span></span><br><span class="line"></span><br><span class="line">z = torch.stack((x, y), dim=<span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(z) <span class="comment"># Shape: torch.Size([2, 3, *2]) The last 2 is the new dimension</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="torch-vstack-x2F-hstack"><a href="#torch-vstack-x2F-hstack" class="headerlink" title="torch.vstack&#x2F;hstack"></a>torch.vstack&#x2F;hstack</h2><p><code>torch.vstack(...)</code> is stacking the tensors vertically, which is equivalent to <code>torch.cat(..., dim=0)</code>. </p>
+<p> <code>torch.hstack(...)</code> is stacking the tensors horizontally, which is equivalent to <code>torch.cat(..., dim=1)</code>. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">2</span>, <span class="number">3</span>) <span class="comment"># Shape: torch.Size([2, 3])</span></span><br><span class="line">y = torch.randn(<span class="number">2</span>, <span class="number">3</span>) <span class="comment"># Shape: torch.Size([2, 3])</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> torch.vstack((x, y)).shape == torch.cat((x, y), dim=<span class="number">0</span>).shape</span><br><span class="line"><span class="keyword">assert</span> torch.hstack((x, y)).shape == torch.cat((x, y), dim=<span class="number">1</span>).shape</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="torch-split"><a href="#torch-split" class="headerlink" title="torch.split"></a>torch.split</h2><p><code>torch.split(tensor, split_size_or_sections, dim=0)</code></p>
+<ul>
+<li>If <code>split_size_or_sections</code> is an integer, then tensor will be split into equally sized chunks (if possible, ptherwise, last would be smaller).</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">4</span>, <span class="number">3</span>) <span class="comment"># Shape: torch.Size([4, 3])</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(torch.split(x, <span class="number">2</span>, dim=<span class="number">0</span>)) <span class="comment"># 2-item tuple, each Shape: (2, 3)</span></span><br><span class="line"><span class="built_in">print</span>(torch.split(x, <span class="number">1</span>, dim=<span class="number">1</span>)) <span class="comment"># 3-item tuple, each Shape: (4, 1)</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>If <code>split_size_or_sections</code> is a list, then tensor will be split into <code>len(split_size_or_sections)</code> chunks with sizes in <code>dim</code> according to <code>split_size_or_sections</code>.</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">4</span>, <span class="number">3</span>) <span class="comment"># Shape: torch.Size([4, 3])</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(torch.split(x, (<span class="number">1</span>, <span class="number">3</span>), dim=<span class="number">0</span>)) </span><br><span class="line"><span class="comment"># 2-item tuple, each Shape: (1, 3) and (3, 3)</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(torch.split(x, (<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>), dim=<span class="number">1</span>)) </span><br><span class="line"><span class="comment"># 3-item tuple, each Shape: (4, 1) and (4, 1) and (4, 1)</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="torch-flatten"><a href="#torch-flatten" class="headerlink" title="torch.flatten"></a>torch.flatten</h2><p><code>torch.flatten(input, start_dim=0, end_dim=-1) -&gt; Tensor</code></p>
+<p>flatten the given dimension from <code>start_dim</code> to <code>end_dim</code>. This is especially useful when converting a 3D (image) tensor to a linear vector.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">2</span>, <span class="number">4</span>, <span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span>(x) <span class="comment"># Shape: torch.Size([2, 4, 4])</span></span><br><span class="line"></span><br><span class="line">flattened = torch.flatten(x, start_dim=<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(flattened) <span class="comment"># Shape: torch.Size([2, 16])</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/05/30/CMake-QRH/" rel="prev" title="CMake Quick Reference">
+      <i class="fa fa-chevron-left"></i> CMake Quick Reference
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PyTorch-Practical-Hand-Written-Modules-Basics-3%E2%80%93Tensor-wise-operations"><span class="nav-number">1.</span> <span class="nav-text">PyTorch Practical Hand-Written Modules Basics 3–Tensor-wise operations</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-Tensor-expand"><span class="nav-number">1.1.</span> <span class="nav-text">torch.Tensor.expand</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-Tensor-repeat"><span class="nav-number">1.2.</span> <span class="nav-text">torch.Tensor.repeat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-Tensor-transpose"><span class="nav-number">1.3.</span> <span class="nav-text">torch.Tensor.transpose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-Tensor-permute"><span class="nav-number">1.4.</span> <span class="nav-text">torch.Tensor.permute</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-Tensor-view-x2F-torch-Tensor-reshape"><span class="nav-number">1.5.</span> <span class="nav-text">torch.Tensor.view &#x2F; torch.Tensor.reshape</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-cat"><span class="nav-number">1.6.</span> <span class="nav-text">torch.cat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-stack"><span class="nav-number">1.7.</span> <span class="nav-text">torch.stack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-vstack-x2F-hstack"><span class="nav-number">1.8.</span> <span class="nav-text">torch.vstack&#x2F;hstack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-split"><span class="nav-number">1.9.</span> <span class="nav-text">torch.split</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-flatten"><span class="nav-number">1.10.</span> <span class="nav-text">torch.flatten</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Future</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Future</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
