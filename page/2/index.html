@@ -179,6 +179,141 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/27/pytorch-C-packages-installation-failed-problems/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/04/27/pytorch-C-packages-installation-failed-problems/" class="post-title-link" itemprop="url">Pytorch C packages CUDA Installation Mismatch Problems</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-04-27 10:10:13" itemprop="dateCreated datePublished" datetime="2023-04-27T10:10:13+08:00">2023-04-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-05-27 16:43:07" itemprop="dateModified" datetime="2023-05-27T16:43:07+08:00">2023-05-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Problem-Solving/" itemprop="url" rel="index"><span itemprop="name">Problem Solving</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>When installing some non-pip installed packages, especially in the deep learning field, we may use <code>python setup.py build install</code> to build the packages locally. Then, some typical problems may happen in this stage. An CUDA mismatch error may be:</p>
+<p><img src="/2023/04/27/pytorch-C-packages-installation-failed-problems/problem.png" alt="problem"></p>
+<p>This error can be caused for many reasons. I just report my situation and how do I solve it. </p>
+<h2 id="Why-this-happen"><a href="#Why-this-happen" class="headerlink" title="Why this happen?"></a>Why this happen?</h2><p>Some packages need to be compiled by the local CUDA compilers and to be installed locally. Then, those packages cooperate with the pytorch in the conda environment. Therefore, they need to be a compiled with the same version (at least same major version, like <code>cuda 11.x</code>) CUDA compilers. </p>
+<ul>
+<li>First, we inspect the conda environment’s pytorch’s CUDA version by:</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> torch</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>torch.version.cuda</span><br><span class="line"><span class="string">&#x27;11.3&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>This means that our pytorch is compiled by cuda <code>11.3</code>. (Same as the error message above!)</p>
+<ul>
+<li>Then, we inspect the system’s CUDA compiler version by:</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">nvcc -V</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">nvcc: NVIDIA (R) Cuda compiler driver</span><br><span class="line">Copyright (c) 2005-2019 NVIDIA Corporation</span><br><span class="line">Built on Wed_Oct_23_19:24:38_PDT_2019</span><br><span class="line">Cuda compilation tools, release 10.2, V10.2.89</span><br></pre></td></tr></table></figure>
+
+<p>This means that our system’s current CUDA version is <code>10.2</code>. (Same as the error message above!)</p>
+<p>Therefore, the compiler version going to compile the package is NOT consistent with the compiler compiled pytorch. The Error is reported.</p>
+<h2 id="How-to-solve-it"><a href="#How-to-solve-it" class="headerlink" title="How to solve it?"></a>How to solve it?</h2><p>So to solve this problem, the easiest way is to install a new CUDA with corresponding version. (In my test, I don’t need to install an exact <code>11.3</code> version, only an <code>11.1</code> version is OK)</p>
+<ol>
+<li>Install the CUDA with specific version. Many installation tutorials can be found online (skipped)</li>
+<li>Export the new path in <code>~/.bashrc</code>: Add following command at the end of <code>~/.bashrc</code>:</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/usr/local/cuda-&lt;YOUR VERSION&gt;/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/local/cuda-&lt;YOUR VERSION&gt;/lib64:<span class="variable">$&#123;LD_LIBRARY_PATH&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>(Remember to change &lt;YOUR VERSION&gt; above to your CUDA version!!)</p>
+<ol start="3">
+<li>Open a new terminal, type in:</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">nvcc -V</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">nvcc: NVIDIA (R) Cuda compiler driver</span><br><span class="line">Copyright (c) 2005-2020 NVIDIA Corporation</span><br><span class="line">Built on Mon_Oct_12_20:09:46_PDT_2020</span><br><span class="line">Cuda compilation tools, release 11.1, V11.1.105</span><br><span class="line">Build cuda_11.1.TC455_06.29190527_0</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>Then it should work! Go to the installation directory, and then switch to the target conda environment, and install!</li>
+</ol>
+<h2 id="Common-techniques-for-debugging"><a href="#Common-techniques-for-debugging" class="headerlink" title="Common techniques for debugging"></a>Common techniques for debugging</h2><ul>
+<li>Inspecting the pytorch’s CUDA version:</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> torch</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>torch.version.cuda</span><br><span class="line"><span class="string">&#x27;11.3&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Inspecting the system’s CUDA compiler version:</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvcc -V</span><br></pre></td></tr></table></figure>
+
+<p>or</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> torch.utils.cpp_extension <span class="keyword">import</span> CUDA_HOME</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>CUDA_HOME</span><br><span class="line"><span class="string">&#x27;/usr/local/cuda-11.1&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Change the <code>$PATH</code> variable, so the new CUDA can be found:</li>
+</ul>
+<p>Add following command at the end of <code>~/.bashrc</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/usr/local/cuda-11.1/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
+
+<p>REMEMBER to change the CUDA version to your version.</p>
+<ul>
+<li>Delete the cached installing data</li>
+</ul>
+<p>In some situation, when we modified the compiler, we shall build the package from scratch. </p>
+<p><strong>Remove</strong> any of the build, cached, dist, temp directory! E.g., the <code>build</code> and <code>DCNv3.egg-info</code> and <code>dist</code> directory below.</p>
+<img src="/2023/04/27/pytorch-C-packages-installation-failed-problems/package.png" alt="package" style="zoom:60%;"> 
+
+<p>(But be careful that don’t remove the source code!!!)</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/04/signal-system-with-python/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1134,7 +1269,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
