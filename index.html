@@ -680,7 +680,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-31 09:25:56" itemprop="dateModified" datetime="2023-05-31T09:25:56+08:00">2023-05-31</time>
+                <time title="Modified: 2023-07-08 18:32:17" itemprop="dateModified" datetime="2023-07-08T18:32:17+08:00">2023-07-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -744,6 +744,11 @@
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sub-directory</span></span><br><span class="line"><span class="keyword">target_include_directories</span>(hellolib PUBLIC .)</span><br></pre></td></tr></table></figure>
 
 <p>If we change the <code>PUBLIC</code> to <code>PRIVATE</code>, then the further dependent would not have the effects.</p>
+<h2 id="Link-existing-library"><a href="#Link-existing-library" class="headerlink" title="Link existing library"></a>Link existing library</h2><p>For example, use the following code to link the <code>OpenMP</code> library. </p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find_package</span>(OpenMP REQUIRD)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(hellolib PUBLIC OpenMP::OpenMP_CXX)</span><br></pre></td></tr></table></figure>
+
+
+
 <h2 id="Further-options"><a href="#Further-options" class="headerlink" title="Further options"></a>Further options</h2><ul>
 <li>Set C++ standard:</li>
 </ul>
@@ -759,10 +764,17 @@
 </ul>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global</span></span><br><span class="line"><span class="keyword">add_compile_options</span>(-O2)</span><br><span class="line"><span class="comment"># special target</span></span><br><span class="line"><span class="keyword">target_compile_options</span>(a.out PUBLIC -O0)</span><br><span class="line"></span><br><span class="line"><span class="comment"># They have the same effect as</span></span><br><span class="line">g++ xx.cpp -O0 <span class="comment"># (add a `-O0` option in the compilation)</span></span><br></pre></td></tr></table></figure>
 
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set SIMD and fast-math</span></span><br><span class="line"><span class="keyword">target_compile_options</span>(a.out PUBLIC -ffast-<span class="keyword">math</span> -march=native)</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li>Set global &#x2F; special include directories:</li>
 </ul>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global</span></span><br><span class="line"><span class="keyword">include_directories</span>(hellolib)</span><br><span class="line"><span class="comment"># special target</span></span><br><span class="line"><span class="keyword">target_include_directories</span>(a.out PUBLIC hellolib)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Set release type (Default type is DEBUG):</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_BUILD_TYPE Release)</span><br></pre></td></tr></table></figure>
 
 
 
