@@ -21,15 +21,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="PyTorch Practical Hand-Written Modules Basics 4–Hand-written modules basicsAfter three articles talking about tensors, in this article, we will talk about something to the PyTorch Hand Written Modules">
+  <meta name="description" content="After three articles talking about tensors, in this article, we will talk about something to the PyTorch Hand Written Modules Basics. You can see the outline on the left sidebar. Basic structureThe mo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PyTorch Practical Hand-Written Modules Basics 4--Hand-written modules basics">
 <meta property="og:url" content="http://example.com/2023/06/18/Pytorch-Practical-Basics-4/index.html">
 <meta property="og:site_name" content="Future&#39;s blog">
-<meta property="og:description" content="PyTorch Practical Hand-Written Modules Basics 4–Hand-written modules basicsAfter three articles talking about tensors, in this article, we will talk about something to the PyTorch Hand Written Modules">
+<meta property="og:description" content="After three articles talking about tensors, in this article, we will talk about something to the PyTorch Hand Written Modules Basics. You can see the outline on the left sidebar. Basic structureThe mo">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-06-18T02:01:32.000Z">
-<meta property="article:modified_time" content="2023-06-18T12:23:22.893Z">
+<meta property="article:modified_time" content="2023-07-09T01:49:04.295Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 
@@ -207,10 +207,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-06-18 10:01:32 / Modified: 20:23:22" itemprop="dateCreated datePublished" datetime="2023-06-18T10:01:32+08:00">2023-06-18</time>
+              <time title="Created: 2023-06-18 10:01:32" itemprop="dateCreated datePublished" datetime="2023-06-18T10:01:32+08:00">2023-06-18</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-07-09 09:49:04" itemprop="dateModified" datetime="2023-07-09T09:49:04+08:00">2023-07-09</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -232,7 +238,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="PyTorch-Practical-Hand-Written-Modules-Basics-4–Hand-written-modules-basics"><a href="#PyTorch-Practical-Hand-Written-Modules-Basics-4–Hand-written-modules-basics" class="headerlink" title="PyTorch Practical Hand-Written Modules Basics 4–Hand-written modules basics"></a>PyTorch Practical Hand-Written Modules Basics 4–Hand-written modules basics</h1><p>After three articles talking about tensors, in this article, we will talk about something to the PyTorch Hand Written Modules Basics. You can see the outline on the left sidebar.</p>
+        <p>After three articles talking about tensors, in this article, we will talk about something to the PyTorch Hand Written Modules Basics. You can see the outline on the left sidebar.</p>
 <h2 id="Basic-structure"><a href="#Basic-structure" class="headerlink" title="Basic structure"></a>Basic structure</h2><p>The model must inherit the <code>nn.Module</code> class. Basically, according to the <a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/beginner/nn_tutorial.html#closing-thoughts">official tutorial</a>, <code>nn.Module</code> “creates a callable which behaves like a function, but can also contain state(such as neural net layer weights).”</p>
 <p>The following is an example from the <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module">docs</a>:</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Model</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">1</span>, <span class="number">20</span>, <span class="number">5</span>)</span><br><span class="line">        self.conv2 = nn.Conv2d(<span class="number">20</span>, <span class="number">20</span>, <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = F.relu(self.conv1(x))</span><br><span class="line">        <span class="keyword">return</span> F.relu(self.conv2(x))</span><br></pre></td></tr></table></figure>
@@ -345,7 +351,10 @@
     <a href="/2023/06/17/Pytorch-Practical-Basics-3/" rel="prev" title="PyTorch Practical Hand-Written Modules Basics 3--Tensor-wise operations">
       <i class="fa fa-chevron-left"></i> PyTorch Practical Hand-Written Modules Basics 3--Tensor-wise operations
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2023/07/09/Pytorch-Practical-Basics-5/" rel="next" title="PyTorch Practical Hand-Written Modules Basics 5--Implement a ResNet">
+      PyTorch Practical Hand-Written Modules Basics 5--Implement a ResNet <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -404,7 +413,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PyTorch-Practical-Hand-Written-Modules-Basics-4%E2%80%93Hand-written-modules-basics"><span class="nav-number">1.</span> <span class="nav-text">PyTorch Practical Hand-Written Modules Basics 4–Hand-written modules basics</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic-structure"><span class="nav-number">1.1.</span> <span class="nav-text">Basic structure</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#load-x2F-store-the-model-state-dict"><span class="nav-number">1.2.</span> <span class="nav-text">load &#x2F; store the model.state_dict()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Common-Submodules"><span class="nav-number">1.3.</span> <span class="nav-text">Common Submodules</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#clone-the-module"><span class="nav-number">1.3.1.</span> <span class="nav-text">clone the module</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nn-ModuleList"><span class="nav-number">1.3.2.</span> <span class="nav-text">nn.ModuleList</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nn-Parameter"><span class="nav-number">1.3.3.</span> <span class="nav-text">nn.Parameter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nn-Sequential"><span class="nav-number">1.3.4.</span> <span class="nav-text">nn.Sequential</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#model-apply-amp-weight-init"><span class="nav-number">1.4.</span> <span class="nav-text">model.apply() &amp; weight init</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#model-eval-x2F-model-train-x2F-training"><span class="nav-number">1.5.</span> <span class="nav-text">model.eval() &#x2F; model.train() &#x2F; .training</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic-structure"><span class="nav-number">1.</span> <span class="nav-text">Basic structure</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#load-x2F-store-the-model-state-dict"><span class="nav-number">2.</span> <span class="nav-text">load &#x2F; store the model.state_dict()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Common-Submodules"><span class="nav-number">3.</span> <span class="nav-text">Common Submodules</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#clone-the-module"><span class="nav-number">3.1.</span> <span class="nav-text">clone the module</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nn-ModuleList"><span class="nav-number">3.2.</span> <span class="nav-text">nn.ModuleList</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nn-Parameter"><span class="nav-number">3.3.</span> <span class="nav-text">nn.Parameter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nn-Sequential"><span class="nav-number">3.4.</span> <span class="nav-text">nn.Sequential</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#model-apply-amp-weight-init"><span class="nav-number">4.</span> <span class="nav-text">model.apply() &amp; weight init</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#model-eval-x2F-model-train-x2F-training"><span class="nav-number">5.</span> <span class="nav-text">model.eval() &#x2F; model.train() &#x2F; .training</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -418,7 +427,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

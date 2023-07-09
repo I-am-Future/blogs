@@ -62,9 +62,18 @@
 ]]></content>
   </entry>
   <entry>
+    <title>PyTorch Practical Hand-Written Modules Basics 5--Implement a ResNet</title>
+    <url>/2023/07/09/Pytorch-Practical-Basics-5/</url>
+    <content><![CDATA[<p>In this section, we will implement a ResNet based on the </p>
+]]></content>
+      <categories>
+        <category>Deep Learning</category>
+      </categories>
+  </entry>
+  <entry>
     <title>PyTorch Practical Hand-Written Modules Basics 4--Hand-written modules basics</title>
     <url>/2023/06/18/Pytorch-Practical-Basics-4/</url>
-    <content><![CDATA[<h1 id="PyTorch-Practical-Hand-Written-Modules-Basics-4–Hand-written-modules-basics"><a href="#PyTorch-Practical-Hand-Written-Modules-Basics-4–Hand-written-modules-basics" class="headerlink" title="PyTorch Practical Hand-Written Modules Basics 4–Hand-written modules basics"></a>PyTorch Practical Hand-Written Modules Basics 4–Hand-written modules basics</h1><p>After three articles talking about tensors, in this article, we will talk about something to the PyTorch Hand Written Modules Basics. You can see the outline on the left sidebar.</p>
+    <content><![CDATA[<p>After three articles talking about tensors, in this article, we will talk about something to the PyTorch Hand Written Modules Basics. You can see the outline on the left sidebar.</p>
 <h2 id="Basic-structure"><a href="#Basic-structure" class="headerlink" title="Basic structure"></a>Basic structure</h2><p>The model must inherit the <code>nn.Module</code> class. Basically, according to the <a href="https://pytorch.org/tutorials/beginner/nn_tutorial.html#closing-thoughts">official tutorial</a>, <code>nn.Module</code> “creates a callable which behaves like a function, but can also contain state(such as neural net layer weights).”</p>
 <p>The following is an example from the <a href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module">docs</a>:</p>
 <figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Model</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">1</span>, <span class="number">20</span>, <span class="number">5</span>)</span><br><span class="line">        self.conv2 = nn.Conv2d(<span class="number">20</span>, <span class="number">20</span>, <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = F.relu(self.conv1(x))</span><br><span class="line">        <span class="keyword">return</span> F.relu(self.conv2(x))</span><br></pre></td></tr></table></figure>
@@ -167,7 +176,7 @@
   <entry>
     <title>PyTorch Practical Hand-Written Modules Basics 3--Tensor-wise operations</title>
     <url>/2023/06/17/Pytorch-Practical-Basics-3/</url>
-    <content><![CDATA[<h1 id="PyTorch-Practical-Hand-Written-Modules-Basics-3–Tensor-wise-operations"><a href="#PyTorch-Practical-Hand-Written-Modules-Basics-3–Tensor-wise-operations" class="headerlink" title="PyTorch Practical Hand-Written Modules Basics 3–Tensor-wise operations"></a>PyTorch Practical Hand-Written Modules Basics 3–Tensor-wise operations</h1><p>In this section we will talk about some PyTorch functions that operates the tensors. </p>
+    <content><![CDATA[<p>In this section we will talk about some PyTorch functions that operates the tensors. </p>
 <h2 id="torch-Tensor-expand"><a href="#torch-Tensor-expand" class="headerlink" title="torch.Tensor.expand"></a>torch.Tensor.expand</h2><p>Signature: <code>Tensor.expand(*sizes) -&gt; Tensor</code></p>
 <p>The <code>expand</code> function returns a new view of the <code>self</code> tensor, with singleton dimensions expanded to a larger size. The passing parameter indicates the destination size. (“singleton dimensions” means the dimension with shape <code>1</code>)</p>
 <p><strong>Basic Usage</strong></p>
