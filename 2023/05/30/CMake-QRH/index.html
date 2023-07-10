@@ -21,15 +21,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Learned and made up from video and code. Prerequisite: basic knowledge in C&#x2F;C++. BasicSee code here A project root directory must contain a file called CMakeLists.txt, describing the build proced">
+  <meta name="description" content="Learned and made up from video and code. Prerequisite: basic knowledge in C&#x2F;C++. Compile a Basic ProgramSee code here A project root directory must contain a file called CMakeLists.txt, describin">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CMake Quick Reference">
 <meta property="og:url" content="http://example.com/2023/05/30/CMake-QRH/index.html">
 <meta property="og:site_name" content="Future&#39;s blog">
-<meta property="og:description" content="Learned and made up from video and code. Prerequisite: basic knowledge in C&#x2F;C++. BasicSee code here A project root directory must contain a file called CMakeLists.txt, describing the build proced">
+<meta property="og:description" content="Learned and made up from video and code. Prerequisite: basic knowledge in C&#x2F;C++. Compile a Basic ProgramSee code here A project root directory must contain a file called CMakeLists.txt, describin">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-05-30T02:28:18.000Z">
-<meta property="article:modified_time" content="2023-07-08T10:32:17.402Z">
+<meta property="article:modified_time" content="2023-07-10T09:41:24.506Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 
@@ -215,7 +215,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-07-08 18:32:17" itemprop="dateModified" datetime="2023-07-08T18:32:17+08:00">2023-07-08</time>
+                <time title="Modified: 2023-07-10 17:41:24" itemprop="dateModified" datetime="2023-07-10T17:41:24+08:00">2023-07-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -240,7 +240,7 @@
       
         <p>Learned and made up from <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1fa411r7zp">video</a> and <a target="_blank" rel="noopener" href="https://github.com/parallel101/course">code</a>.</p>
 <p>Prerequisite: basic knowledge in C&#x2F;C++.</p>
-<h2 id="Basic"><a href="#Basic" class="headerlink" title="Basic"></a>Basic</h2><p><a target="_blank" rel="noopener" href="https://github.com/parallel101/course/tree/master/01/05">See code here</a></p>
+<h2 id="Compile-a-Basic-Program"><a href="#Compile-a-Basic-Program" class="headerlink" title="Compile a Basic Program"></a>Compile a Basic Program</h2><p><a target="_blank" rel="noopener" href="https://github.com/parallel101/course/tree/master/01/05">See code here</a></p>
 <p>A project root directory must contain a file called <code>CMakeLists.txt</code>, describing the build procedure of the project. </p>
 <p>A typical simple <code>CMakeLists.txt</code> contains the following (assuming we have two source files in the current directory, <code>main.cpp</code> and <code>hello.cpp</code>):</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.12</span>) <span class="comment"># describe the minimum cmake version</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">project</span>(hellocmake LANGUAGES CXX)    <span class="comment"># describe the project name, and lan</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp hello.cpp)</span><br></pre></td></tr></table></figure>
@@ -280,11 +280,19 @@
 
 <p>If we change the <code>PUBLIC</code> to <code>PRIVATE</code>, then the further dependent would not have the effects.</p>
 <h2 id="Link-existing-library"><a href="#Link-existing-library" class="headerlink" title="Link existing library"></a>Link existing library</h2><p>For example, use the following code to link the <code>OpenMP</code> library. </p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find_package</span>(OpenMP REQUIRD)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(hellolib PUBLIC OpenMP::OpenMP_CXX)</span><br></pre></td></tr></table></figure>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find_package</span>(OpenMP REQUIRD)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(main PUBLIC OpenMP::OpenMP_CXX)</span><br></pre></td></tr></table></figure>
+
+<p>Use the following code to link the <code>OpenMP</code> library. </p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find_package</span>(OpenCV REQUIRED)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(main <span class="variable">$&#123;OpenCV_LIBS&#125;</span>)</span><br></pre></td></tr></table></figure>
 
 
 
 <h2 id="Further-options"><a href="#Further-options" class="headerlink" title="Further options"></a>Further options</h2><ul>
+<li>Set release type (Default type is DEBUG):</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_BUILD_TYPE Release)</span><br></pre></td></tr></table></figure>
+
+<ul>
 <li>Set C++ standard:</li>
 </ul>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span>(CMAKE_CXX_STANDARD <span class="number">17</span>)</span><br></pre></td></tr></table></figure>
@@ -292,7 +300,7 @@
 <ul>
 <li>Set global &#x2F; special macros:</li>
 </ul>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global</span></span><br><span class="line"><span class="keyword">add_definitions</span>(-DDEBUG)</span><br><span class="line"><span class="keyword">add_definitions</span>(DEBUG)</span><br><span class="line"><span class="comment"># special target</span></span><br><span class="line"><span class="keyword">target_compile_definitions</span>(a.out PUBLIC -DDEBUG)</span><br><span class="line"><span class="keyword">target_compile_definitions</span>(a.out PUBLIC DEBUG)</span><br><span class="line"></span><br><span class="line"><span class="comment"># They have the same effect as</span></span><br><span class="line">g++ xx.cpp -DDEBUG <span class="comment"># (define a `DEBUG` macro to the file)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global</span></span><br><span class="line"><span class="keyword">add_definitions</span>(-DDEBUG) <span class="comment"># -D is not necessary</span></span><br><span class="line"><span class="keyword">add_definitions</span>(DEBUG)</span><br><span class="line"><span class="comment"># special target</span></span><br><span class="line"><span class="keyword">target_compile_definitions</span>(a.out PUBLIC -DDEBUG)</span><br><span class="line"><span class="keyword">target_compile_definitions</span>(a.out PUBLIC DEBUG)</span><br><span class="line"></span><br><span class="line"><span class="comment"># They have the same effect as</span></span><br><span class="line">g++ xx.cpp -DDEBUG <span class="comment"># (define a `DEBUG` macro to the file)</span></span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>Set global &#x2F; special compiling options:</li>
@@ -306,15 +314,11 @@
 </ul>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global</span></span><br><span class="line"><span class="keyword">include_directories</span>(hellolib)</span><br><span class="line"><span class="comment"># special target</span></span><br><span class="line"><span class="keyword">target_include_directories</span>(a.out PUBLIC hellolib)</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>Set release type (Default type is DEBUG):</li>
-</ul>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_BUILD_TYPE Release)</span><br></pre></td></tr></table></figure>
 
 
 
 <h2 id="CUDA-with-CMake"><a href="#CUDA-with-CMake" class="headerlink" title="CUDA with CMake"></a>CUDA with CMake</h2><p>A common template can be:</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CMAKE_MINIMUM_REQUIRED</span>(VERSION <span class="number">3.12</span>)</span><br><span class="line"><span class="keyword">PROJECT</span>(adder)</span><br><span class="line"></span><br><span class="line"><span class="keyword">SET</span>(CMAKE_CXX_STANDARD <span class="number">14</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">FIND_PACKAGE</span>(CUDA REQUIRED)</span><br><span class="line"></span><br><span class="line">CUDA_ADD_EXECUTABLE(adder main.cu)</span><br><span class="line"><span class="keyword">TARGET_LINK_LIBRARIES</span>(adder)</span><br></pre></td></tr></table></figure>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.10</span>)</span><br><span class="line"><span class="keyword">project</span>(main LANGUAGES CUDA CXX)</span><br><span class="line"></span><br><span class="line"><span class="keyword">SET</span>(CMAKE_CXX_STANDARD <span class="number">17</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(main main.cu)</span><br><span class="line"><span class="keyword">set_target_properties</span>(main PROPERTIES CUDA_ARCHITECTURES <span class="string">&quot;75&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
     </div>
@@ -396,7 +400,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic"><span class="nav-number">1.</span> <span class="nav-text">Basic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compile-a-Library-amp-Link-it"><span class="nav-number">2.</span> <span class="nav-text">Compile a Library &amp; Link it</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compile-a-subdirectory"><span class="nav-number">3.</span> <span class="nav-text">Compile a subdirectory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Link-existing-library"><span class="nav-number">4.</span> <span class="nav-text">Link existing library</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Further-options"><span class="nav-number">5.</span> <span class="nav-text">Further options</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CUDA-with-CMake"><span class="nav-number">6.</span> <span class="nav-text">CUDA with CMake</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Compile-a-Basic-Program"><span class="nav-number">1.</span> <span class="nav-text">Compile a Basic Program</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compile-a-Library-amp-Link-it"><span class="nav-number">2.</span> <span class="nav-text">Compile a Library &amp; Link it</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compile-a-subdirectory"><span class="nav-number">3.</span> <span class="nav-text">Compile a subdirectory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Link-existing-library"><span class="nav-number">4.</span> <span class="nav-text">Link existing library</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Further-options"><span class="nav-number">5.</span> <span class="nav-text">Further options</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CUDA-with-CMake"><span class="nav-number">6.</span> <span class="nav-text">CUDA with CMake</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
