@@ -328,10 +328,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-07-09 09:47:01 / Modified: 11:38:56" itemprop="dateCreated datePublished" datetime="2023-07-09T09:47:01+08:00">2023-07-09</time>
+              <time title="Created: 2023-07-09 09:47:01" itemprop="dateCreated datePublished" datetime="2023-07-09T09:47:01+08:00">2023-07-09</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-07-10 21:01:57" itemprop="dateModified" datetime="2023-07-10T21:01:57+08:00">2023-07-10</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -353,9 +359,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>In this section, we’ll utilize knowledge we learnt from the last section <a href>here</a>. We will implement a ResNet Network (<a href>paper</a>). </p>
-<p>Note that Our implementation is a simper version of the official <code>torchvision</code> implementation. (That is, we only implement the key structure, and the random weight init). </p>
-<h2 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h2><h2 id="Basic-Block-Implementation"><a href="#Basic-Block-Implementation" class="headerlink" title="Basic Block Implementation"></a>Basic Block Implementation</h2><h2 id="ResNet-Base-Implementation"><a href="#ResNet-Base-Implementation" class="headerlink" title="ResNet Base Implementation"></a>ResNet Base Implementation</h2><h2 id="Encapsulate-to-Constructors"><a href="#Encapsulate-to-Constructors" class="headerlink" title="Encapsulate to Constructors"></a>Encapsulate to Constructors</h2>
+          <p>In this section, we’ll utilize knowledge we learnt from the last section (<a href>see here</a>), to implement a ResNet Network (<a href>paper</a>). </p>
+<p>Note that we follow the original paper’s work. Our implementation is a simper version of the official <code>torchvision</code> implementation. (That is, we only implement the key structure, and the random weight init. We don’t consider dilation or other things). </p>
+<h2 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h2><h2 id="Basic-Block-Implementation"><a href="#Basic-Block-Implementation" class="headerlink" title="Basic Block Implementation"></a>Basic Block Implementation</h2><h2 id="ResNet-Base-Implementation"><a href="#ResNet-Base-Implementation" class="headerlink" title="ResNet Base Implementation"></a>ResNet Base Implementation</h2><h2 id="Encapsulate-the-Constructors"><a href="#Encapsulate-the-Constructors" class="headerlink" title="Encapsulate the Constructors"></a>Encapsulate the Constructors</h2>
       
     </div>
 
@@ -756,7 +762,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-07-10 17:41:24" itemprop="dateModified" datetime="2023-07-10T17:41:24+08:00">2023-07-10</time>
+                <time title="Modified: 2023-07-24 12:00:05" itemprop="dateModified" datetime="2023-07-24T12:00:05+08:00">2023-07-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -831,7 +837,7 @@
 <h2 id="Further-options"><a href="#Further-options" class="headerlink" title="Further options"></a>Further options</h2><ul>
 <li>Set release type (Default type is DEBUG):</li>
 </ul>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_BUILD_TYPE Release)</span><br></pre></td></tr></table></figure>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_BUILD_TYPE Release)</span><br><span class="line"><span class="comment"># Or set it when building</span></span><br><span class="line">cmake --build build --config Release</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>Set C++ standard:</li>

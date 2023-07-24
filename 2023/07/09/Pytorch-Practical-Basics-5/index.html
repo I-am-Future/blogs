@@ -21,15 +21,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="In this section, we’ll utilize knowledge we learnt from the last section here. We will implement a ResNet Network (paper).  Note that Our implementation is a simper version of the official torchvision">
+  <meta name="description" content="In this section, we’ll utilize knowledge we learnt from the last section (see here), to implement a ResNet Network (paper).  Note that we follow the original paper’s work. Our implementation is a simp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PyTorch Practical Hand-Written Modules Basics 5--Implement a ResNet">
 <meta property="og:url" content="http://example.com/2023/07/09/Pytorch-Practical-Basics-5/index.html">
 <meta property="og:site_name" content="Future&#39;s blog">
-<meta property="og:description" content="In this section, we’ll utilize knowledge we learnt from the last section here. We will implement a ResNet Network (paper).  Note that Our implementation is a simper version of the official torchvision">
+<meta property="og:description" content="In this section, we’ll utilize knowledge we learnt from the last section (see here), to implement a ResNet Network (paper).  Note that we follow the original paper’s work. Our implementation is a simp">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-07-09T01:47:01.000Z">
-<meta property="article:modified_time" content="2023-07-09T03:38:56.150Z">
+<meta property="article:modified_time" content="2023-07-10T13:01:57.023Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 
@@ -207,10 +207,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-07-09 09:47:01 / Modified: 11:38:56" itemprop="dateCreated datePublished" datetime="2023-07-09T09:47:01+08:00">2023-07-09</time>
+              <time title="Created: 2023-07-09 09:47:01" itemprop="dateCreated datePublished" datetime="2023-07-09T09:47:01+08:00">2023-07-09</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-07-10 21:01:57" itemprop="dateModified" datetime="2023-07-10T21:01:57+08:00">2023-07-10</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -232,9 +238,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>In this section, we’ll utilize knowledge we learnt from the last section <a href>here</a>. We will implement a ResNet Network (<a href>paper</a>). </p>
-<p>Note that Our implementation is a simper version of the official <code>torchvision</code> implementation. (That is, we only implement the key structure, and the random weight init). </p>
-<h2 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h2><h2 id="Basic-Block-Implementation"><a href="#Basic-Block-Implementation" class="headerlink" title="Basic Block Implementation"></a>Basic Block Implementation</h2><h2 id="ResNet-Base-Implementation"><a href="#ResNet-Base-Implementation" class="headerlink" title="ResNet Base Implementation"></a>ResNet Base Implementation</h2><h2 id="Encapsulate-to-Constructors"><a href="#Encapsulate-to-Constructors" class="headerlink" title="Encapsulate to Constructors"></a>Encapsulate to Constructors</h2>
+        <p>In this section, we’ll utilize knowledge we learnt from the last section (<a href>see here</a>), to implement a ResNet Network (<a href>paper</a>). </p>
+<p>Note that we follow the original paper’s work. Our implementation is a simper version of the official <code>torchvision</code> implementation. (That is, we only implement the key structure, and the random weight init. We don’t consider dilation or other things). </p>
+<h2 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h2><h2 id="Basic-Block-Implementation"><a href="#Basic-Block-Implementation" class="headerlink" title="Basic Block Implementation"></a>Basic Block Implementation</h2><h2 id="ResNet-Base-Implementation"><a href="#ResNet-Base-Implementation" class="headerlink" title="ResNet Base Implementation"></a>ResNet Base Implementation</h2><h2 id="Encapsulate-the-Constructors"><a href="#Encapsulate-the-Constructors" class="headerlink" title="Encapsulate the Constructors"></a>Encapsulate the Constructors</h2>
     </div>
 
     
@@ -311,7 +317,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overall-Structure"><span class="nav-number">1.</span> <span class="nav-text">Overall Structure</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic-Block-Implementation"><span class="nav-number">2.</span> <span class="nav-text">Basic Block Implementation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ResNet-Base-Implementation"><span class="nav-number">3.</span> <span class="nav-text">ResNet Base Implementation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Encapsulate-to-Constructors"><span class="nav-number">4.</span> <span class="nav-text">Encapsulate to Constructors</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Overall-Structure"><span class="nav-number">1.</span> <span class="nav-text">Overall Structure</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic-Block-Implementation"><span class="nav-number">2.</span> <span class="nav-text">Basic Block Implementation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ResNet-Base-Implementation"><span class="nav-number">3.</span> <span class="nav-text">ResNet Base Implementation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Encapsulate-the-Constructors"><span class="nav-number">4.</span> <span class="nav-text">Encapsulate the Constructors</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

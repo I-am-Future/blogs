@@ -29,7 +29,7 @@
 <meta property="og:description" content="Learned and made up from video and code. Prerequisite: basic knowledge in C&#x2F;C++. Compile a Basic ProgramSee code here A project root directory must contain a file called CMakeLists.txt, describin">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-05-30T02:28:18.000Z">
-<meta property="article:modified_time" content="2023-07-10T09:41:24.506Z">
+<meta property="article:modified_time" content="2023-07-24T04:00:05.140Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 
@@ -215,7 +215,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-07-10 17:41:24" itemprop="dateModified" datetime="2023-07-10T17:41:24+08:00">2023-07-10</time>
+                <time title="Modified: 2023-07-24 12:00:05" itemprop="dateModified" datetime="2023-07-24T12:00:05+08:00">2023-07-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -290,7 +290,7 @@
 <h2 id="Further-options"><a href="#Further-options" class="headerlink" title="Further options"></a>Further options</h2><ul>
 <li>Set release type (Default type is DEBUG):</li>
 </ul>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_BUILD_TYPE Release)</span><br></pre></td></tr></table></figure>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_BUILD_TYPE Release)</span><br><span class="line"><span class="comment"># Or set it when building</span></span><br><span class="line">cmake --build build --config Release</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>Set C++ standard:</li>
