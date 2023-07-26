@@ -62,6 +62,36 @@
 ]]></content>
   </entry>
   <entry>
+    <title>An Obscure RuntimeError for CUDA error: out of memory</title>
+    <url>/2023/07/26/An-Obscure-RuntimeError-for-CUDA-error-out-of-memory/</url>
+    <content><![CDATA[<h2 id="Problem"><a href="#Problem" class="headerlink" title="Problem"></a>Problem</h2><p>Today when I was running PyTorch scripts, I met a strange problem: </p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">a = torch.rand(<span class="number">2</span>, <span class="number">2</span>).to(<span class="string">&#x27;cuda:1&#x27;</span>)</span><br><span class="line">......</span><br><span class="line">torch.cuda.synchronize()</span><br></pre></td></tr></table></figure>
+
+<p>but result in the following error:</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">  File <span class="string">&quot;....../test.py&quot;</span>, line 67, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    torch.cuda.synchronize()</span><br><span class="line">  File <span class="string">&quot;....../miniconda3/envs/py39/lib/python3.9/site-packages/torch/cuda/__init__.py&quot;</span>, line 495, <span class="keyword">in</span> synchronize</span><br><span class="line">    <span class="built_in">return</span> torch._C._cuda_synchronize()</span><br><span class="line">RuntimeError: CUDA error: out of memory</span><br></pre></td></tr></table></figure>
+
+<p>but It’s clear that GPU1 has enough memory (we only need to allocate 16 bytes!):</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">|===============================+======================+======================|</span><br><span class="line">|   0  NVIDIA GeForce ...  Off  | 00000000:1A:00.0 Off |                  N/A |</span><br><span class="line">| 75%   73C    P2   303W / 350W |  24222MiB / 24268MiB |     64%      Default |</span><br><span class="line">|                               |                      |                  N/A |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br><span class="line">|   1  NVIDIA GeForce ...  Off  | 00000000:1B:00.0 Off |                  N/A |</span><br><span class="line">| 90%   80C    P2   328W / 350W |  15838MiB / 24268MiB |     92%      Default |</span><br><span class="line">|                               |                      |                  N/A |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br></pre></td></tr></table></figure>
+
+<p>And normally, when we fail to allocate the memory for tensors, the error is:</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">CUDA out of memory. Tried to allocate 16.00 MiB (GPU 0; 6.00 GiB total capacity; 4.54 GiB already allocated; 14.94 MiB free; 4.64 GiB reserved <span class="keyword">in</span> total by PyTorch)</span><br></pre></td></tr></table></figure>
+
+<p>So what happened?</p>
+<h2 id="Possible-Answer"><a href="#Possible-Answer" class="headerlink" title="Possible Answer"></a>Possible Answer</h2><p>This confused me for some time. According to the <a href="https://discuss.pytorch.org/t/pytorch-cuda-synchronize-out-of-memory/9502">website</a>:</p>
+<blockquote>
+<p>When you initially do a CUDA call, it’ll create a cuda context and a THC context on the primary GPU (GPU0), and for that i think it needs 200 MB or so. That’s right at the edge of how much memory you have left. </p>
+</blockquote>
+<p>Surprisingly, in my case, GPU0 has occupied <code>24222MiB / 24268MiB</code> memory. So there is no more memory for the context. In addition, this makes sense that out error message is <code>RuntimeError: CUDA error: out of memory</code>, not the message that tensallocation failed. </p>
+<h2 id="Possible-Solution"><a href="#Possible-Solution" class="headerlink" title="Possible Solution"></a>Possible Solution</h2><p>Set the <code>CUDA_VISIBLE_DEVICES</code> environment variable. We need to change primary GPU (GPU0) to other one.</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Do this before `import torch`</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ[<span class="string">&#x27;CUDA_VISIBLE_DEVICES&#x27;</span>] = <span class="string">&#x27;1&#x27;</span> <span class="comment"># set to what you like, e.g., &#x27;1,2,3,4,5,6,7&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>And then, our program is ready to go. </p>
+]]></content>
+      <categories>
+        <category>Problem Solving</category>
+      </categories>
+  </entry>
+  <entry>
     <title>PyTorch Practical Hand-Written Modules Basics 5--Implement a ResNet</title>
     <url>/2023/07/09/Pytorch-Practical-Basics-5/</url>
     <content><![CDATA[<p>In this section, we’ll utilize knowledge we learnt from the last section (<a href>see here</a>), to implement a ResNet Network (<a href>paper</a>). </p>
