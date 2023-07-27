@@ -1339,7 +1339,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-27 16:52:48" itemprop="dateModified" datetime="2023-05-27T16:52:48+08:00">2023-05-27</time>
+                <time title="Modified: 2023-07-27 11:43:14" itemprop="dateModified" datetime="2023-07-27T11:43:14+08:00">2023-07-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1412,12 +1412,14 @@
 
 
 
-<h2 id="3-Set-some-alias"><a href="#3-Set-some-alias" class="headerlink" title="3. Set some alias"></a>3. Set some alias</h2><p>Add the following to the end of <code>~/.bashrc</code>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> cf=<span class="string">&quot;ls -l | grep &quot;</span>^-<span class="string">&quot; | wc -l&quot;</span></span><br><span class="line"><span class="built_in">alias</span> ns=<span class="string">&quot;nvidia-smi&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="3-Set-some-alias"><a href="#3-Set-some-alias" class="headerlink" title="3. Set some alias"></a>3. Set some alias</h2><p>Alias convenient us typing some common commands.</p>
+<p>Add the following to the end of <code>~/.bashrc</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> cf=<span class="string">&quot;ls -l | grep &quot;</span>^-<span class="string">&quot; | wc -l&quot;</span></span><br><span class="line"><span class="built_in">alias</span> ns=<span class="string">&quot;nvidia-smi&quot;</span></span><br><span class="line"><span class="built_in">alias</span> py=<span class="string">&quot;python&quot;</span></span><br><span class="line"><span class="built_in">alias</span> act=<span class="string">&quot;conda activate&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>The first alias, <code>cf</code> means count files, can count number of visible files (excluding directories) under the current working directory.</p>
 <p>The second alias, <code>ns</code> is short for <code>nvidia-smi</code> to check for the GPU information.</p>
-<p>To execute these commands, you just need to type <code>cf</code> <code>ns</code> in the command line.</p>
+<p>The third alias <code>py</code> is short for <code>python</code>.</p>
+<p>The fourth alias <code>act</code> can be used like <code>act py39</code> (activate the conda <code>py39</code> environment)</p>
 <h2 id="4-Configure-the-CUDA-compiler-version"><a href="#4-Configure-the-CUDA-compiler-version" class="headerlink" title="4. Configure the CUDA compiler version"></a>4. Configure the CUDA compiler version</h2><p>Add the following to the end of <code>~/.bashrc</code>:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/usr/local/cuda-11.1/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
 
