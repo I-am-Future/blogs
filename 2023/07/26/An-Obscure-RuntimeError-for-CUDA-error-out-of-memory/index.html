@@ -29,7 +29,7 @@
 <meta property="og:description" content="ProblemToday when I was running PyTorch scripts, I met a strange problem:  123a &#x3D; torch.rand(2, 2).to(&amp;#x27;cuda:1&amp;#x27;)......torch.cuda.synchronize()  but result in the following error: 12345  File">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-07-26T13:02:18.000Z">
-<meta property="article:modified_time" content="2023-07-26T13:17:19.637Z">
+<meta property="article:modified_time" content="2023-07-28T05:12:30.102Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 
@@ -207,10 +207,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-07-26 21:02:18 / Modified: 21:17:19" itemprop="dateCreated datePublished" datetime="2023-07-26T21:02:18+08:00">2023-07-26</time>
+              <time title="Created: 2023-07-26 21:02:18" itemprop="dateCreated datePublished" datetime="2023-07-26T21:02:18+08:00">2023-07-26</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-07-28 13:12:30" itemprop="dateModified" datetime="2023-07-28T13:12:30+08:00">2023-07-28</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -244,8 +250,8 @@
 <p>And normally, when we fail to allocate the memory for tensors, the error is:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CUDA out of memory. Tried to allocate 16.00 MiB (GPU 0; 6.00 GiB total capacity; 4.54 GiB already allocated; 14.94 MiB free; 4.64 GiB reserved <span class="keyword">in</span> total by PyTorch)</span><br></pre></td></tr></table></figure>
 
-<p>So what happened?</p>
-<h2 id="Possible-Answer"><a href="#Possible-Answer" class="headerlink" title="Possible Answer"></a>Possible Answer</h2><p>This confused me for some time. According to the <a target="_blank" rel="noopener" href="https://discuss.pytorch.org/t/pytorch-cuda-synchronize-out-of-memory/9502">website</a>:</p>
+<p>But our error message is much “simpler”. So what happened?</p>
+<h2 id="Possible-Answer"><a href="#Possible-Answer" class="headerlink" title="Possible Answer"></a>Possible Answer</h2><p>This confused me for some time. According to this <a target="_blank" rel="noopener" href="https://discuss.pytorch.org/t/pytorch-cuda-synchronize-out-of-memory/9502">website</a>:</p>
 <blockquote>
 <p>When you initially do a CUDA call, it’ll create a cuda context and a THC context on the primary GPU (GPU0), and for that i think it needs 200 MB or so. That’s right at the edge of how much memory you have left. </p>
 </blockquote>

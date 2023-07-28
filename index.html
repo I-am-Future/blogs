@@ -328,10 +328,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-07-26 21:02:18 / Modified: 21:17:19" itemprop="dateCreated datePublished" datetime="2023-07-26T21:02:18+08:00">2023-07-26</time>
+              <time title="Created: 2023-07-26 21:02:18" itemprop="dateCreated datePublished" datetime="2023-07-26T21:02:18+08:00">2023-07-26</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-07-28 13:12:30" itemprop="dateModified" datetime="2023-07-28T13:12:30+08:00">2023-07-28</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -365,8 +371,8 @@
 <p>And normally, when we fail to allocate the memory for tensors, the error is:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CUDA out of memory. Tried to allocate 16.00 MiB (GPU 0; 6.00 GiB total capacity; 4.54 GiB already allocated; 14.94 MiB free; 4.64 GiB reserved <span class="keyword">in</span> total by PyTorch)</span><br></pre></td></tr></table></figure>
 
-<p>So what happened?</p>
-<h2 id="Possible-Answer"><a href="#Possible-Answer" class="headerlink" title="Possible Answer"></a>Possible Answer</h2><p>This confused me for some time. According to the <a target="_blank" rel="noopener" href="https://discuss.pytorch.org/t/pytorch-cuda-synchronize-out-of-memory/9502">website</a>:</p>
+<p>But our error message is much “simpler”. So what happened?</p>
+<h2 id="Possible-Answer"><a href="#Possible-Answer" class="headerlink" title="Possible Answer"></a>Possible Answer</h2><p>This confused me for some time. According to this <a target="_blank" rel="noopener" href="https://discuss.pytorch.org/t/pytorch-cuda-synchronize-out-of-memory/9502">website</a>:</p>
 <blockquote>
 <p>When you initially do a CUDA call, it’ll create a cuda context and a THC context on the primary GPU (GPU0), and for that i think it needs 200 MB or so. That’s right at the edge of how much memory you have left. </p>
 </blockquote>
@@ -426,7 +432,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-07-28 13:02:13" itemprop="dateModified" datetime="2023-07-28T13:02:13+08:00">2023-07-28</time>
+                <time title="Modified: 2023-07-28 13:11:36" itemprop="dateModified" datetime="2023-07-28T13:11:36+08:00">2023-07-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -454,17 +460,17 @@
 <h2 id="Preliminaries-Calculate-the-feature-map-size"><a href="#Preliminaries-Calculate-the-feature-map-size" class="headerlink" title="Preliminaries: Calculate the feature map size"></a>Preliminaries: Calculate the feature map size</h2><ul>
 <li>Basic formula</li>
 </ul>
-<p>Given a convolution kernel with size $[K_1, K_2]$, and the padding $P$, the stride $S$, feature map size $[I_1, I_2]$, we can calculate the output size as:<br>$$<br>\begin{cases}<br>O_1 &#x3D; \frac{I_1 - K_1 + 2P}{S} + 1; \<br>O_2 &#x3D; \frac{I_2 - K_2 + 2P}{S} + 1; \<br>\end{cases}<br>$$<br>Usually, we have $K_1 &#x3D; K_2$ and $I_1 &#x3D; I_2$. In that case, two formula above are same</p>
+<p>Given a convolution kernel with size <em>K</em>, and the padding <em>P</em>, the stride <em>S</em>, feature map size <em>I</em>, we can calculate the output size as <em>O</em> &#x3D; ( <em>I</em> - <em>K</em> + 2<em>P</em> ) &#x2F; <em>S</em> + 1.</p>
 <ul>
 <li>Corollary</li>
 </ul>
-<p>Based on the formula above, we know that when $S&#x3D;1$: </p>
+<p>Based on the formula above, we know that when <em>S</em>&#x3D;1: </p>
 <ol>
-<li>$K&#x3D;3, P&#x3D;1$ makes the input size and output size same.</li>
-<li>$K&#x3D;1, P&#x3D;0$ makes the input size and output size same.</li>
+<li><em>K</em>&#x3D;3, <em>P</em>&#x3D;1 makes the input size and output size same.</li>
+<li><em>K</em>&#x3D;1, <em>P</em>&#x3D;0 makes the input size and output size same.</li>
 </ol>
 <h2 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h2><p>The Table 1 in the original paper illustrates the overall structure of the ResNet:</p>
-<img src="/2023/07/09/Pytorch-Practical-Basics-5/resnet_table1.png" alt="resnet_table1" style="zoom:50%;">
+<img src="/2023/07/09/Pytorch-Practical-Basics-5/resnet_table1.png" alt="resnet_table1" style="zoom: 67%;">
 
 <p>We know that from <code>conv2</code>, each layer consists of many blocks. And the blocks in <code>18, 34 layers</code> is different from blocks in <code>50, 101, 152 layers</code>. </p>
 <p>We have several deductions: </p>
@@ -473,7 +479,7 @@
 <li>At other convolution kernels, the feature map’s size is same. So the convolution settings is same as the one referred in Preliminaries.</li>
 </ol>
 <h2 id="Basic-Block-Implementation"><a href="#Basic-Block-Implementation" class="headerlink" title="Basic Block Implementation"></a>Basic Block Implementation</h2><p>The basic block’s structure looks like this: </p>
-<img src="/2023/07/09/Pytorch-Practical-Basics-5/basic.png" alt="basic" style="zoom:50%;">
+<img src="/2023/07/09/Pytorch-Practical-Basics-5/basic.png" alt="basic">
 
 <p>Please see the code below. Here, apart from <code>channels</code> defining the channels in the block, we have three additional parameters, <code>in_channels</code>, <code>stride</code>, and <code>downsample</code> to make this block versatile in the FIRST block in each layer. </p>
 <p>According to the ResNet structure, for example, the first block in layer3 has the input <code>64*56*56</code>. The first block in layer3 has two tasks: </p>
@@ -487,7 +493,7 @@
 
 
 <h2 id="Bottleneck-Block-Implementation"><a href="#Bottleneck-Block-Implementation" class="headerlink" title="Bottleneck Block Implementation"></a>Bottleneck Block Implementation</h2><p>The bottleneck block’s structure looks like this: </p>
-<img src="/2023/07/09/Pytorch-Practical-Basics-5/bottleneck.png" alt="bottleneck" style="zoom:50%;">
+<img src="/2023/07/09/Pytorch-Practical-Basics-5/bottleneck.png" alt="bottleneck">
 
 <p>To reduce the computation cost, the Bottleneck block use <code>1x1</code> kernel to map the high number of channels (e.g., 256) to a low one (e.g., 64), and do the <code>3x3</code> convolution. Then, it maps the <code>64</code> channels to <code>256</code> again. </p>
 <p>Please see the code below. Same as the basic block, We have three additional parameters, <code>in_channels</code>, <code>stride</code>, and <code>downsample</code> to make this block versatile in the FIRST block in each layer. The reasons are same as above. </p>
@@ -598,7 +604,7 @@
 <li>The <code>forward()</code> function do the forward-propagation of the model. It receives a tensor <code>x</code> and do two convolution-with-relu operation. And then return the result. </li>
 <li>As for the backward-propagation, that step is calculated automatically by the powerful PyTorch’s auto-gradient technique. You don’t need to care about that.</li>
 </ul>
-<h2 id="load-x2F-store-the-model-state-dict"><a href="#load-x2F-store-the-model-state-dict" class="headerlink" title="load &#x2F; store the model.state_dict()"></a>load &#x2F; store the model.state_dict()</h2><p>Only model’s attributes that are subclass of <code>nn.Module</code> can be regarded as a valid registered parameters. These parameters are in the <code>model.state_dict()</code>, and can be load and store from&#x2F;to the disk.</p>
+<h2 id="load-store-the-model-state-dict"><a href="#load-store-the-model-state-dict" class="headerlink" title="load &#x2F; store the model.state_dict()"></a>load &#x2F; store the model.state_dict()</h2><p>Only model’s attributes that are subclass of <code>nn.Module</code> can be regarded as a valid registered parameters. These parameters are in the <code>model.state_dict()</code>, and can be load and store from&#x2F;to the disk.</p>
 <ul>
 <li><code>model.state_dict()</code>:</li>
 </ul>
@@ -668,13 +674,13 @@
 
 
 
-<h2 id="model-apply-amp-weight-init"><a href="#model-apply-amp-weight-init" class="headerlink" title="model.apply() &amp; weight init"></a>model.apply() &amp; weight init</h2><p>Applies <code>fn</code> recursively to every submodule (as returned by <code>model.children()</code>) as well as self. Typical use includes initializing the parameters of a model (see also <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/nn.init.html#nn-init-doc">torch.nn.init</a>).</p>
+<h2 id="model-apply-weight-init"><a href="#model-apply-weight-init" class="headerlink" title="model.apply() &amp; weight init"></a>model.apply() &amp; weight init</h2><p>Applies <code>fn</code> recursively to every submodule (as returned by <code>model.children()</code>) as well as self. Typical use includes initializing the parameters of a model (see also <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/nn.init.html#nn-init-doc">torch.nn.init</a>).</p>
 <p>A typical example can be:</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Model</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">1</span>, <span class="number">20</span>, <span class="number">5</span>)</span><br><span class="line">        self.conv2 = nn.Conv2d(<span class="number">20</span>, <span class="number">20</span>, <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = F.relu(self.conv1(x))</span><br><span class="line">        <span class="keyword">return</span> F.relu(self.conv2(x))</span><br><span class="line">    </span><br><span class="line">model = Model()   </span><br><span class="line"><span class="comment"># do init params with model.apply():</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">init_weights</span>(<span class="params">m</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>(m) == nn.Linear:</span><br><span class="line">        torch.nn.init.xavier_uniform_(m.weight)</span><br><span class="line">        m.bias.data.fill_(<span class="number">0.01</span>)</span><br><span class="line">    <span class="keyword">elif</span> <span class="built_in">type</span>(m) == nn.Conv2d:</span><br><span class="line">        torch.nn.init.xavier_uniform_(m.weight)</span><br><span class="line">        m.bias.data.fill_(<span class="number">0.01</span>)</span><br><span class="line">model.apply(init_weights)</span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="model-eval-x2F-model-train-x2F-training"><a href="#model-eval-x2F-model-train-x2F-training" class="headerlink" title="model.eval() &#x2F; model.train() &#x2F; .training"></a>model.eval() &#x2F; model.train() &#x2F; .training</h2><p>The modules such as <code>BatchNorm</code> and <code>DropOut</code> performs differently on the training and evaluating stage. </p>
+<h2 id="model-eval-model-train-training"><a href="#model-eval-model-train-training" class="headerlink" title="model.eval() &#x2F; model.train() &#x2F; .training"></a>model.eval() &#x2F; model.train() &#x2F; .training</h2><p>The modules such as <code>BatchNorm</code> and <code>DropOut</code> performs differently on the training and evaluating stage. </p>
 <p>We can use <code>model.train()</code> to set the model to the training stage. Use <code>model.eval()</code> to set the model to the training stage. </p>
 <p>But, what if our <u>own written modules</u> need to perform differently in two stages? The answer is that, <code>nn.Module</code> has an attribute called <code>training</code>. It’s <code>True</code> when training, <code>False</code> otherwise. </p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Model</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># skipped in this example</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="keyword">if</span> self.training:</span><br><span class="line">            ... <span class="comment"># write the code in training stage here</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ... <span class="comment"># write the code in evaluating/inferencing stage here</span></span><br></pre></td></tr></table></figure>
@@ -812,7 +818,7 @@
 </li>
 </ul>
 <p>Finally, the result shape is <code>torch.Size([2, 4, 3])</code>. </p>
-<h2 id="torch-Tensor-view-x2F-torch-Tensor-reshape"><a href="#torch-Tensor-view-x2F-torch-Tensor-reshape" class="headerlink" title="torch.Tensor.view &#x2F; torch.Tensor.reshape"></a>torch.Tensor.view &#x2F; torch.Tensor.reshape</h2><p>Signature: <code>Tensor.view(*shape) -&gt; Tensor</code></p>
+<h2 id="torch-Tensor-view-torch-Tensor-reshape"><a href="#torch-Tensor-view-torch-Tensor-reshape" class="headerlink" title="torch.Tensor.view &#x2F; torch.Tensor.reshape"></a>torch.Tensor.view &#x2F; torch.Tensor.reshape</h2><p>Signature: <code>Tensor.view(*shape) -&gt; Tensor</code></p>
 <p>Signature: <code>Tensor.reshape(*shape) -&gt; Tensor</code></p>
 <p>Reshape the Tensor to <code>shape</code>. </p>
 <p>The function <code>shape()</code> always return a new copy of the tensor. </p>
@@ -833,7 +839,7 @@
 
 
 
-<h2 id="torch-vstack-x2F-hstack"><a href="#torch-vstack-x2F-hstack" class="headerlink" title="torch.vstack&#x2F;hstack"></a>torch.vstack&#x2F;hstack</h2><p><code>torch.vsplit(...)</code> is spliting the tensors vertically, which is equivalent to <code>torch.split(..., dim=0)</code>. </p>
+<h2 id="torch-vstack-hstack"><a href="#torch-vstack-hstack" class="headerlink" title="torch.vstack&#x2F;hstack"></a>torch.vstack&#x2F;hstack</h2><p><code>torch.vsplit(...)</code> is spliting the tensors vertically, which is equivalent to <code>torch.split(..., dim=0)</code>. </p>
 <p> <code>torch.hsplit(...)</code> is spliting the tensors horizontally, which is equivalent to <code>torch.split(..., dim=1)</code>. </p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">2</span>, <span class="number">3</span>) <span class="comment"># Shape: torch.Size([2, 3])</span></span><br><span class="line">y = torch.randn(<span class="number">2</span>, <span class="number">3</span>) <span class="comment"># Shape: torch.Size([2, 3])</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> torch.vstack((x, y)).shape == torch.cat((x, y), dim=<span class="number">0</span>).shape</span><br><span class="line"><span class="keyword">assert</span> torch.hstack((x, y)).shape == torch.cat((x, y), dim=<span class="number">1</span>).shape</span><br></pre></td></tr></table></figure>
 
@@ -852,7 +858,7 @@
 
 
 
-<h2 id="torch-vsplit-x2F-hsplit"><a href="#torch-vsplit-x2F-hsplit" class="headerlink" title="torch.vsplit&#x2F;hsplit"></a>torch.vsplit&#x2F;hsplit</h2><p>This is actually similar to <code>torch.vstack</code> and <code>torch.hstack</code>. v means vertically, along dim&#x3D;0, and h means horizontally, along dim&#x3D;1.</p>
+<h2 id="torch-vsplit-hsplit"><a href="#torch-vsplit-hsplit" class="headerlink" title="torch.vsplit&#x2F;hsplit"></a>torch.vsplit&#x2F;hsplit</h2><p>This is actually similar to <code>torch.vstack</code> and <code>torch.hstack</code>. v means vertically, along dim&#x3D;0, and h means horizontally, along dim&#x3D;1.</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># The followings are equivalent:</span></span><br><span class="line"><span class="comment"># pair 1</span></span><br><span class="line"><span class="built_in">print</span>(torch.vsplit(x, <span class="number">3</span>))</span><br><span class="line"><span class="built_in">print</span>(torch.split(x, <span class="number">1</span>, dim=<span class="number">0</span>))</span><br><span class="line"><span class="comment"># pair 2</span></span><br><span class="line"><span class="built_in">print</span>(torch.hsplit(x, <span class="number">4</span>))</span><br><span class="line"><span class="built_in">print</span>(torch.split(x, <span class="number">1</span>, dim=<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
 
 
@@ -951,7 +957,7 @@
 
 
 
-<h2 id="Compile-a-Library-amp-Link-it"><a href="#Compile-a-Library-amp-Link-it" class="headerlink" title="Compile a Library &amp; Link it"></a>Compile a Library &amp; Link it</h2><p><a target="_blank" rel="noopener" href="https://github.com/parallel101/course/tree/master/01/06">See code here</a></p>
+<h2 id="Compile-a-Library-Link-it"><a href="#Compile-a-Library-Link-it" class="headerlink" title="Compile a Library &amp; Link it"></a>Compile a Library &amp; Link it</h2><p><a target="_blank" rel="noopener" href="https://github.com/parallel101/course/tree/master/01/06">See code here</a></p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># compile static OR dynamic library</span></span><br><span class="line"><span class="keyword">add_library</span>(hellolib STATIC hello.cpp)</span><br><span class="line"><span class="keyword">add_library</span>(hellolib SHARED hello.cpp)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp)</span><br><span class="line"></span><br><span class="line"><span class="keyword">target_link_libraries</span>(a.out PUBLIC hellolib)</span><br></pre></td></tr></table></figure>
 
 <ul>
@@ -1399,7 +1405,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-07-27 11:43:14" itemprop="dateModified" datetime="2023-07-27T11:43:14+08:00">2023-07-27</time>
+                <time title="Modified: 2023-07-27 11:43:48" itemprop="dateModified" datetime="2023-07-27T11:43:48+08:00">2023-07-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
