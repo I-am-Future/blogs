@@ -179,6 +179,109 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/07/Conda-common-commands/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/07/Conda-common-commands/" class="post-title-link" itemprop="url">Conda Common Commands Quick Reference</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-05-07 13:46:58" itemprop="dateCreated datePublished" datetime="2023-05-07T13:46:58+08:00">2023-05-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-05-31 17:28:41" itemprop="dateModified" datetime="2023-05-31T17:28:41+08:00">2023-05-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/QRH/" itemprop="url" rel="index"><span itemprop="name">QRH</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><p>Please refer to the official <a target="_blank" rel="noopener" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html">docs</a>. </p>
+<p>Mirrors: to download faster in China, it’s recommended to add some mirror configs:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/</span><br><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/ </span><br><span class="line">conda config --<span class="built_in">set</span> show_channel_urls <span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Common-commands"><a href="#Common-commands" class="headerlink" title="Common commands"></a>Common commands</h2><h3 id="Create-env"><a href="#Create-env" class="headerlink" title="Create env"></a>Create env</h3><p>Create an environment with <code>&lt;env_name&gt;</code> and python with <code>3.9</code>. </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda create -n &lt;env_name&gt; python=3.9</span><br></pre></td></tr></table></figure>
+
+<h3 id="Activate-env"><a href="#Activate-env" class="headerlink" title="Activate env"></a>Activate env</h3><p>Activate &#x2F; Deactivate the environment <code>&lt;env_name&gt;</code>.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># activate</span></span><br><span class="line">conda activate &lt;env_name&gt;</span><br><span class="line"><span class="comment"># deactivate</span></span><br><span class="line">conda deactivate &lt;env_name&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Remove-env"><a href="#Remove-env" class="headerlink" title="Remove env"></a>Remove env</h3><p>Remove the environment <code>&lt;env_name&gt;</code>.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda remove -n &lt;env_name&gt; --all</span><br></pre></td></tr></table></figure>
+
+<h3 id="Install-packages"><a href="#Install-packages" class="headerlink" title="Install packages"></a>Install packages</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># with conda</span></span><br><span class="line">conda install &lt;packages&gt;</span><br><span class="line"><span class="comment"># with pip</span></span><br><span class="line">pip install &lt;packages&gt;</span><br><span class="line"><span class="comment"># with pip and mirrors</span></span><br><span class="line">pip install &lt;packages&gt; -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br></pre></td></tr></table></figure>
+
+<h3 id="Update-packages"><a href="#Update-packages" class="headerlink" title="Update packages"></a>Update packages</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda update &lt;packages&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="List-packages-in-env"><a href="#List-packages-in-env" class="headerlink" title="List packages in env"></a>List packages in env</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda list</span><br></pre></td></tr></table></figure>
+
+<h3 id="List-all-envs"><a href="#List-all-envs" class="headerlink" title="List all envs"></a>List all envs</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda info --envs</span><br></pre></td></tr></table></figure>
+
+<h3 id="Clean-caches"><a href="#Clean-caches" class="headerlink" title="Clean caches"></a>Clean caches</h3><p>The downloaded caches occupies the storage data. We may clean them by the following commands:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda clean --all</span><br></pre></td></tr></table></figure>
+
+<h3 id="Export-env-configs"><a href="#Export-env-configs" class="headerlink" title="Export env configs"></a>Export env configs</h3><p>Export the current environment configs to a yaml file, then we can follow the yaml file to create another environment.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># change to the desired env</span></span><br><span class="line">conda activate &lt;env_name&gt;</span><br><span class="line"><span class="comment"># export </span></span><br><span class="line">conda <span class="built_in">env</span> <span class="built_in">export</span> &gt; environment.yml</span><br><span class="line"><span class="comment"># import and create</span></span><br><span class="line">conda <span class="built_in">env</span> create -f environment.yml</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/06/CUDA-No-process-but-GPU-memory-occupied/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1155,87 +1258,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/21/Redirect-other-webpages/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Future">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Future's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/21/Redirect-other-webpages/" class="post-title-link" itemprop="url">我在其他平台发的文章链接</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-03-21 20:22:19 / Modified: 20:27:13" itemprop="dateCreated datePublished" datetime="2023-03-21T20:22:19+08:00">2023-03-21</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Others/" itemprop="url" rel="index"><span itemprop="name">Others</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>这里会摆放我在其他平台上写的文章的链接（因为我懒得搬过来了），欢迎点击阅读。</p>
-<ul>
-<li><p>原生word仿制latex伪代码块，数学建模、作业报告均适用！【带图手把手教学】 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/472381746">https://zhuanlan.zhihu.com/p/472381746</a></p>
-</li>
-<li><p>个人炼丹炉配置经验分享（上）：利用校园网LAN启动、智能插座远程启动并远程桌面连接 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/460263000">https://zhuanlan.zhihu.com/p/460263000</a></p>
-</li>
-<li><p>个人炼丹炉配置经验分享（下）：利用JupyterLab实现何时何地都可远程炼丹 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/461491632">https://zhuanlan.zhihu.com/p/461491632</a></p>
-</li>
-<li><p>【新手向】Python x VS Code 简单debug与调试 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/357874811">https://zhuanlan.zhihu.com/p/357874811</a></p>
-</li>
-<li><p>【新手向】Python x VS Code debug按钮 与 进阶debug介绍 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/359283509">https://zhuanlan.zhihu.com/p/359283509</a></p>
-</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1305,7 +1327,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

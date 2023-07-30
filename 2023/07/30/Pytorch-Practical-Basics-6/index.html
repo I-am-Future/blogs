@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/time-machine.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="In this section (and also three sections in the future), we investigate how to use torch.autograd.Function to implement the hand-written operators. The tentative outline is:   This section (6), we tal">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PyTorch Practical Hand-Written Modules Basics 6--torch.autograd.Function">
+<meta property="og:url" content="http://example.com/2023/07/30/Pytorch-Practical-Basics-6/index.html">
+<meta property="og:site_name" content="Future&#39;s blog">
+<meta property="og:description" content="In this section (and also three sections in the future), we investigate how to use torch.autograd.Function to implement the hand-written operators. The tentative outline is:   This section (6), we tal">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-07-30T12:31:20.000Z">
+<meta property="article:modified_time" content="2023-07-30T13:19:52.272Z">
+<meta property="article:author" content="Future">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/07/30/Pytorch-Practical-Basics-6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>PyTorch Practical Hand-Written Modules Basics 6--torch.autograd.Function | Future's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Future's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/30/Pytorch-Practical-Basics-6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PyTorch Practical Hand-Written Modules Basics 6--torch.autograd.Function
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-07-30 20:31:20 / Modified: 21:19:52" itemprop="dateCreated datePublished" datetime="2023-07-30T20:31:20+08:00">2023-07-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>In this section (and also three sections in the future), we investigate how to use <code>torch.autograd.Function</code> to implement the hand-written operators. The tentative outline is:</p>
+<ul>
+<li><input checked disabled type="checkbox"> This section (6), we talk about the basics of <code>torch.autograd.Function</code>.</li>
+<li><input disabled type="checkbox"> In the next section (7), we’ll talk about mathematic derivation for the “linear layer” operator. </li>
+<li><input disabled type="checkbox"> In the section 8, we talk about writing C++ CUDA extension for the “linear layer” operator. </li>
+<li><input disabled type="checkbox"> In the section 9, we talk details about building the extension to a module, as well as testing. Then we’ll conclude the things we’ve done so far.</li>
+</ul>
+<h1 id="Backgrounds"><a href="#Backgrounds" class="headerlink" title="Backgrounds"></a>Backgrounds</h1><p>This article mainly takes reference of the <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/notes/extending.html#extending-autograd">Official tutorial</a> and summarizes, explains the important points. </p>
+<p>By defining an operator with <code>torch.autograd.Function</code> and implement its forward &#x2F; backward function, we can use this operator with other PyTorch built-in operators together. </p>
+<p>As mentioned in the tutorial, we should use the <code>torch.autograd.Function</code> in the following scenes:</p>
+<ul>
+<li>The computation is from other libraries, so they don’t support differential natively. We should explicitly define its backward functions. </li>
+<li>The PyTorch’s implementation of an operator cannot take benefits from the parallelization. We utilize the PyTorch C++&#x2F;CUDA extension for the better performance.</li>
+</ul>
+<h1 id="Basic-Structure"><a href="#Basic-Structure" class="headerlink" title="Basic Structure"></a>Basic Structure</h1><p>The following is the basic structure of the Function:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Function</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LinearFunction</span>(<span class="title class_ inherited__">Function</span>):</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">ctx, input0, input1, ... , inputN</span>):</span><br><span class="line">        <span class="comment"># Save the input for the backward use. </span></span><br><span class="line">        ctx.save_for_backward(input1, input1, ... , inputN)</span><br><span class="line">        <span class="comment"># Calculate the output0, ... outputM given the inputs.</span></span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">return</span> output0, ... , outputM</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">backward</span>(<span class="params">ctx, grad_output0, ... , grad_outputM</span>):</span><br><span class="line">        <span class="comment"># Get and unpack the input for the backward use. </span></span><br><span class="line">        input0, input1, ... , inputN = ctx.saved_tensors</span><br><span class="line">        </span><br><span class="line">        grad_input0 = grad_input1 = grad_inputN = <span class="literal">None</span></span><br><span class="line">        <span class="comment"># These needs_input_grad records whether each input need to calculate the gradient. This can improve the efficiency.</span></span><br><span class="line">        <span class="keyword">if</span> ctx.needs_input_grad[<span class="number">0</span>]:</span><br><span class="line">            grad_input0 = ...  <span class="comment"># backward calculation</span></span><br><span class="line">        <span class="keyword">if</span> ctx.needs_input_grad[<span class="number">1</span>]:</span><br><span class="line">            grad_input1 = ...  <span class="comment"># backward calculation</span></span><br><span class="line">        ......</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> grad_input0, grad_input1, grad_inputN</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>The <code>forward</code> and <code>backward</code> functions are <code>staticmethod</code>. The forward function is <code>o0, ..., oM = forward(i0, ..., iN)</code>, calculate the output0 ~ outputM by the input0 ~ inputN. Then the backward function is <code>g_i0, ..., g_iN = backward(g_o0, ..., g_M)</code>, calculate the gradient of input0 ~ gradient of inputM by the gradient of output0 ~ outputN.</p>
+</li>
+<li><p>Since forward and backward are merely functions. We need store the input tensors to the <code>ctx</code> in the forward pass, so that we can get them in the backward functions. See <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/notes/extending.html#combining-forward-context">here</a> to use the alternative way to define <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/autograd.html#torch.autograd.Function"><code>Function</code></a>.</p>
+</li>
+<li><p><code>ctx.needs_input_grad</code> is a tuple of Booleans. It records whether one input needs to calculate the gradient or not. Therefore, we can save computation resources if one tensor doesn’t need gradients. In that case, the return value of backward function for that tensor is <code>None</code>.</p>
+</li>
+</ol>
+<h1 id="Use-it"><a href="#Use-it" class="headerlink" title="Use it"></a>Use it</h1><h2 id="Pure-functions"><a href="#Pure-functions" class="headerlink" title="Pure functions"></a>Pure functions</h2><p>After defining the class, we can use the <code>.apply</code> method to use it. Simply</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Option 1: alias</span></span><br><span class="line">linear = LinearFunction.apply</span><br></pre></td></tr></table></figure>
+<p>or, </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Option 2: wrap in a function, to support default args and keyword args.</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">linear</span>(<span class="params"><span class="built_in">input</span>, weight, bias=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="keyword">return</span> LinearFunction.apply(<span class="built_in">input</span>, weight, bias)</span><br></pre></td></tr></table></figure>
+
+<p>Then call as</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">output = linear(<span class="built_in">input</span>, weight, bias) <span class="comment"># input, weight, bias are all tensors!</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="nn-Module"><a href="#nn-Module" class="headerlink" title="nn.Module"></a>nn.Module</h2><p>In most cases, the weight and bias are parameters that are trainable during the process. We can further wrap this linear function to a Linear module: </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Linear</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, input_features, output_features, bias=<span class="literal">True</span></span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.input_features = input_features</span><br><span class="line">        self.output_features = output_features</span><br><span class="line"></span><br><span class="line">        <span class="comment"># nn.Parameters require gradients by default.</span></span><br><span class="line">        self.weight = nn.Parameter(torch.empty(output_features, input_features))</span><br><span class="line">        <span class="keyword">if</span> bias:</span><br><span class="line">            self.bias = nn.Parameter(torch.empty(output_features))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># You should always register all possible parameters, but the</span></span><br><span class="line">            <span class="comment"># optional ones can be None if you want.</span></span><br><span class="line">            self.register_parameter(<span class="string">&#x27;bias&#x27;</span>, <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Not a very smart way to initialize weights</span></span><br><span class="line">        nn.init.uniform_(self.weight, -<span class="number">0.1</span>, <span class="number">0.1</span>)</span><br><span class="line">        <span class="keyword">if</span> self.bias <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            nn.init.uniform_(self.bias, -<span class="number">0.1</span>, <span class="number">0.1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, <span class="built_in">input</span></span>):</span><br><span class="line">        <span class="comment"># See the autograd section for explanation of what happens here.</span></span><br><span class="line">        <span class="keyword">return</span> LinearFunction.apply(<span class="built_in">input</span>, self.weight, self.bias)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">extra_repr</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># (Optional)Set the extra information about this module. You can test</span></span><br><span class="line">        <span class="comment"># it by printing an object of this class.</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;input_features=&#123;&#125;, output_features=&#123;&#125;, bias=&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(</span><br><span class="line">            self.input_features, self.output_features, self.bias <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span></span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+
+<p>As mentioned in section 3, 4 of this series, the weight and bias should be <code>nn.Parameter</code> so that they can be recognized correctly. Then we initialize the weights with random variables. </p>
+<p>In the <code>forward</code> functions, we use the defined <code>LinearFunction.apply</code> functions. The backward process will be automatically done just as other PyTorch modules. </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/07/26/An-Obscure-RuntimeError-for-CUDA-error-out-of-memory/" rel="prev" title="An Obscure RuntimeError for CUDA error: out of memory">
+      <i class="fa fa-chevron-left"></i> An Obscure RuntimeError for CUDA error: out of memory
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Backgrounds"><span class="nav-number">1.</span> <span class="nav-text">Backgrounds</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Basic-Structure"><span class="nav-number">2.</span> <span class="nav-text">Basic Structure</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Use-it"><span class="nav-number">3.</span> <span class="nav-text">Use it</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Pure-functions"><span class="nav-number">3.1.</span> <span class="nav-text">Pure functions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nn-Module"><span class="nav-number">3.2.</span> <span class="nav-text">nn.Module</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Future</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Future</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
