@@ -304,6 +304,103 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/01/Pytorch-Practical-Basics-7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/01/Pytorch-Practical-Basics-7/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 7--Mathematics Derivation of Linear Layer</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-08-01 20:15:44 / Modified: 21:14:59" itemprop="dateCreated datePublished" datetime="2023-08-01T20:15:44+08:00">2023-08-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>In the section 6 to 9, we’ll investigate how to use <code>torch.autograd.Function</code> to implement the hand-written operators. The tentative outline is:</p>
+<ul>
+<li><input checked disabled type="checkbox"> In the last section (6), we talk about the basics of <code>torch.autograd.Function</code>. <strong>The operators defined by <code>torch.autograd.Function</code> can be automatically back-propagated.</strong></li>
+<li><input checked disabled type="checkbox"> In this section (7), we’ll talk about mathematic derivation for the “linear layer” operator. </li>
+<li><input disabled type="checkbox"> In the section 8, we talk about writing C++ CUDA extension for the “linear layer” operator. </li>
+<li><input disabled type="checkbox"> In the section 9, we talk details about building the extension to a module, as well as testing. Then we’ll conclude the things we’ve done so far.</li>
+</ul>
+<p>The linear layer is defined by Y &#x3D; XW + b. There is a matrix multiplication operation, and a bias addition. <strong>We’ll talk about their forward&#x2F;backward derivation separately.</strong> </p>
+<p>(I feel sorry that currently there is some problem with displaying mathematics formula here. I’ll use screenshot first.)</p>
+<h1 id="Matrix-multiplication-forward"><a href="#Matrix-multiplication-forward" class="headerlink" title="Matrix multiplication: forward"></a>Matrix multiplication: forward</h1><p>The matrix multiplication operation is a common operator. Each entry in the result matrix is a vector dot product of two input matrixes. The <code>(i, j)</code> entry of the result is from multiplying first matrix’s row i vector and the second matrix’s column j vector. From this property, we know that number of columns in the first matrix should equal to number of rows in the second matrix. The shape should be: [m, n] x [n, r] -&gt; [m, r]. For more details, see the figure illustration below. </p>
+<img src="/2023/08/01/Pytorch-Practical-Basics-7/matmul-forward.png" alt="matmul-forward" style="zoom: 67%;">
+
+
+
+<h1 id="Matrix-multiplication-backward"><a href="#Matrix-multiplication-backward" class="headerlink" title="Matrix multiplication: backward"></a>Matrix multiplication: backward</h1><p>First, we should know what’s the <strong>goal</strong> of the backward propagation. In the upstream side, we would get the gradient of the answer matrix, C. (The gradient matrix has the same size as its corresponding matrix. i.e., if C is in shape [m, r], then gradient of C is shape [m, r] as well.) In this step, we should get the gradient of matrix A and B. Gradient of matrix A and B are functions in terms of matrix A and B and gradient of C. Specially, by chain rule, we can formulate it as</p>
+<img src="/2023/08/01/Pytorch-Practical-Basics-7/matmul-backward-math1.png" alt="matmul-backward-math1" style="zoom:50%;">
+
+<!-- $$
+\frac{\partial L}{\partial A} = \frac{\partial L}{\partial C} \cdot \frac{\partial C}{\partial A} \\
+(\frac{\partial L}{\partial C} \text{ is the gradient of C, and we need to figure out } \frac{\partial C}{\partial A}.)
+$$-->
+
+<p>To figure out the gradient of A, we should first investigate how an entry <code>A[i, j]</code> contribute to the entries in the result matrix C. See the figure below:</p>
+<img src="/2023/08/01/Pytorch-Practical-Basics-7/matmul-backward.png" alt="matmul-backward" style="zoom:67%;">
+
+<p>As shown above, entry <code>A[i, j]</code> multiplies with entries in row <code>j</code> of matrix B, contributing to the entries in row <code>i</code> of matrix C. We can write the gradient down in mathematics formula:</p>
+<p>$$</p>
+<p>$$<br>The result above is the gradient for one entry <code>A[i, j]</code>, and it’s a vector dot product. Observing this formula, we can naturally extend it to the gradient of the whole matrix A, and that will be a matrix product.<br>$$</p>
+<p>$$</p>
+<h1 id="Add-bias-forward"><a href="#Add-bias-forward" class="headerlink" title="Add bias: forward"></a>Add bias: forward</h1><h1 id="Add-bias-backward"><a href="#Add-bias-backward" class="headerlink" title="Add bias: backward"></a>Add bias: backward</h1><h1 id="PyTorch-Verification"><a href="#PyTorch-Verification" class="headerlink" title="PyTorch Verification"></a>PyTorch Verification</h1>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/30/Pytorch-Practical-Basics-6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -328,10 +425,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-07-30 20:31:20 / Modified: 21:19:52" itemprop="dateCreated datePublished" datetime="2023-07-30T20:31:20+08:00">2023-07-30</time>
+              <time title="Created: 2023-07-30 20:31:20" itemprop="dateCreated datePublished" datetime="2023-07-30T20:31:20+08:00">2023-07-30</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-01 20:19:16" itemprop="dateModified" datetime="2023-08-01T20:19:16+08:00">2023-08-01</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -361,7 +464,7 @@
 <li><input disabled type="checkbox"> In the section 9, we talk details about building the extension to a module, as well as testing. Then we’ll conclude the things we’ve done so far.</li>
 </ul>
 <h1 id="Backgrounds"><a href="#Backgrounds" class="headerlink" title="Backgrounds"></a>Backgrounds</h1><p>This article mainly takes reference of the <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/notes/extending.html#extending-autograd">Official tutorial</a> and summarizes, explains the important points. </p>
-<p>By defining an operator with <code>torch.autograd.Function</code> and implement its forward &#x2F; backward function, we can use this operator with other PyTorch built-in operators together. </p>
+<p>By defining an operator with <code>torch.autograd.Function</code> and implement its forward &#x2F; backward function, we can use this operator with other PyTorch built-in operators together. <strong>The operators defined by <code>torch.autograd.Function</code> can be automatically back-propagated.</strong></p>
 <p>As mentioned in the tutorial, we should use the <code>torch.autograd.Function</code> in the following scenes:</p>
 <ul>
 <li>The computation is from other libraries, so they don’t support differential natively. We should explicitly define its backward functions. </li>
@@ -538,7 +641,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-07-28 13:11:36" itemprop="dateModified" datetime="2023-07-28T13:11:36+08:00">2023-07-28</time>
+                <time title="Modified: 2023-07-30 23:59:13" itemprop="dateModified" datetime="2023-07-30T23:59:13+08:00">2023-07-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -566,7 +669,7 @@
 <h2 id="Preliminaries-Calculate-the-feature-map-size"><a href="#Preliminaries-Calculate-the-feature-map-size" class="headerlink" title="Preliminaries: Calculate the feature map size"></a>Preliminaries: Calculate the feature map size</h2><ul>
 <li>Basic formula</li>
 </ul>
-<p>Given a convolution kernel with size <em>K</em>, and the padding <em>P</em>, the stride <em>S</em>, feature map size <em>I</em>, we can calculate the output size as <em>O</em> &#x3D; ( <em>I</em> - <em>K</em> + 2<em>P</em> ) &#x2F; <em>S</em> + 1.</p>
+<p>Given a convolution kernel with size <em>K</em>, and the padding <em>P</em>, the stride <em>S</em>, feature map size <em>I</em>, we can calculate the output size as <em>O</em> &#x3D; ( <em>I</em> - <em>K</em> + 2<em>P</em> ) &#x2F; <em>S</em> + 1. </p>
 <ul>
 <li>Corollary</li>
 </ul>
@@ -1475,142 +1578,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/07/My-Setup-to-New-Linux-Server-Account/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Future">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Future's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/05/07/My-Setup-to-New-Linux-Server-Account/" class="post-title-link" itemprop="url">My Setup to New Linux Server Account</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-05-07 13:47:38" itemprop="dateCreated datePublished" datetime="2023-05-07T13:47:38+08:00">2023-05-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-07-27 11:43:48" itemprop="dateModified" datetime="2023-07-27T11:43:48+08:00">2023-07-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>In this article, I list some procedures I do when setting up new Linux server account.</p>
-<h2 id="1-Install-conda"><a href="#1-Install-conda" class="headerlink" title="1. Install conda"></a>1. Install conda</h2><p>Please refer to the official docs:</p>
-<p><a target="_blank" rel="noopener" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html">https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html</a></p>
-<h2 id="2-Setup-ssh-key-password-free-login"><a href="#2-Setup-ssh-key-password-free-login" class="headerlink" title="2. Setup ssh key (password-free login)"></a>2. Setup ssh key (password-free login)</h2><p>Modified from <a target="_blank" rel="noopener" href="https://github.com/bokesyo/CSC4005_2022Fall_Demo/blob/main/docs/Instruction%20on%20Passwordlessly%20Connecting%20to%20Cluster%20by%20Setting%20Up%20SSH%20Key%20Authentification.md">here</a>.</p>
-<p>(Replace <code>&#123;KeyName&#125;</code> to any name you like)</p>
-<h3 id="2-1-Generate-SSH-Key-Pair-on-Your-Local-Machine"><a href="#2-1-Generate-SSH-Key-Pair-on-Your-Local-Machine" class="headerlink" title="2.1. Generate SSH Key Pair on Your Local Machine"></a>2.1. Generate SSH Key Pair on Your Local Machine</h3><p>(macOS)</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Execute the following commands on your local machine</span></span><br><span class="line"><span class="built_in">cd</span> ~/.ssh</span><br><span class="line">ssh-keygen -t rsa -b 1024 -f <span class="string">&quot;&#123;KeyName&#125;&quot;</span> -C <span class="string">&quot;&#123;Put Any Comment You Like&#125;&quot;</span></span><br><span class="line">ssh-add -K ./&#123;KeyName&#125;</span><br></pre></td></tr></table></figure>
-<p>To check if you make it right, type the following command and you should see a string as the output.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/&#123;KeyName&#125;.pub</span><br></pre></td></tr></table></figure>
-
-<p>(Windows)</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Execute the following commands on your local machine</span></span><br><span class="line"><span class="built_in">cd</span> C:\Users\&#123;UserName&#125;\.ssh</span><br><span class="line">ssh<span class="literal">-keygen</span> <span class="literal">-t</span> rsa <span class="literal">-b</span> <span class="number">1024</span> <span class="operator">-f</span> <span class="string">&quot;&#123;KeyName&#125;&quot;</span> <span class="literal">-C</span> <span class="string">&quot;&#123;Put Any Comment You Like&#125;&quot;</span></span><br></pre></td></tr></table></figure>
-<p>To check if you make it right, double click the key file and you should see a string.</p>
-<p><strong>Notes:</strong></p>
-<ul>
-<li>Execute ssh-keygen on your own computer instead of the cluster.</li>
-<li>It is fine to use the SSH key file generated before (eg. id_rsa.pub), if you have.</li>
-<li>ssh-keygen will ask you to set a paraphrase, which improves the security of using SSH key authentication. Type “Enter” for no paraphrase.</li>
-</ul>
-<p><strong>Parameters for ssh-keygen command:</strong></p>
-<ul>
-<li><strong>-t</strong>: type for ssh key generation. Here we use rsa</li>
-<li><strong>-b</strong>: bits</li>
-<li><strong>-f</strong>: name of your ssh key file. You are recommended to set this parameter in case it<br>is conflict with the ssh key file you generated before.</li>
-<li><strong>-C</strong>: comments to distinguish the ssh key file from others</li>
-</ul>
-<h3 id="2-2-Transfer-Your-SSH-Public-Key-File-to-the-Server"><a href="#2-2-Transfer-Your-SSH-Public-Key-File-to-the-Server" class="headerlink" title="2.2. Transfer Your SSH Public Key File to the Server"></a>2.2. Transfer Your SSH Public Key File to the Server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Execute the following commands on your local machine</span></span><br><span class="line">scp ~/.ssh/&#123;KeyName&#125;.pub &#123;Your Account Name&#125;@&#123;Server ip&#125;:~</span><br></pre></td></tr></table></figure>
-<p><strong>Notes:</strong></p>
-<ul>
-<li>This command will ask you for password for data transfer. Please make sure that you type in the correct password. If you are Windows user and you want to copy &amp; paste the password for convenience, try “Ctrl + Shift + V” if you fail to paste the password with “Ctrl + V”.</li>
-</ul>
-<h3 id="2-3-Configure-authorized-keys-on-the-Server"><a href="#2-3-Configure-authorized-keys-on-the-Server" class="headerlink" title="2.3. Configure authorized_keys on the Server"></a>2.3. Configure authorized_keys on the Server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Login the cluster with password</span></span><br><span class="line">ssh &#123;Your Account Name&#125;@&#123;Server ip&#125;</span><br><span class="line"><span class="comment">## All the following commands should be executed on the cluster</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/.ssh</span><br><span class="line"><span class="built_in">cat</span> ./&#123;KeyName&#125;.pub &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line"><span class="built_in">rm</span> -f ~/&#123;KeyName&#125;.pub</span><br><span class="line"><span class="built_in">chmod</span> 700 ~/.ssh</span><br><span class="line"><span class="built_in">chmod</span> 600 ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
-<p>To check if you make it right, execute the following command and you should see a string as the output that is the same as in Step-1.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-4-Prepare-for-SSH-Connection-with-Key-Authentication"><a href="#2-4-Prepare-for-SSH-Connection-with-Key-Authentication" class="headerlink" title="2.4. Prepare for SSH Connection with Key Authentication"></a>2.4. Prepare for SSH Connection with Key Authentication</h3><p>Add the following content to <code>~/.ssh/config</code> file on your local machine:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Host &#123;Any Name You Like&#125;</span><br><span class="line">    HostName &#123;ip&#125;</span><br><span class="line">    IdentityFile ~/.ssh/&#123;KeyName&#125;</span><br><span class="line">    User &#123;Your Account Name&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Notes:</strong></p>
-<ul>
-<li>It is recommended to configure with the Remote SSH extension on VS Code. Please refer to <a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/remote/ssh">Remote Development using SSH</a> for more information.</li>
-</ul>
-<h3 id="2-5-Login-the-Server-Password-free-with-SSH-key-Authentication"><a href="#2-5-Login-the-Server-Password-free-with-SSH-key-Authentication" class="headerlink" title="2.5. Login the Server Password-free with SSH key Authentication"></a>2.5. Login the Server Password-free with SSH key Authentication</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;Your Account Name&#125;@&#123;Server ip&#125;</span><br></pre></td></tr></table></figure>
-<p>or</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;Your Student ID&#125;@&#123;Any Name You Like&#125; <span class="comment"># above in Sec. 4</span></span><br></pre></td></tr></table></figure>
-
-<p>or </p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;Any Name You Like&#125; <span class="comment"># above in Sec. 4</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="3-Set-some-alias"><a href="#3-Set-some-alias" class="headerlink" title="3. Set some alias"></a>3. Set some alias</h2><p>Alias convenient us typing some common commands.</p>
-<p>Add the following to the end of <code>~/.bashrc</code>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> cf=<span class="string">&quot;ls -l | grep &quot;</span>^-<span class="string">&quot; | wc -l&quot;</span></span><br><span class="line"><span class="built_in">alias</span> ns=<span class="string">&quot;nvidia-smi&quot;</span></span><br><span class="line"><span class="built_in">alias</span> py=<span class="string">&quot;python&quot;</span></span><br><span class="line"><span class="built_in">alias</span> act=<span class="string">&quot;conda activate&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>The first alias, <code>cf</code> means count files, can count number of visible files (excluding directories) under the current working directory.</p>
-<p>The second alias, <code>ns</code> is short for <code>nvidia-smi</code> to check for the GPU information.</p>
-<p>The third alias <code>py</code> is short for <code>python</code>.</p>
-<p>The fourth alias <code>act</code> can be used like <code>act py39</code> (activate the conda <code>py39</code> environment)</p>
-<h2 id="4-Configure-the-CUDA-compiler-version"><a href="#4-Configure-the-CUDA-compiler-version" class="headerlink" title="4. Configure the CUDA compiler version"></a>4. Configure the CUDA compiler version</h2><p>Add the following to the end of <code>~/.bashrc</code>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/usr/local/cuda-11.1/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
-
-<p>Change the CUDA directory (<code>/usr/local/cuda-11.1</code> above) to the one you actually want to use.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1680,7 +1647,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
