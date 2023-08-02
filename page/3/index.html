@@ -179,6 +179,155 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/23/cpp-declare-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/03/23/cpp-declare-1/" class="post-title-link" itemprop="url">C/C++ 复杂类型声明规则（1）-螺旋法则</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-03-23 13:24:13" itemprop="dateCreated datePublished" datetime="2023-03-23T13:24:13+08:00">2023-03-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-03-24 12:00:25" itemprop="dateModified" datetime="2023-03-24T12:00:25+08:00">2023-03-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>“C&#x2F;C++ 复杂类型声明规则” 将分为两节。第一节介绍螺旋法则声明规范，第二节介绍const的修饰关系。这两节内容，我都尝试以一种不用死记硬背，而是理解的方式去掌握。</p>
+<p>本文参考自【初中生也能看懂的C&#x2F;C++类型声明规则教学，很简单的！】 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1mB4y1L7HB/">https://www.bilibili.com/video/BV1mB4y1L7HB/</a> 。里面通过一些例子介绍了螺旋法则。我将在此基础上加上我对其的解释，使其变得更加通俗易懂。</p>
+<h3 id="螺旋法则："><a href="#螺旋法则：" class="headerlink" title="螺旋法则："></a>螺旋法则：</h3><ul>
+<li><p>第一步，找到变量名，如果没有变置名，找到最里面的结构</p>
+</li>
+<li><p>第二步，向右看，读出你看到的东西但是不要跳过括号</p>
+</li>
+<li><p>第三步，再向左看，读出你看到的东西，但是也不要跳过括号</p>
+</li>
+<li><p>第四步，如果有括号的话，跳出一层括号</p>
+</li>
+<li><p>第五步，重复上述过程，直到你读出最终的类型</p>
+</li>
+</ul>
+<h3 id="举例1："><a href="#举例1：" class="headerlink" title="举例1："></a>举例1：</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *v[<span class="number">5</span>];</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第一步：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *v[<span class="number">5</span>];</span><br><span class="line">     ^</span><br></pre></td></tr></table></figure>
+
+<p>如上，我们找到了<code>v</code>是变量名。读作：<code>v</code>是……</p>
+<ul>
+<li>第二步，向右看，读出你看到的东西但是不要跳过括号。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *v[<span class="number">5</span>];</span><br><span class="line">      ^^^</span><br></pre></td></tr></table></figure>
+
+<p><code>[5]</code>意为是一个5个元素的数组。读作：v是一个五个元素的数组。</p>
+<ul>
+<li>第三步，再向左看，读出你看到的东西，但是也不要跳过括号。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *v[<span class="number">5</span>];</span><br><span class="line">^^^^^</span><br></pre></td></tr></table></figure>
+
+<p><code>int *</code>意为每个东西是一个指向int的指针。读作：<code>v</code>是一个五个元素的数组，数组每个东西指向一个int型指针。</p>
+<ul>
+<li>第四步，如果有括号的话，跳出一层括号。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *v[<span class="number">5</span>];</span><br></pre></td></tr></table></figure>
+
+<p>对于上面这个例子，无这一步。我们已经读完了：<code>v</code>是一个五个元素的数组，数组每个东西指向一个int型指针。</p>
+<p>我们可以验证一下我们理解正不正确。我们可以用下列的代码给v数组赋值：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">2023</span>;</span><br><span class="line">v[<span class="number">0</span>] = &amp;a;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%p %p&quot;</span>, &amp;a, v[<span class="number">0</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>g++编译通过且运行正确，可见我们的理解没有问题。</p>
+<h3 id="举例2"><a href="#举例2" class="headerlink" title="举例2"></a>举例2</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> (*func)()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第一步：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> (*func)()</span><br><span class="line">      ^^^^</span><br></pre></td></tr></table></figure>
+
+<p>如上，我们找到了<code>func</code>是变量名。读作：<code>func</code>是……</p>
+<ul>
+<li>第二步：向右看，读出你看到的东西但是不要跳过括号。</li>
+</ul>
+<p>向右边遇到括号了，不跳出括号，skip。</p>
+<ul>
+<li>第三步，再向左看，读出你看到的东西，但是也不要跳过括号。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> (*func)()</span><br><span class="line">     ^ </span><br></pre></td></tr></table></figure>
+
+<p>单独一个*意为“指向”。读作：<code>func</code>指向……</p>
+<ul>
+<li>第四步，如果有括号的话，跳出一层括号。向右看。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> (*func)()</span><br><span class="line">           ^^</span><br></pre></td></tr></table></figure>
+
+<p>这样一组括号是函数的意思。括号内为空，说明这个函数没有参数。整个<code>(*func)</code>的左边是<code>int</code>，它是这个函数的返回值，是<code>int</code>。读作：<code>func</code>指向一个接收空参且返回值为<code>int</code>的函数。</p>
+<p>我们可以验证一下我们理解正不正确。我们可以用下列的代码用匿名函数给<code>func</code>赋值：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> (*func1)();</span><br><span class="line">func1 = []()-&gt;<span class="type">int</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2023</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, <span class="built_in">func1</span>());</span><br></pre></td></tr></table></figure>
+
+<p>g++编译通过且运行正确，可见我们的理解没有问题。</p>
+<h3 id="总结-一个网站推荐"><a href="#总结-一个网站推荐" class="headerlink" title="总结&amp;一个网站推荐"></a>总结&amp;一个网站推荐</h3><p>螺旋法则五步骤；</p>
+<p>当读的时候，看到<code>[]</code>意为一个数组， <code>()</code>意为是一个函数，那么在主体的左侧肯定配套还会有一个返回值（当然，这个返回值也可能是一个复杂复合类型）。 <code>*</code>如果单独出现，意为指向，如果和类型出现，如<code>int*</code>，那就可以理解为指向int。</p>
+<p>这里顺便推荐一个可以辅助阅读的网站：<a target="_blank" rel="noopener" href="https://cdecl.org/">https://cdecl.org/</a> 。这个网站可以将表达式翻译成人话（英语），帮助大家的理解。但是总体来说只要会了螺旋法则，啥声明都能理解确切含义。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/22/Numpy-intro/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -637,7 +786,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

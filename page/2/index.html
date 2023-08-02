@@ -179,6 +179,176 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/27/Pytorch-Practical-Basics-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/27/Pytorch-Practical-Basics-1/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 1--Tensor basics (attributes, creation)</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-05-27 11:47:00" itemprop="dateCreated datePublished" datetime="2023-05-27T11:47:00+08:00">2023-05-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-05-29 00:30:27" itemprop="dateModified" datetime="2023-05-29T00:30:27+08:00">2023-05-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>This series would not be a general PyTorch introduction or detailed tutorials. Instead, this would be a very practical introduction to some common basics needed for Implementing Hand-Written Modules. </p>
+<p>This is the First Section of this series, we would like to introduce some tensor basics, including: tensor attributes, tensor creation, and some other things. All the things I mentioned will be practical, but not exhaustive. </p>
+<h2 id="Tensor-attributes"><a href="#Tensor-attributes" class="headerlink" title="Tensor attributes"></a>Tensor attributes</h2><p>We introduce 5 key attributes for <code>torch.tensor</code> <code>a</code> here:</p>
+<ul>
+<li><code>a.shape</code>: Returns the shape of <code>a</code>. The return type is <code>torch.Size</code>. Example:</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a = torch.randn(<span class="number">10</span>, <span class="number">20</span>) <span class="comment"># create a 10x20 tensor</span></span><br><span class="line">a.shape</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.Size([<span class="number">10</span>, <span class="number">20</span>])</span><br></pre></td></tr></table></figure>
+
+<p>The <code>torch.Size</code> object supports some tricks:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># unpack</span></span><br><span class="line">h, w = a.shape</span><br><span class="line">h, w</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">(<span class="number">10</span>, <span class="number">20</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># unpack in function calls</span></span><br><span class="line"><span class="built_in">print</span>(*a.shape)</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">10</span> <span class="number">20</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>a.ndim</code>: Returns number of dimensions of <code>a</code>.</li>
+</ul>
+<p>It looks like <code>len(a.shape)</code>. It also has a function version, called <code>a.ndimension()</code></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a.ndim</span><br><span class="line">a.ndimension()</span><br><span class="line"><span class="built_in">len</span>(a.shape)</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>a.device</code>: Returns where the <code>a</code> locates.</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a.device</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">device(<span class="built_in">type</span>=<span class="string">&#x27;cpu&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Convert to CUDA by using <code>a = a.to(&#39;cuda:0&#39;)</code>. Convert back to CPU by using <code>a = a.to(&#39;cpu&#39;)</code> or <code>a = a.cpu()</code>.</p>
+<ul>
+<li><code>a.dtype</code>: Returns the data type of <code>a</code>.</li>
+</ul>
+<p>The data type of tensor <code>a</code>. It’s very important in PyTorch! Usually, the data type would be <code>torch.float32</code> or <code>torch.int64</code>. Some data type convert method:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># to float32</span></span><br><span class="line">f = a.<span class="built_in">float</span>()</span><br><span class="line">f.dtype</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.float32</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># to int64</span></span><br><span class="line">l = a.long()</span><br><span class="line">l.dtype</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.int64</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># to int32</span></span><br><span class="line">i = a.<span class="built_in">int</span>()</span><br><span class="line">i.dtype</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.int32</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Also, we can use .to() as well:</span></span><br><span class="line">f = a.to(torch.float32)</span><br><span class="line">f.dtype</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.float32</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>a.numel()</code>: Returns <strong>num</strong>ber of <strong>el</strong>ements in <code>a</code>. Usually used in counting number of parameters in the model.</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a.numel()</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">200</span>  <span class="comment"># it&#x27;s 10*20!</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line">model = torchvision.models.resnet50()</span><br><span class="line"><span class="built_in">sum</span>([p.numel() <span class="keyword">for</span> p <span class="keyword">in</span> model.parameters()])</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">25557032</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Tensor-creation"><a href="#Tensor-creation" class="headerlink" title="Tensor creation"></a>Tensor creation</h2><p>PyTorch tensors plays key role in writing deep learning programs. Usually, tensor are from two types: data and auxiliary variables (e.g., masks).</p>
+<ol>
+<li>For the data tensor, they are usually converted from other packages, such as <code>numpy</code>. We have several methods to convert it to <code>torch.tensor</code>.</li>
+</ol>
+<ul>
+<li><p><code>torch.tensor(arr)</code> Returns a deep copy of <code>arr</code>, i.e., the storage data is independent with <code>arr</code>.. (Very memory and time consuming, not recommended for most cases)</p>
+</li>
+<li><p><code>torch.from_numpy(arr)</code> Returns a shallow copy tensor, i.e., the storage data is shared with <code>arr</code>. </p>
+</li>
+<li><p><code>torch.as_tensor(arr, dtype=..., device=...)</code> If <code>dtype</code> and <code>device</code> is same as <code>arr</code>, then it behaves like <code>torch.from_numpy()</code> function, shallow copy. Otherwise, it acts like <code>torch.tensor()</code>, deep copy. So using the function is recommended.</p>
+</li>
+</ul>
+<ol start="2">
+<li>For the auxiliary variables, PyTorch provides some common methods:</li>
+</ol>
+<ul>
+<li>Linear:</li>
+</ul>
+<p>We have <code>torch.linspace</code> and <code>torch.arange</code>. They are easy to understand. Please see the docs <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.linspace.html#torch.linspace">linspace</a> and <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.arange.html#torch.arange">arange</a>.</p>
+<ul>
+<li>Random:</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">torch.randn(<span class="number">1</span>, <span class="number">2</span>) <span class="comment"># normal distribution, shape 1x2</span></span><br><span class="line">torch.rand(<span class="number">1</span>, <span class="number">2</span>)  <span class="comment"># uniform[0, 1) distribution, shape 1x2</span></span><br><span class="line">torch.randint(<span class="number">0</span>, <span class="number">100</span>, (<span class="number">1</span>, <span class="number">2</span>)) <span class="comment"># uniform[0, 100) distribution, shape 1x2</span></span><br></pre></td></tr></table></figure>
+
+<p>These functions also support passing in <code>torch.Size()</code> or a sequence as the size parameter. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = torch.randn(<span class="number">10</span>, <span class="number">10</span>) <span class="comment"># a is in shape 10x10</span></span><br><span class="line">torch.randn(a.shape)    <span class="comment"># good!</span></span><br><span class="line">torch.randn([<span class="number">10</span>, <span class="number">10</span>])   <span class="comment"># good!</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Special tensors:</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">torch.zeros(<span class="number">10</span>, <span class="number">10</span>) <span class="comment"># all zero tensor, shape 10x10</span></span><br><span class="line">torch.ones(<span class="number">10</span>, <span class="number">10</span>)  <span class="comment"># all one tensor, shape 10x10</span></span><br><span class="line"><span class="comment"># By default, the dtype is float32.</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>xxx_like()</code></li>
+</ul>
+<p>PyTorch has a series of function looks like <code>xxx_like()</code>, such as <code>ones_like()</code>, <code>zeros_like()</code>, <code>randn_like()</code>. These functions generates the tensor with the name, and the <code>dtype</code> and <code>device</code> and <code>layout</code> is same as the passing-in tensor. </p>
+<p><code>torch.rand_like(input)</code> is equivalent to <code>torch.rand(input.size(), dtype=input.dtype, layout=input.layout, device=input.device)</code>.</p>
+<p>An example:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">arr = torch.tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>], dtype=torch.float64)</span><br><span class="line"><span class="built_in">print</span>(arr.shape) <span class="comment"># torch.Size([3])</span></span><br><span class="line"><span class="built_in">print</span>(arr.dtype) <span class="comment"># torch.float64</span></span><br><span class="line"></span><br><span class="line">z = torch.zeros_like(arr)</span><br><span class="line"><span class="built_in">print</span>(z.shape)   <span class="comment"># torch.Size([3])</span></span><br><span class="line"><span class="built_in">print</span>(z.dtype)   <span class="comment"># torch.float64</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/07/My-Setup-to-New-Linux-Server-Account/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1112,155 +1282,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/23/cpp-declare-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Future">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Future's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/03/23/cpp-declare-1/" class="post-title-link" itemprop="url">C/C++ 复杂类型声明规则（1）-螺旋法则</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-03-23 13:24:13" itemprop="dateCreated datePublished" datetime="2023-03-23T13:24:13+08:00">2023-03-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-03-24 12:00:25" itemprop="dateModified" datetime="2023-03-24T12:00:25+08:00">2023-03-24</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>“C&#x2F;C++ 复杂类型声明规则” 将分为两节。第一节介绍螺旋法则声明规范，第二节介绍const的修饰关系。这两节内容，我都尝试以一种不用死记硬背，而是理解的方式去掌握。</p>
-<p>本文参考自【初中生也能看懂的C&#x2F;C++类型声明规则教学，很简单的！】 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1mB4y1L7HB/">https://www.bilibili.com/video/BV1mB4y1L7HB/</a> 。里面通过一些例子介绍了螺旋法则。我将在此基础上加上我对其的解释，使其变得更加通俗易懂。</p>
-<h3 id="螺旋法则："><a href="#螺旋法则：" class="headerlink" title="螺旋法则："></a>螺旋法则：</h3><ul>
-<li><p>第一步，找到变量名，如果没有变置名，找到最里面的结构</p>
-</li>
-<li><p>第二步，向右看，读出你看到的东西但是不要跳过括号</p>
-</li>
-<li><p>第三步，再向左看，读出你看到的东西，但是也不要跳过括号</p>
-</li>
-<li><p>第四步，如果有括号的话，跳出一层括号</p>
-</li>
-<li><p>第五步，重复上述过程，直到你读出最终的类型</p>
-</li>
-</ul>
-<h3 id="举例1："><a href="#举例1：" class="headerlink" title="举例1："></a>举例1：</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *v[<span class="number">5</span>];</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>第一步：</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *v[<span class="number">5</span>];</span><br><span class="line">     ^</span><br></pre></td></tr></table></figure>
-
-<p>如上，我们找到了<code>v</code>是变量名。读作：<code>v</code>是……</p>
-<ul>
-<li>第二步，向右看，读出你看到的东西但是不要跳过括号。</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *v[<span class="number">5</span>];</span><br><span class="line">      ^^^</span><br></pre></td></tr></table></figure>
-
-<p><code>[5]</code>意为是一个5个元素的数组。读作：v是一个五个元素的数组。</p>
-<ul>
-<li>第三步，再向左看，读出你看到的东西，但是也不要跳过括号。</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *v[<span class="number">5</span>];</span><br><span class="line">^^^^^</span><br></pre></td></tr></table></figure>
-
-<p><code>int *</code>意为每个东西是一个指向int的指针。读作：<code>v</code>是一个五个元素的数组，数组每个东西指向一个int型指针。</p>
-<ul>
-<li>第四步，如果有括号的话，跳出一层括号。</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *v[<span class="number">5</span>];</span><br></pre></td></tr></table></figure>
-
-<p>对于上面这个例子，无这一步。我们已经读完了：<code>v</code>是一个五个元素的数组，数组每个东西指向一个int型指针。</p>
-<p>我们可以验证一下我们理解正不正确。我们可以用下列的代码给v数组赋值：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">2023</span>;</span><br><span class="line">v[<span class="number">0</span>] = &amp;a;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%p %p&quot;</span>, &amp;a, v[<span class="number">0</span>]);</span><br></pre></td></tr></table></figure>
-
-<p>g++编译通过且运行正确，可见我们的理解没有问题。</p>
-<h3 id="举例2"><a href="#举例2" class="headerlink" title="举例2"></a>举例2</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> (*func)()</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>第一步：</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> (*func)()</span><br><span class="line">      ^^^^</span><br></pre></td></tr></table></figure>
-
-<p>如上，我们找到了<code>func</code>是变量名。读作：<code>func</code>是……</p>
-<ul>
-<li>第二步：向右看，读出你看到的东西但是不要跳过括号。</li>
-</ul>
-<p>向右边遇到括号了，不跳出括号，skip。</p>
-<ul>
-<li>第三步，再向左看，读出你看到的东西，但是也不要跳过括号。</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> (*func)()</span><br><span class="line">     ^ </span><br></pre></td></tr></table></figure>
-
-<p>单独一个*意为“指向”。读作：<code>func</code>指向……</p>
-<ul>
-<li>第四步，如果有括号的话，跳出一层括号。向右看。</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> (*func)()</span><br><span class="line">           ^^</span><br></pre></td></tr></table></figure>
-
-<p>这样一组括号是函数的意思。括号内为空，说明这个函数没有参数。整个<code>(*func)</code>的左边是<code>int</code>，它是这个函数的返回值，是<code>int</code>。读作：<code>func</code>指向一个接收空参且返回值为<code>int</code>的函数。</p>
-<p>我们可以验证一下我们理解正不正确。我们可以用下列的代码用匿名函数给<code>func</code>赋值：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">int</span> (*func1)();</span><br><span class="line">func1 = []()-&gt;<span class="type">int</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2023</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, <span class="built_in">func1</span>());</span><br></pre></td></tr></table></figure>
-
-<p>g++编译通过且运行正确，可见我们的理解没有问题。</p>
-<h3 id="总结-一个网站推荐"><a href="#总结-一个网站推荐" class="headerlink" title="总结&amp;一个网站推荐"></a>总结&amp;一个网站推荐</h3><p>螺旋法则五步骤；</p>
-<p>当读的时候，看到<code>[]</code>意为一个数组， <code>()</code>意为是一个函数，那么在主体的左侧肯定配套还会有一个返回值（当然，这个返回值也可能是一个复杂复合类型）。 <code>*</code>如果单独出现，意为指向，如果和类型出现，如<code>int*</code>，那就可以理解为指向int。</p>
-<p>这里顺便推荐一个可以辅助阅读的网站：<a target="_blank" rel="noopener" href="https://cdecl.org/">https://cdecl.org/</a> 。这个网站可以将表达式翻译成人话（英语），帮助大家的理解。但是总体来说只要会了螺旋法则，啥声明都能理解确切含义。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1330,7 +1351,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
