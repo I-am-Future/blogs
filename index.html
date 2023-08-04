@@ -328,10 +328,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-08-02 12:03:42 / Modified: 12:10:41" itemprop="dateCreated datePublished" datetime="2023-08-02T12:03:42+08:00">2023-08-02</time>
+              <time title="Created: 2023-08-02 12:03:42" itemprop="dateCreated datePublished" datetime="2023-08-02T12:03:42+08:00">2023-08-02</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-05 00:52:15" itemprop="dateModified" datetime="2023-08-05T00:52:15+08:00">2023-08-05</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -355,11 +361,20 @@
       
           <p>In the section 6 to 9, we’ll investigate how to use <code>torch.autograd.Function</code> to implement the hand-written operators. The tentative outline is:</p>
 <ul>
-<li><input checked disabled type="checkbox"> In the section 6, we talk about the basics of <code>torch.autograd.Function</code>. <strong>The operators defined by <code>torch.autograd.Function</code> can be automatically back-propagated.</strong></li>
-<li><input checked disabled type="checkbox"> In the last section (7), we’ll talk about mathematic derivation for the “linear layer” operator. </li>
-<li><input checked disabled type="checkbox"> In this section (8), we talk about writing C++ CUDA extension for the “linear layer” operator. </li>
-<li><input disabled type="checkbox"> In the section 9, we talk details about building the extension to a module, as well as testing. Then we’ll conclude the things we’ve done so far.</li>
+<li>[x] In the section 6, we talk about the basics of <code>torch.autograd.Function</code>. <strong>The operators defined by <code>torch.autograd.Function</code> can be automatically back-propagated.</strong></li>
+<li>[x] In the last section (7), we’ll talk about mathematic derivation for the “linear layer” operator. </li>
+<li>[x] In this section (8), we talk about writing C++ CUDA extension for the “linear layer” operator. </li>
+<li>[ ] In the section 9, we talk details about building the extension to a module, as well as testing. Then we’ll conclude the things we’ve done so far. </li>
 </ul>
+<p><strong>Note:</strong></p>
+<p>This blog is written with following reference: </p>
+<ol>
+<li>PyTorch official tutorial about CUDA extension: <a href>website</a>.</li>
+<li>YouTube video about writing CUDA extension: <a href>video</a>, <a href>code</a>.</li>
+</ol>
+<p>For how to write CUDA code, you can follow <a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">official documentation</a>, <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/34587739">blogs</a> (In Chinese). You can search by yourself for English tutorials and video tutorials.</p>
+<p>This blog’s whole code all at: <a href>code</a>.</p>
+<h1 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h1><h1 id="pybind-Interface"><a href="#pybind-Interface" class="headerlink" title="pybind Interface"></a>pybind Interface</h1><h1 id="CUDA-wrapper"><a href="#CUDA-wrapper" class="headerlink" title="CUDA wrapper"></a>CUDA wrapper</h1><h1 id="CUDA-kernel"><a href="#CUDA-kernel" class="headerlink" title="CUDA kernel"></a>CUDA kernel</h1><p>That’s too much things in this section. In the next section, we’ll talk about how to write the <code>setup.py</code> to compile the code, letting it be a module for python. </p>
 
       
     </div>
