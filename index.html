@@ -473,7 +473,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-04 21:59:11" itemprop="dateModified" datetime="2023-08-04T21:59:11+08:00">2023-08-04</time>
+                <time title="Modified: 2023-08-05 17:50:46" itemprop="dateModified" datetime="2023-08-05T17:50:46+08:00">2023-08-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -503,14 +503,14 @@
 <li><input disabled type="checkbox"> In the section 8, we talk about writing C++ CUDA extension for the “linear layer” operator. </li>
 <li><input disabled type="checkbox"> In the section 9, we talk details about building the extension to a module, as well as testing. Then we’ll conclude the things we’ve done so far.</li>
 </ul>
-<p>The linear layer is defined by Y &#x3D; XW + b. There is a matrix multiplication operation, and a bias addition. <strong>We’ll talk about their forward&#x2F;backward derivation separately.</strong> </p>
+<p>The linear layer is defined by <code>Y = XW + b</code>. There is a matrix multiplication operation, and a bias addition. <strong>We’ll talk about their forward&#x2F;backward derivation separately.</strong> </p>
 <p>(I feel sorry that currently there is some problem with displaying mathematics formula here. I’ll use screenshot first.)</p>
-<h1 id="Matrix-multiplication-forward"><a href="#Matrix-multiplication-forward" class="headerlink" title="Matrix multiplication: forward"></a>Matrix multiplication: forward</h1><p>The matrix multiplication operation is a common operator. Each entry in the result matrix is a vector dot product of two input matrixes. The <code>(i, j)</code> entry of the result is from multiplying first matrix’s row <code>i</code> vector and the second matrix’s column <code>j</code> vector. From this property, we know that number of columns in the first matrix should equal to number of rows in the second matrix. The shape should be: [m, n] x [n, r] -&gt; [m, r]. For more details, see the figure illustration below. </p>
+<h1 id="Matrix-multiplication-forward"><a href="#Matrix-multiplication-forward" class="headerlink" title="Matrix multiplication: forward"></a>Matrix multiplication: forward</h1><p>The matrix multiplication operation is a common operator. Each entry in the result matrix is a vector dot product of two input matrixes. The <code>(i, j)</code> entry of the result is from multiplying first matrix’s row <code>i</code> vector and the second matrix’s column <code>j</code> vector. From this property, we know that number of columns in the first matrix should equal to number of rows in the second matrix. The shape should be: <code>[m, n] x [n, r] -&gt; [m, r]</code>. For more details, see the figure illustration below. </p>
 <img src="/2023/08/01/Pytorch-Practical-Basics-7/matmul-forward.png" alt="matmul-forward" style="zoom: 67%;">
 
 
 
-<h1 id="Matrix-multiplication-backward"><a href="#Matrix-multiplication-backward" class="headerlink" title="Matrix multiplication: backward"></a>Matrix multiplication: backward</h1><p>First, we should know what’s the <strong>goal</strong> of the backward propagation. In the upstream side, we would get the gradient of the answer matrix, C. (The gradient matrix has the same size as its corresponding matrix. i.e., if C is in shape [m, r], then gradient of C is shape [m, r] as well.) <strong>In this step, we should get the gradient of matrix A and B.</strong> <u>Gradient of matrix A and B are functions in terms of matrix A and B and gradient of C.</u> Specially, by chain rule, we can formulate it as</p>
+<h1 id="Matrix-multiplication-backward"><a href="#Matrix-multiplication-backward" class="headerlink" title="Matrix multiplication: backward"></a>Matrix multiplication: backward</h1><p>First, we should know what’s the <strong>goal</strong> of the backward propagation. In the upstream side, we would get the gradient of the answer matrix, C. (The gradient matrix has the same size as its corresponding matrix. i.e., if C is in shape <code>[m, r]</code>, then gradient of C is shape <code>[m, r]</code> as well.) <strong>In this step, we should get the gradient of matrix A and B.</strong> <u>Gradient of matrix A and B are functions in terms of matrix A and B and gradient of C.</u> Specially, by chain rule, we can formulate it as</p>
 <img src="/2023/08/01/Pytorch-Practical-Basics-7/matmul-backward-math1.png" alt="matmul-backward-math1" style="zoom:50%;">
 
 <!-- $$
@@ -533,7 +533,7 @@ $$-->
 \end{align}
 $$-->
 
-<p>The result above is the gradient for one entry <code>A[i, j]</code>, and it’s a vector dot product between a matrix’s row <code>x</code> and another matrix’s column <code>y</code>. Observing this formula, we can naturally extend it to the gradient of the whole matrix A, and that will be a matrix product. </p>
+<p>The result above is the gradient for one entry <code>A[i, j]</code>, and it’s a vector dot product between a matrix’s row <code>i</code> and another matrix’s column <code>j</code>. Observing this formula, we can naturally extend it to the gradient of the whole matrix A, and that will be a matrix product. </p>
 <img src="/2023/08/01/Pytorch-Practical-Basics-7/matmul-backward-math3.png" alt="matmul-backward-math3" style="zoom:50%;">
 
 <!--$$
