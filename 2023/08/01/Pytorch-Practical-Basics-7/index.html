@@ -37,7 +37,7 @@
 <meta property="og:image" content="http://example.com/2023/08/01/Pytorch-Practical-Basics-7/addbias-backward.jpg">
 <meta property="og:image" content="http://example.com/2023/08/01/Pytorch-Practical-Basics-7/addbias-backward-math1.png">
 <meta property="article:published_time" content="2023-08-01T12:15:44.000Z">
-<meta property="article:modified_time" content="2023-08-05T09:50:46.155Z">
+<meta property="article:modified_time" content="2023-08-05T09:53:31.595Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2023/08/01/Pytorch-Practical-Basics-7/matmul-forward.png">
@@ -224,7 +224,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-05 17:50:46" itemprop="dateModified" datetime="2023-08-05T17:50:46+08:00">2023-08-05</time>
+                <time title="Modified: 2023-08-05 17:53:31" itemprop="dateModified" datetime="2023-08-05T17:53:31+08:00">2023-08-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -293,13 +293,13 @@ $$-->
 $$-->
 
 <p>Recall “Gradient of matrix A and B are functions in terms of matrix A and B and gradient of C” we said before. Our derivation indeed show that, uh?</p>
-<h1 id="Add-bias-forward"><a href="#Add-bias-forward" class="headerlink" title="Add bias: forward"></a>Add bias: forward</h1><p>First, we should note that when doing the addition, we’re actually adding the XW matrix (shape [n, r]) with the bias vector (shape [r]). Indeed we have a <strong>broadcasting</strong> here. <strong>We add bias to each row of the <code>XW</code> matrix.</strong></p>
+<h1 id="Add-bias-forward"><a href="#Add-bias-forward" class="headerlink" title="Add bias: forward"></a>Add bias: forward</h1><p>First, we should note that when doing the addition, we’re actually adding the <code>XW</code> matrix (shape <code>[n, r]</code>) with the bias vector (shape <code>[r]</code>). Indeed we have a <strong>broadcasting</strong> here. <strong>We add bias to each row of the <code>XW</code> matrix.</strong></p>
 <img src="/2023/08/01/Pytorch-Practical-Basics-7/addbias-forward.png" alt="addbias-forward.drawio" style="zoom:67%;">
 
 <h1 id="Add-bias-backward"><a href="#Add-bias-backward" class="headerlink" title="Add bias: backward"></a>Add bias: backward</h1><p>With the similar principle, we can get the gradient for the bias as well. </p>
 <img src="/2023/08/01/Pytorch-Practical-Basics-7/addbias-backward.jpg" alt="addbias-backward" style="zoom:67%;">
 
-<p>For each entry in b vector, the gradient is:</p>
+<p>For each entry in vector <code>b</code>, the gradient is:</p>
 <img src="/2023/08/01/Pytorch-Practical-Basics-7/addbias-backward-math1.png" alt="addbias-backward-math1" style="zoom:50%;">
 
 <!--$$
@@ -309,7 +309,7 @@ $$-->
 &= \sum_{k=1}^m \frac{\partial L}{\partial C_{k, i}} \\
 \end{align}
 $$-->
-<p>That is, the gradient of entry <code>bi</code> is the summation of the i-th column. In total, the gradient will be the summation along each column (i.e., axis&#x3D;0). In programming, we write:</p>
+<p>That is, the gradient of entry <code>b_i</code> is the summation of the i-th column. In total, the gradient will be the summation along each column (i.e., axis&#x3D;0). In programming, we write:</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grad_b = torch.<span class="built_in">sum</span>(grad_C, axis=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
 
 
