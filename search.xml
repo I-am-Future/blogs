@@ -62,6 +62,31 @@
 ]]></content>
   </entry>
   <entry>
+    <title>PyTorch Practical Hand-Written Modules Basics 9--Compiling and Testing the Module</title>
+    <url>/2023/08/07/Pytorch-Practical-Basics-9/</url>
+    <content><![CDATA[<p>In the section 6 to 9, we’ll investigate how to use <code>torch.autograd.Function</code> to implement the hand-written operators. The tentative outline is:</p>
+<ul>
+<li><input checked disabled type="checkbox"> In the section 6, we talk about the basics of <code>torch.autograd.Function</code>. <strong>The operators defined by <code>torch.autograd.Function</code> can be automatically back-propagated.</strong></li>
+<li><input checked disabled type="checkbox"> In the last section (7), we’ll talk about <strong>mathematic derivation</strong> for the “linear layer” operator. </li>
+<li><input checked disabled type="checkbox"> In the section (8), we talk about <strong>writing C++ CUDA extension</strong> for the “linear layer” operator. </li>
+<li><input checked disabled type="checkbox"> In this section (9), we talk details about <strong>building the extension</strong> to a python module, as well as <strong>testing</strong> the module. Then we’ll <strong>conclude</strong> the things we’ve done so far.</li>
+</ul>
+<p><strong>Note:</strong></p>
+<ul>
+<li>This blog is written with following reference: <ul>
+<li>PyTorch official tutorial about CUDA extension: <a href="https://pytorch.org/tutorials/advanced/cpp_extension.html">website</a>.</li>
+<li>YouTube video about writing CUDA extension: <a href="https://www.youtube.com/watch?v=l_Rpk6CRJYI">video</a>, <a href="https://github.com/kwea123/pytorch-cppcuda-tutorial">code</a>.</li>
+</ul>
+</li>
+<li>For how to write CUDA code, you can follow <a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">official documentation</a>, <a href="https://zhuanlan.zhihu.com/p/34587739">blogs</a> (In Chinese). You can search by yourself for English tutorials and video tutorials.</li>
+<li>This blog only talk some important points in the matrix multiplication example. Code are picked by pieces for illustration. Whole code is at: <a href="https://github.com/I-am-Future/PyTorch-Linear-Operator-CUDA">code</a>.</li>
+</ul>
+<h1 id="Python-side-Wrapper"><a href="#Python-side-Wrapper" class="headerlink" title="Python-side Wrapper"></a>Python-side Wrapper</h1><h1 id="Writing-setup-py"><a href="#Writing-setup-py" class="headerlink" title="Writing setup.py"></a>Writing setup.py</h1><h1 id="Module-Testing"><a href="#Module-Testing" class="headerlink" title="Module Testing"></a>Module Testing</h1><h1 id="Full-Example"><a href="#Full-Example" class="headerlink" title="Full Example"></a>Full Example</h1><h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1>]]></content>
+      <categories>
+        <category>Deep Learning</category>
+      </categories>
+  </entry>
+  <entry>
     <title>PyTorch Practical Hand-Written Modules Basics 8--Linear Layer Ops on C++/CUDA</title>
     <url>/2023/08/02/Pytorch-Practical-Basics-8/</url>
     <content><![CDATA[<p>In the section 6 to 9, we’ll investigate how to use <code>torch.autograd.Function</code> to implement the hand-written operators. The tentative outline is:</p>
@@ -205,7 +230,7 @@
     <content><![CDATA[<p>In the section 6 to 9, we’ll investigate how to use <code>torch.autograd.Function</code> to implement the hand-written operators. The tentative outline is:</p>
 <ul>
 <li><input checked disabled type="checkbox"> In the last section (6), we talk about the basics of <code>torch.autograd.Function</code>. <strong>The operators defined by <code>torch.autograd.Function</code> can be automatically back-propagated.</strong></li>
-<li><input checked disabled type="checkbox"> In this section (7), we’ll talk about mathematic derivation for the “linear layer” operator. </li>
+<li><input checked disabled type="checkbox"> In this section (7), we’ll talk about <strong>mathematic derivation</strong> for the “linear layer” operator. </li>
 <li><input disabled type="checkbox"> In the section 8, we talk about writing C++ CUDA extension for the “linear layer” operator. </li>
 <li><input disabled type="checkbox"> In the section 9, we talk details about building the extension to a module, as well as testing. Then we’ll conclude the things we’ve done so far.</li>
 </ul>
