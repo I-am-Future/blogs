@@ -328,10 +328,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-08-07 14:47:24 / Modified: 14:50:45" itemprop="dateCreated datePublished" datetime="2023-08-07T14:47:24+08:00">2023-08-07</time>
+              <time title="Created: 2023-08-07 14:47:24" itemprop="dateCreated datePublished" datetime="2023-08-07T14:47:24+08:00">2023-08-07</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-10 14:15:02" itemprop="dateModified" datetime="2023-08-10T14:15:02+08:00">2023-08-10</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -370,7 +376,14 @@
 <li>For how to write CUDA code, you can follow <a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">official documentation</a>, <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/34587739">blogs</a> (In Chinese). You can search by yourself for English tutorials and video tutorials.</li>
 <li>This blog only talk some important points in the matrix multiplication example. Code are picked by pieces for illustration. Whole code is at: <a target="_blank" rel="noopener" href="https://github.com/I-am-Future/PyTorch-Linear-Operator-CUDA">code</a>.</li>
 </ul>
-<h1 id="Python-side-Wrapper"><a href="#Python-side-Wrapper" class="headerlink" title="Python-side Wrapper"></a>Python-side Wrapper</h1><h1 id="Writing-setup-py"><a href="#Writing-setup-py" class="headerlink" title="Writing setup.py"></a>Writing setup.py</h1><h1 id="Module-Testing"><a href="#Module-Testing" class="headerlink" title="Module Testing"></a>Module Testing</h1><h1 id="Full-Example"><a href="#Full-Example" class="headerlink" title="Full Example"></a>Full Example</h1><h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1>
+<h1 id="Python-side-Wrapper"><a href="#Python-side-Wrapper" class="headerlink" title="Python-side Wrapper"></a>Python-side Wrapper</h1><p>Purely using C++ extension functions is not enough in our case. As mentioned in the Section 6, we need to build our operators with <code>torch.autograd.Function</code>. It is not convenient to let the user define the operator wrapper every time, so it’s better if we can write the wrapper in a python module. Then, users can easily import our python module, and using the wrapper class and functions in it.</p>
+<img src="/2023/08/07/Pytorch-Practical-Basics-9/cudaops-struct-improved.drawio.png" alt="cudaops-struct-improved.drawio" style="zoom:50%;">
+
+<p>The python module is at <code>mylinearops/</code>. Follow the section 6, we define some <code>autograd.Function</code> operators and <code>nn.Module</code> modules in the <code>mylinearops/mylinearops.py</code>. Then, we export the operators and modules by the code in the <code>mylinearops/__init__.py</code>:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> .mylinearops <span class="keyword">import</span> matmul</span><br><span class="line"><span class="keyword">from</span> .mylinearops <span class="keyword">import</span> linearop</span><br><span class="line"><span class="keyword">from</span> .mylinearops <span class="keyword">import</span> LinearLayer</span><br></pre></td></tr></table></figure>
+
+<p>As a result, when user imports the <code>mylinearops</code>, only the <code>matmul</code> (Y &#x3D; XW) function, <code>linearop</code> (Y &#x3D; XW+b) function and <code>LinearLayer</code> module are public to the users. </p>
+<h1 id="Writing-setup-py"><a href="#Writing-setup-py" class="headerlink" title="Writing setup.py"></a>Writing setup.py</h1><h1 id="Module-Testing"><a href="#Module-Testing" class="headerlink" title="Module Testing"></a>Module Testing</h1><h1 id="Full-Example"><a href="#Full-Example" class="headerlink" title="Full Example"></a>Full Example</h1><h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1>
       
     </div>
 
