@@ -528,7 +528,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-29 00:30:27" itemprop="dateModified" datetime="2023-05-29T00:30:27+08:00">2023-05-29</time>
+                <time title="Modified: 2023-08-18 23:54:31" itemprop="dateModified" datetime="2023-08-18T23:54:31+08:00">2023-08-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -553,88 +553,61 @@
       
           <p>This series would not be a general PyTorch introduction or detailed tutorials. Instead, this would be a very practical introduction to some common basics needed for Implementing Hand-Written Modules. </p>
 <p>This is the First Section of this series, we would like to introduce some tensor basics, including: tensor attributes, tensor creation, and some other things. All the things I mentioned will be practical, but not exhaustive. </p>
-<h2 id="Tensor-attributes"><a href="#Tensor-attributes" class="headerlink" title="Tensor attributes"></a>Tensor attributes</h2><p>We introduce 5 key attributes for <code>torch.tensor</code> <code>a</code> here:</p>
-<ul>
+<h1 id="1-Tensor-attributes"><a href="#1-Tensor-attributes" class="headerlink" title="1. Tensor attributes"></a>1. Tensor attributes</h1><p>We introduce 5 key attributes for <code>torch.tensor</code> <code>a</code> here:</p>
+<h2 id="1-1-a-shape"><a href="#1-1-a-shape" class="headerlink" title="1.1 a.shape"></a>1.1 a.shape</h2><ul>
 <li><code>a.shape</code>: Returns the shape of <code>a</code>. The return type is <code>torch.Size</code>. Example:</li>
 </ul>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a = torch.randn(<span class="number">10</span>, <span class="number">20</span>) <span class="comment"># create a 10x20 tensor</span></span><br><span class="line">a.shape</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.Size([<span class="number">10</span>, <span class="number">20</span>])</span><br></pre></td></tr></table></figure>
-
 <p>The <code>torch.Size</code> object supports some tricks:</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># unpack</span></span><br><span class="line">h, w = a.shape</span><br><span class="line">h, w</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">(<span class="number">10</span>, <span class="number">20</span>)</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># unpack in function calls</span></span><br><span class="line"><span class="built_in">print</span>(*a.shape)</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">10</span> <span class="number">20</span></span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li><code>a.ndim</code>: Returns number of dimensions of <code>a</code>.</li>
+<h2 id="1-2-a-ndim"><a href="#1-2-a-ndim" class="headerlink" title="1.2 a.ndim"></a>1.2 a.ndim</h2><ul>
+<li><code>a.ndim</code>: Returns number of dimensions of <code>a</code>. </li>
 </ul>
 <p>It looks like <code>len(a.shape)</code>. It also has a function version, called <code>a.ndimension()</code></p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a.ndim</span><br><span class="line">a.ndimension()</span><br><span class="line"><span class="built_in">len</span>(a.shape)</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
+<h2 id="1-3-a-device"><a href="#1-3-a-device" class="headerlink" title="1.3 a.device"></a>1.3 a.device</h2><ul>
 <li><code>a.device</code>: Returns where the <code>a</code> locates.</li>
 </ul>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a.device</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">device(<span class="built_in">type</span>=<span class="string">&#x27;cpu&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
 <p>Convert to CUDA by using <code>a = a.to(&#39;cuda:0&#39;)</code>. Convert back to CPU by using <code>a = a.to(&#39;cpu&#39;)</code> or <code>a = a.cpu()</code>.</p>
-<ul>
-<li><code>a.dtype</code>: Returns the data type of <code>a</code>.</li>
+<h2 id="1-4-a-dtype"><a href="#1-4-a-dtype" class="headerlink" title="1.4 a.dtype"></a>1.4 a.dtype</h2><ul>
+<li><code>a.dtype</code>: Returns the data type of <code>a</code>. </li>
 </ul>
 <p>The data type of tensor <code>a</code>. It’s very important in PyTorch! Usually, the data type would be <code>torch.float32</code> or <code>torch.int64</code>. Some data type convert method:</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># to float32</span></span><br><span class="line">f = a.<span class="built_in">float</span>()</span><br><span class="line">f.dtype</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.float32</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># to int64</span></span><br><span class="line">l = a.long()</span><br><span class="line">l.dtype</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.int64</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># to int32</span></span><br><span class="line">i = a.<span class="built_in">int</span>()</span><br><span class="line">i.dtype</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.int32</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Also, we can use .to() as well:</span></span><br><span class="line">f = a.to(torch.float32)</span><br><span class="line">f.dtype</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.float32</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
+<h2 id="1-5-a-numel"><a href="#1-5-a-numel" class="headerlink" title="1.5 a.numel"></a>1.5 a.numel</h2><ul>
 <li><code>a.numel()</code>: Returns <strong>num</strong>ber of <strong>el</strong>ements in <code>a</code>. Usually used in counting number of parameters in the model.</li>
 </ul>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a.numel()</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">200</span>  <span class="comment"># it&#x27;s 10*20!</span></span><br></pre></td></tr></table></figure>
-
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line">model = torchvision.models.resnet50()</span><br><span class="line"><span class="built_in">sum</span>([p.numel() <span class="keyword">for</span> p <span class="keyword">in</span> model.parameters()])</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">25557032</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Tensor-creation"><a href="#Tensor-creation" class="headerlink" title="Tensor creation"></a>Tensor creation</h2><p>PyTorch tensors plays key role in writing deep learning programs. Usually, tensor are from two types: data and auxiliary variables (e.g., masks).</p>
-<ol>
-<li>For the data tensor, they are usually converted from other packages, such as <code>numpy</code>. We have several methods to convert it to <code>torch.tensor</code>.</li>
-</ol>
+<h1 id="2-Tensor-creation"><a href="#2-Tensor-creation" class="headerlink" title="2. Tensor creation"></a>2. Tensor creation</h1><p>PyTorch tensors plays key role in writing deep learning programs. Usually, tensor are from two types: data and auxiliary variables (e.g., masks).</p>
+<h2 id="2-1-From-data"><a href="#2-1-From-data" class="headerlink" title="2.1 From data"></a>2.1 From data</h2><p>For the data tensor, they are usually converted from other packages, such as <code>numpy</code>. We have several methods to convert it to <code>torch.tensor</code>.</p>
 <ul>
-<li><p><code>torch.tensor(arr)</code> Returns a deep copy of <code>arr</code>, i.e., the storage data is independent with <code>arr</code>.. (Very memory and time consuming, not recommended for most cases)</p>
-</li>
+<li><code>torch.tensor(arr)</code> Returns a deep copy of <code>arr</code>, i.e., the storage data is independent with <code>arr</code>. (Very memory and time consuming, not recommended for most cases)</li>
 <li><p><code>torch.from_numpy(arr)</code> Returns a shallow copy tensor, i.e., the storage data is shared with <code>arr</code>. </p>
 </li>
-<li><p><code>torch.as_tensor(arr, dtype=..., device=...)</code> If <code>dtype</code> and <code>device</code> is same as <code>arr</code>, then it behaves like <code>torch.from_numpy()</code> function, shallow copy. Otherwise, it acts like <code>torch.tensor()</code>, deep copy. So using the function is recommended.</p>
+<li><p><code>torch.as_tensor(arr, dtype=..., device=...)</code> If <code>dtype</code> and <code>device</code> is same as <code>arr</code>, then it behaves like <code>torch.from_numpy()</code> function, shallow copy. Otherwise, it acts like <code>torch.tensor()</code>, deep copy. So using the function is recommended. </p>
 </li>
 </ul>
-<ol start="2">
-<li>For the auxiliary variables, PyTorch provides some common methods:</li>
-</ol>
+<h2 id="2-2-Special-tensors"><a href="#2-2-Special-tensors" class="headerlink" title="2.2 Special tensors"></a>2.2 Special tensors</h2><p>For the special tensors, PyTorch provides some common methods:</p>
 <ul>
 <li>Linear:</li>
 </ul>
 <p>We have <code>torch.linspace</code> and <code>torch.arange</code>. They are easy to understand. Please see the docs <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.linspace.html#torch.linspace">linspace</a> and <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.arange.html#torch.arange">arange</a>.</p>
 <ul>
-<li>Random:</li>
+<li>Random: </li>
 </ul>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">torch.randn(<span class="number">1</span>, <span class="number">2</span>) <span class="comment"># normal distribution, shape 1x2</span></span><br><span class="line">torch.rand(<span class="number">1</span>, <span class="number">2</span>)  <span class="comment"># uniform[0, 1) distribution, shape 1x2</span></span><br><span class="line">torch.randint(<span class="number">0</span>, <span class="number">100</span>, (<span class="number">1</span>, <span class="number">2</span>)) <span class="comment"># uniform[0, 100) distribution, shape 1x2</span></span><br></pre></td></tr></table></figure>
-
 <p>These functions also support passing in <code>torch.Size()</code> or a sequence as the size parameter. </p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = torch.randn(<span class="number">10</span>, <span class="number">10</span>) <span class="comment"># a is in shape 10x10</span></span><br><span class="line">torch.randn(a.shape)    <span class="comment"># good!</span></span><br><span class="line">torch.randn([<span class="number">10</span>, <span class="number">10</span>])   <span class="comment"># good!</span></span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>Special tensors:</li>
 </ul>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">torch.zeros(<span class="number">10</span>, <span class="number">10</span>) <span class="comment"># all zero tensor, shape 10x10</span></span><br><span class="line">torch.ones(<span class="number">10</span>, <span class="number">10</span>)  <span class="comment"># all one tensor, shape 10x10</span></span><br><span class="line"><span class="comment"># By default, the dtype is float32.</span></span><br></pre></td></tr></table></figure>
-
 <ul>
 <li><code>xxx_like()</code></li>
 </ul>
@@ -642,11 +615,6 @@
 <p><code>torch.rand_like(input)</code> is equivalent to <code>torch.rand(input.size(), dtype=input.dtype, layout=input.layout, device=input.device)</code>.</p>
 <p>An example:</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">arr = torch.tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>], dtype=torch.float64)</span><br><span class="line"><span class="built_in">print</span>(arr.shape) <span class="comment"># torch.Size([3])</span></span><br><span class="line"><span class="built_in">print</span>(arr.dtype) <span class="comment"># torch.float64</span></span><br><span class="line"></span><br><span class="line">z = torch.zeros_like(arr)</span><br><span class="line"><span class="built_in">print</span>(z.shape)   <span class="comment"># torch.Size([3])</span></span><br><span class="line"><span class="built_in">print</span>(z.dtype)   <span class="comment"># torch.float64</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
 
       
     </div>
