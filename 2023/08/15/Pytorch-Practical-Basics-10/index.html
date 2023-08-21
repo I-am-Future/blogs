@@ -21,15 +21,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Finally, we have finished all contents we want to talk about. In this section, we’ll do a quick summary about what we have talked about and plan for the future of this series. SummaryConclusionAnnounc">
+  <meta name="description" content="Finally, we have finished all contents we want to talk about. In this section, we’ll do a quick summary about what we have talked about and plan for the future of this series. SummaryIn our ten sectio">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PyTorch Practical Hand-Written Modules Basics 10--Summary and Conclusion">
 <meta property="og:url" content="http://example.com/2023/08/15/Pytorch-Practical-Basics-10/index.html">
 <meta property="og:site_name" content="Future&#39;s blog">
-<meta property="og:description" content="Finally, we have finished all contents we want to talk about. In this section, we’ll do a quick summary about what we have talked about and plan for the future of this series. SummaryConclusionAnnounc">
+<meta property="og:description" content="Finally, we have finished all contents we want to talk about. In this section, we’ll do a quick summary about what we have talked about and plan for the future of this series. SummaryIn our ten sectio">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-08-15T11:01:03.000Z">
-<meta property="article:modified_time" content="2023-08-15T11:06:01.373Z">
+<meta property="article:modified_time" content="2023-08-21T10:21:20.365Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 
@@ -207,10 +207,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-08-15 19:01:03 / Modified: 19:06:01" itemprop="dateCreated datePublished" datetime="2023-08-15T19:01:03+08:00">2023-08-15</time>
+              <time title="Created: 2023-08-15 19:01:03" itemprop="dateCreated datePublished" datetime="2023-08-15T19:01:03+08:00">2023-08-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-21 18:21:20" itemprop="dateModified" datetime="2023-08-21T18:21:20+08:00">2023-08-21</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -233,7 +239,28 @@
 
       
         <p>Finally, we have finished all contents we want to talk about. In this section, we’ll do a quick summary about what we have talked about and plan for the future of this series.</p>
-<h1 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h1><h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><h1 id="Announce-in-Advance"><a href="#Announce-in-Advance" class="headerlink" title="Announce in Advance"></a>Announce in Advance</h1>
+<h1 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h1><p>In our ten sections of tutorial, we are learning from low-level (tensors) to high-level (modules). In detail, the structure looks like this:</p>
+<ul>
+<li>Tensor operations (Sec <a target="_blank" rel="noopener" href="https://i-am-future.github.io/2023/05/27/Pytorch-Practical-Basics-1/">1</a>, <a target="_blank" rel="noopener" href="https://i-am-future.github.io/2023/05/27/Pytorch-Practical-Basics-2/">2</a>)</li>
+<li>Tensor-wise operations (Sec <a target="_blank" rel="noopener" href="https://i-am-future.github.io/2023/06/17/Pytorch-Practical-Basics-3/">3</a>)</li>
+<li>Module basics (Sec <a target="_blank" rel="noopener" href="https://i-am-future.github.io/2023/06/18/Pytorch-Practical-Basics-4/">4</a>)</li>
+<li>Implement by pure-python (Sec <a target="_blank" rel="noopener" href="https://i-am-future.github.io/2023/07/09/Pytorch-Practical-Basics-5/">5</a> ResNet)</li>
+<li>Implement by CUDA (Sec <a target="_blank" rel="noopener" href="https://i-am-future.github.io/2023/07/30/Pytorch-Practical-Basics-6/">6</a>, <a target="_blank" rel="noopener" href="https://i-am-future.github.io/2023/08/01/Pytorch-Practical-Basics-7/">7</a>, <a target="_blank" rel="noopener" href="https://i-am-future.github.io/2023/08/02/Pytorch-Practical-Basics-8/">8</a>, <a target="_blank" rel="noopener" href="https://i-am-future.github.io/2023/08/07/Pytorch-Practical-Basics-9/">9</a>)</li>
+</ul>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>From our tutorial, we know that the model consists of <code>nn.Module</code>s. We implement the <code>forward()</code> function with many tensor-wise operations to do the forward pass. </p>
+<p>The PyTorch is highly optimized. The Python side <strong>is enough for most cases</strong>. So, it is unnecessary to implement the algorithm in C++/CUDA. (Ref to sec 9. Our CUDA matrix multiplication operation is slower than the PyTorch’s). In addition, when we are writing in native Python, we <strong>don’t need to worry about the correctness of the gradient calculation</strong>. </p>
+<p>But just in some rare cases, the <code>forward()</code> implementation is complicated, and they may contain <code>for</code> loop. The performance is low. Under such circumstances, you may consider to write the operator by yourself. But keep in mind that:</p>
+<ul>
+<li>You need to check if the forward &amp; backward propagations are correct;</li>
+<li>You need to do benchmarks - does my operator really get faster?</li>
+</ul>
+<p>Therefore, manually write a optimized CUDA operator is time consuming and complicated. In addition, one should be equipped with proficient CUDA knowledge. But once you write the good CUDA operators, your program will boost for many times. They are all about trade-off.</p>
+<h1 id="Announce-in-Advance"><a href="#Announce-in-Advance" class="headerlink" title="Announce in Advance"></a>Announce in Advance</h1><p>Finally, let’s talk about some things I will do in the future: </p>
+<ul>
+<li>This series will not end. For this series article 11 and later: we’ll talk about some famous model implementations.</li>
+<li>As I said above, writing CUDA operator needs proficient CUDA knowledge. So I’ll setup a new series to tell you how to write good CUDA programs: <em>CUDA Medium Tutorials</em></li>
+</ul>
+
     </div>
 
     
