@@ -23,13 +23,13 @@
 
   <meta name="description" content="IntroductionThere are 30 questions to practice Python Pandas and MySQL on https:&#x2F;&#x2F;leetcode.cn&#x2F;studyplan&#x2F;30-days-of-pandas&#x2F; . These questions basically practice the fundamental skills. Pandas and MySQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Pandas &amp; MySQL Leetcode Practice Notes 1-Condition Filter &amp; Join &amp; Misc">
+<meta property="og:title" content="Pandas &amp; MySQL Leetcode Practice Notes 1-Condition Filter &amp; Misc">
 <meta property="og:url" content="http://example.com/2023/08/20/Pandas-MySQL-Leetcode-Practice-Notes-1/index.html">
 <meta property="og:site_name" content="Future&#39;s blog">
 <meta property="og:description" content="IntroductionThere are 30 questions to practice Python Pandas and MySQL on https:&#x2F;&#x2F;leetcode.cn&#x2F;studyplan&#x2F;30-days-of-pandas&#x2F; . These questions basically practice the fundamental skills. Pandas and MySQL">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-08-20T12:05:37.000Z">
-<meta property="article:modified_time" content="2023-08-22T15:56:33.658Z">
+<meta property="article:modified_time" content="2023-08-23T10:32:11.826Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>Pandas & MySQL Leetcode Practice Notes 1-Condition Filter & Join & Misc | Future's blog</title>
+  <title>Pandas & MySQL Leetcode Practice Notes 1-Condition Filter & Misc | Future's blog</title>
   
 
 
@@ -197,7 +197,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Pandas & MySQL Leetcode Practice Notes 1-Condition Filter & Join & Misc
+          Pandas & MySQL Leetcode Practice Notes 1-Condition Filter & Misc
         </h1>
 
         <div class="post-meta">
@@ -215,7 +215,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-22 23:56:33" itemprop="dateModified" datetime="2023-08-22T23:56:33+08:00">2023-08-22</time>
+                <time title="Modified: 2023-08-23 18:32:11" itemprop="dateModified" datetime="2023-08-23T18:32:11+08:00">2023-08-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,7 +248,8 @@
 <li>Grouping</li>
 <li>Merging</li>
 </ol>
-<h1 id="1-Condition-Filter-Join-Misc"><a href="#1-Condition-Filter-Join-Misc" class="headerlink" title="1. Condition Filter &amp; Join &amp; Misc"></a>1. Condition Filter &amp; Join &amp; Misc</h1><h2 id="1-1-Condition"><a href="#1-1-Condition" class="headerlink" title="1.1 Condition"></a>1.1 Condition</h2><p>Typical condition filter work is asking us to do like this:</p>
+<h1 id="1-Condition-Filter-amp-Join-amp-Misc"><a href="#1-Condition-Filter-amp-Join-amp-Misc" class="headerlink" title="1. Condition Filter &amp; Join &amp; Misc"></a>1. Condition Filter &amp; Join &amp; Misc</h1><p>The four related question in this area are:</p>
+<h2 id="1-1-Condition"><a href="#1-1-Condition" class="headerlink" title="1.1 Condition"></a>1.1 Condition</h2><p>Typical condition filter work is asking us to do like this:</p>
 <blockquote>
 <p>Filter the <strong>big</strong> country in World scheme. A country is <strong>big</strong> if:</p>
 <ul>
@@ -259,34 +260,33 @@
 <p>We’ll use this example to illustrate the point. </p>
 <h3 id="1-1-a-MySQL"><a href="#1-1-a-MySQL" class="headerlink" title="1.1.a MySQL"></a>1.1.a MySQL</h3><p>A typical condition filter in SQL looks like this:</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">&lt;</span>col_names<span class="operator">&gt;</span></span><br><span class="line"><span class="keyword">from</span> <span class="operator">&lt;</span>table_name<span class="operator">&gt;</span></span><br><span class="line"><span class="keyword">where</span> (</span><br><span class="line">	<span class="operator">&lt;</span><span class="keyword">condition</span> predicate<span class="operator">&gt;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
 <p>SQL allows the use of the logical connectives <strong>and, or, and not</strong>. </p>
-<p>The operands of the logical connectives can be expressions involving the comparison operators <strong>&lt;, &lt;&#x3D;, &gt;, &gt;&#x3D;, &#x3D;, and &lt;&gt;</strong> (Note that, equal symbol is one <code>=</code>, but not <code>==</code>!)</p>
+<p>The operands of the logical connectives can be expressions involving the comparison operators <strong>&lt;, &lt;=, &gt;, &gt;=, =, and &lt;&gt;</strong> (Note that, equal symbol is one <code>=</code>, but not <code>==</code>!)</p>
 <p>For example, in the codes above, the answer is</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name, population, area</span><br><span class="line"><span class="keyword">FROM</span> World</span><br><span class="line"><span class="keyword">WHERE</span> area <span class="operator">&gt;=</span> <span class="number">3000000</span> <span class="keyword">OR</span> population <span class="operator">&gt;=</span> <span class="number">25000000</span></span><br></pre></td></tr></table></figure>
-
-
-
 <h3 id="1-1-b-Pandas"><a href="#1-1-b-Pandas" class="headerlink" title="1.1.b Pandas"></a>1.1.b Pandas</h3><p>Filter operations in pandas is a little bit difference. We should know two basics things first:</p>
 <ul>
 <li>Condition result in Index Series</li>
 </ul>
 <p>If we want to get all data that are greater than 5 in <code>df</code>‘s <code>col1</code> column, the code and result is as below:</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(df)</span><br><span class="line"><span class="comment"># OUTPUT:</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">  name  col1  col2</span></span><br><span class="line"><span class="string">0    a     1    10</span></span><br><span class="line"><span class="string">1    b     2     9</span></span><br><span class="line"><span class="string">2    c     3     8</span></span><br><span class="line"><span class="string">3    d     4     7</span></span><br><span class="line"><span class="string">4    e     5     6</span></span><br><span class="line"><span class="string">5    f     6     5</span></span><br><span class="line"><span class="string">6    g     7     4</span></span><br><span class="line"><span class="string">7    h     8     3</span></span><br><span class="line"><span class="string">8    i     9     2</span></span><br><span class="line"><span class="string">9    j    10     1</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(df[<span class="string">&#x27;col1&#x27;</span>] &gt; <span class="number">5</span>)</span><br><span class="line"><span class="comment"># OUTPUT: </span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">0    False</span></span><br><span class="line"><span class="string">1    False</span></span><br><span class="line"><span class="string">2    False</span></span><br><span class="line"><span class="string">3    False</span></span><br><span class="line"><span class="string">4    False</span></span><br><span class="line"><span class="string">5     True</span></span><br><span class="line"><span class="string">6     True</span></span><br><span class="line"><span class="string">7     True</span></span><br><span class="line"><span class="string">8     True</span></span><br><span class="line"><span class="string">9     True</span></span><br><span class="line"><span class="string">Name: col1, dtype: bool</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
-
 <p>As you can see, the result of <code>df[&#39;col1&#39;] &gt; 5</code> is a bool Series with <code>len(df)</code> size. The entry is True only when the corresponding entry at <code>col1</code> satisfies the condition. </p>
 <ul>
 <li>Indexing by the Index Series</li>
 </ul>
 <p>We can pass this bool index series in to the <code>df.loc[]</code>. Then, only the rows with the condition satisfied are displayed:</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">a = df.loc[df[<span class="string">&#x27;col1&#x27;</span>] &gt; <span class="number">5</span>]</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">  name  col1  col2</span></span><br><span class="line"><span class="string">5    f     6     5</span></span><br><span class="line"><span class="string">6    g     7     4</span></span><br><span class="line"><span class="string">7    h     8     3</span></span><br><span class="line"><span class="string">8    i     9     2</span></span><br><span class="line"><span class="string">9    j    10     1</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
-
 <p>By such method, we can do the filtering in the pandas. Note that:</p>
 <p>For the <code>and</code>, <code>or</code> and <code>not</code> logic operators, the corresponding operator in pandas is <code>&amp;</code>, <code>|</code> and <code>~</code>. For example:</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cond1 = df[<span class="string">&#x27;col1&#x27;</span>] &gt; <span class="number">5</span></span><br><span class="line">cond2 = df[<span class="string">&#x27;col2&#x27;</span>] &gt; <span class="number">2</span></span><br><span class="line"></span><br><span class="line">b = df.loc[cond1 &amp; cond2]</span><br><span class="line">c = df.loc[ (df[<span class="string">&#x27;col1&#x27;</span>] &gt; <span class="number">5</span>) &amp; (df[<span class="string">&#x27;col2&#x27;</span>] &gt; <span class="number">2</span>) ]</span><br></pre></td></tr></table></figure>
-
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cond1 = df[<span class="string">&#x27;col1&#x27;</span>] &gt; <span class="number">5</span></span><br><span class="line">cond2 = df[<span class="string">&#x27;col2&#x27;</span>] &gt; <span class="number">2</span></span><br><span class="line"></span><br><span class="line">b = df.loc[cond1 &amp; cond2]</span><br><span class="line"></span><br><span class="line">c = df.loc[ (df[<span class="string">&#x27;col1&#x27;</span>] &gt; <span class="number">5</span>) &amp; (df[<span class="string">&#x27;col2&#x27;</span>] &gt; <span class="number">2</span>) ]</span><br></pre></td></tr></table></figure>
 <p><strong>Note</strong> that the <code>()</code> symbols are necessary because of the operator precedence. </p>
-<h2 id="Join"><a href="#Join" class="headerlink" title="Join"></a>Join</h2><h2 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h2>
+<h2 id="1-2-Misc"><a href="#1-2-Misc" class="headerlink" title="1.2 Misc"></a>1.2 Misc</h2><h3 id="1-2-1-Rename-output-columns"><a href="#1-2-1-Rename-output-columns" class="headerlink" title="1.2.1 Rename output columns"></a>1.2.1 Rename output columns</h3><h4 id="1-2-1-a-MySQL"><a href="#1-2-1-a-MySQL" class="headerlink" title="1.2.1.a MySQL"></a>1.2.1.a MySQL</h4><p>In MySQL, rename a column is very easy. By default, if the command is</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name, population, area</span><br><span class="line"><span class="keyword">FROM</span> World</span><br><span class="line"><span class="keyword">WHERE</span> area <span class="operator">&gt;=</span> <span class="number">3000000</span> <span class="keyword">OR</span> population <span class="operator">&gt;=</span> <span class="number">25000000</span></span><br></pre></td></tr></table></figure>
+<p>Then the output columns are named <code>name</code>, <code>population</code>, and <code>area</code>. To rename, just use the <code>as</code> symbol to give a new name as output:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- change name =&gt; Name, population =&gt; Population, area =&gt; Area</span></span><br><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">as</span> Name, population <span class="keyword">as</span> Population, area <span class="keyword">as</span> Area</span><br><span class="line"><span class="keyword">FROM</span> World</span><br><span class="line"><span class="keyword">WHERE</span> area <span class="operator">&gt;=</span> <span class="number">3000000</span> <span class="keyword">OR</span> population <span class="operator">&gt;=</span> <span class="number">25000000</span></span><br></pre></td></tr></table></figure>
+<h4 id="1-2-1-b-Pandas"><a href="#1-2-1-b-Pandas" class="headerlink" title="1.2.1.b Pandas"></a>1.2.1.b Pandas</h4><p>In pandas, we can use the <code>pd.DataFrame.rename</code> function to rename the columns. The input parameter <code>columns</code> is a <code>dict[str, str]</code>, where key is the old name, and the value is the new name. For example in the example above:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = df.rename(columns=&#123;<span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;Name&#x27;</span>, <span class="string">&#x27;population&#x27;</span>: <span class="string">&#x27;Population&#x27;</span>, <span class="string">&#x27;area&#x27;</span>: <span class="string">&#x27;Area&#x27;</span>&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="1-2-2-Swap-output-columns-order"><a href="#1-2-2-Swap-output-columns-order" class="headerlink" title="1.2.2 Swap output columns order"></a>1.2.2 Swap output columns order</h3>
     </div>
 
     
@@ -363,7 +363,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Condition-Filter-Join-Misc"><span class="nav-number">2.</span> <span class="nav-text">1. Condition Filter &amp; Join &amp; Misc</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-Condition"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 Condition</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-a-MySQL"><span class="nav-number">2.1.1.</span> <span class="nav-text">1.1.a MySQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-b-Pandas"><span class="nav-number">2.1.2.</span> <span class="nav-text">1.1.b Pandas</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Join"><span class="nav-number">2.2.</span> <span class="nav-text">Join</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Misc"><span class="nav-number">2.3.</span> <span class="nav-text">Misc</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Condition-Filter-amp-Join-amp-Misc"><span class="nav-number">2.</span> <span class="nav-text">1. Condition Filter &amp; Join &amp; Misc</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-Condition"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 Condition</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-a-MySQL"><span class="nav-number">2.1.1.</span> <span class="nav-text">1.1.a MySQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-b-Pandas"><span class="nav-number">2.1.2.</span> <span class="nav-text">1.1.b Pandas</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-Misc"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 Misc</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-1-Rename-output-columns"><span class="nav-number">2.2.1.</span> <span class="nav-text">1.2.1 Rename output columns</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-a-MySQL"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">1.2.1.a MySQL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-b-Pandas"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">1.2.1.b Pandas</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-2-Swap-output-columns-order"><span class="nav-number">2.2.2.</span> <span class="nav-text">1.2.2 Swap output columns order</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
