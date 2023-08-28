@@ -112,7 +112,11 @@
 <p>For the <code>and</code>, <code>or</code> and <code>not</code> logic operators, the corresponding operator in pandas is <code>&amp;</code>, <code>|</code> and <code>~</code>. For example:</p>
 <figure class="highlight py"><table><tr><td class="code"><pre><span class="line">cond1 = df[<span class="string">&#x27;col1&#x27;</span>] &gt; <span class="number">5</span></span><br><span class="line">cond2 = df[<span class="string">&#x27;col2&#x27;</span>] &gt; <span class="number">2</span></span><br><span class="line"></span><br><span class="line">b = df.loc[cond1 &amp; cond2]</span><br><span class="line"></span><br><span class="line">c = df.loc[ (df[<span class="string">&#x27;col1&#x27;</span>] &gt; <span class="number">5</span>) &amp; (df[<span class="string">&#x27;col2&#x27;</span>] &gt; <span class="number">2</span>) ]</span><br></pre></td></tr></table></figure>
 
-<p><strong>Note</strong> that the <code>()</code> symbols are necessary because of the operator precedence. </p>
+<p><strong>Note</strong> that the <code>()</code> symbols are necessary because of the operator precedence. For example, in the codes above, the answer is:</p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">cond1 = world[<span class="string">&#x27;area&#x27;</span>] &gt;= <span class="number">300_0000</span></span><br><span class="line">cond2 = world[<span class="string">&#x27;population&#x27;</span>] &gt;= <span class="number">2500_0000</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> world.loc[cond1 | cond2, [<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;population&#x27;</span>, <span class="string">&#x27;area&#x27;</span>]]</span><br></pre></td></tr></table></figure>
+
+
+
 <h2 id="1-2-Misc"><a href="#1-2-Misc" class="headerlink" title="1.2 Misc"></a>1.2 Misc</h2><h3 id="1-2-1-Rename-output-columns"><a href="#1-2-1-Rename-output-columns" class="headerlink" title="1.2.1 Rename output columns"></a>1.2.1 Rename output columns</h3><h4 id="1-2-1-a-MySQL"><a href="#1-2-1-a-MySQL" class="headerlink" title="1.2.1.a MySQL"></a>1.2.1.a MySQL</h4><p>In MySQL, rename a column is very easy. By default, if the command is</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name, population, area</span><br><span class="line"><span class="keyword">FROM</span> World</span><br><span class="line"><span class="keyword">WHERE</span> area <span class="operator">&gt;=</span> <span class="number">3000000</span> <span class="keyword">OR</span> population <span class="operator">&gt;=</span> <span class="number">25000000</span></span><br></pre></td></tr></table></figure>
 
@@ -128,7 +132,16 @@
 <h4 id="1-2-2-b-Pandas"><a href="#1-2-2-b-Pandas" class="headerlink" title="1.2.2.b Pandas"></a>1.2.2.b Pandas</h4><p>The method is relatively similar as the code in MySQL, by:</p>
 <figure class="highlight py"><table><tr><td class="code"><pre><span class="line"><span class="comment"># show with A, B, C columns </span></span><br><span class="line">df.loc[:, [<span class="string">&#x27;A&#x27;</span>, <span class="string">&#x27;B&#x27;</span>, <span class="string">&#x27;C&#x27;</span>]]</span><br><span class="line"></span><br><span class="line"><span class="comment"># show with C, B, A columns </span></span><br><span class="line">df.loc[:, [<span class="string">&#x27;C&#x27;</span>, <span class="string">&#x27;B&#x27;</span>, <span class="string">&#x27;A&#x27;</span>]]</span><br></pre></td></tr></table></figure>
 
-<h3 id="1-2-3-Remove-duplicate-rows"><a href="#1-2-3-Remove-duplicate-rows" class="headerlink" title="1.2.3 Remove duplicate rows"></a>1.2.3 Remove duplicate rows</h3>]]></content>
+<h3 id="1-2-3-Remove-duplicate-rows"><a href="#1-2-3-Remove-duplicate-rows" class="headerlink" title="1.2.3 Remove duplicate rows"></a>1.2.3 Remove duplicate rows</h3><h4 id="1-2-3-a-MySQL"><a href="#1-2-3-a-MySQL" class="headerlink" title="1.2.3.a MySQL"></a>1.2.3.a MySQL</h4><p>It is quite easy to do that: you only need to add <code>DISTINCT</code> keyword. For example: </p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">DISTINCT</span> student_id</span><br><span class="line"><span class="keyword">from</span> courses</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-3-b-Pandas"><a href="#1-2-3-b-Pandas" class="headerlink" title="1.2.3.b Pandas"></a>1.2.3.b Pandas</h4><p>The DataFrame has a method called <code>drop_duplicates()</code>. For example: </p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">selected_views = selected_views.drop_duplicates()</span><br></pre></td></tr></table></figure>
+
+<p>More advanced usage is use parameter <code>subset</code> to  tell which columns for identifying duplicates, by default use all of the columns. For example, the following code drop the duplicate rows whenever they have same value in column <code>teacher_id</code>, <code>subject_id</code>. </p>
+<figure class="highlight py"><table><tr><td class="code"><pre><span class="line">teacher = teacher.drop_duplicates(subset=[<span class="string">&#x27;teacher_id&#x27;</span>, <span class="string">&#x27;subject_id&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+]]></content>
       <categories>
         <category>Pandas_SQL</category>
       </categories>
