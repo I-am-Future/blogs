@@ -336,7 +336,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-28 19:18:42" itemprop="dateModified" datetime="2023-08-28T19:18:42+08:00">2023-08-28</time>
+                <time title="Modified: 2023-08-29 14:52:42" itemprop="dateModified" datetime="2023-08-29T14:52:42+08:00">2023-08-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -435,6 +435,15 @@
 
 <p>More advanced usage is use parameter <code>subset</code> to  tell which columns for identifying duplicates, by default use all of the columns. For example, the following code drop the duplicate rows whenever they have same value in column <code>teacher_id</code>, <code>subject_id</code>. </p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">teacher = teacher.drop_duplicates(subset=[<span class="string">&#x27;teacher_id&#x27;</span>, <span class="string">&#x27;subject_id&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-4-Sort"><a href="#1-2-4-Sort" class="headerlink" title="1.2.4 Sort"></a>1.2.4 Sort</h3><h4 id="1-2-4-a-MySQL"><a href="#1-2-4-a-MySQL" class="headerlink" title="1.2.4.a MySQL"></a>1.2.4.a MySQL</h4><p>In the <code>select</code> statement, add with <code>order by &lt;col&gt; asc/desc</code> statement. <code>&lt;col&gt;</code> indicates sort according to which column, <code>asc</code> means ascending sorting, <code>desc</code> means descending sorting. </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> v.author_id </span><br><span class="line"><span class="keyword">from</span> Views <span class="keyword">as</span> v</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> id <span class="keyword">asc</span></span><br></pre></td></tr></table></figure>
+
+<p>To sort according multiple columns (if first column is the same, sort by second column), do it by:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> v.author_id </span><br><span class="line"><span class="keyword">from</span> Views <span class="keyword">as</span> v</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> id <span class="keyword">asc</span>, col2 <span class="keyword">desc</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-4-b-Pandas"><a href="#1-2-4-b-Pandas" class="headerlink" title="1.2.4.b Pandas"></a>1.2.4.b Pandas</h4><p>Use the <code>pd.DataFrame.sort_values()</code> to sort according to which column(s). If we want to sort from biggest to smallest, use <code>ascending</code> parameter. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sort by one column, id</span></span><br><span class="line">selected_views = selected_views.sort_values(by=[<span class="string">&#x27;id&#x27;</span>])</span><br><span class="line">selected_views = selected_views.sort_values(by=[<span class="string">&#x27;id&#x27;</span>], ascending=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># sort by two columns</span></span><br><span class="line"><span class="comment"># if first column is the same, sort by second column</span></span><br><span class="line">selected_views = selected_views.sort_values(by=[<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;view_date&#x27;</span>])</span><br><span class="line">selected_views = selected_views.sort_values(by=[<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;view_date&#x27;</span>], ascending=[<span class="literal">True</span>, <span class="literal">False</span>])</span><br></pre></td></tr></table></figure>
 
 
       
