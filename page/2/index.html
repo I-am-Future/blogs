@@ -179,6 +179,175 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/06/18/Pytorch-Practical-Basics-4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/06/18/Pytorch-Practical-Basics-4/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 4--Hand-written modules basics</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-06-18 10:01:32" itemprop="dateCreated datePublished" datetime="2023-06-18T10:01:32+08:00">2023-06-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-07-09 09:49:04" itemprop="dateModified" datetime="2023-07-09T09:49:04+08:00">2023-07-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>After three articles talking about tensors, in this article, we will talk about something to the PyTorch Hand Written Modules Basics. You can see the outline on the left sidebar.</p>
+<h2 id="Basic-structure"><a href="#Basic-structure" class="headerlink" title="Basic structure"></a>Basic structure</h2><p>The model must inherit the <code>nn.Module</code> class. Basically, according to the <a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/beginner/nn_tutorial.html#closing-thoughts">official tutorial</a>, <code>nn.Module</code> “creates a callable which behaves like a function, but can also contain state(such as neural net layer weights).”</p>
+<p>The following is an example from the <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module">docs</a>:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Model</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">1</span>, <span class="number">20</span>, <span class="number">5</span>)</span><br><span class="line">        self.conv2 = nn.Conv2d(<span class="number">20</span>, <span class="number">20</span>, <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = F.relu(self.conv1(x))</span><br><span class="line">        <span class="keyword">return</span> F.relu(self.conv2(x))</span><br></pre></td></tr></table></figure>
+
+<p><strong>Some details</strong></p>
+<ul>
+<li>First, our model has Name <code>Model</code>, and inherits the <code>nn.Module</code> class.</li>
+<li><code>super().__init__()</code> must be called at the first line of the <code>__init__</code> function.</li>
+<li>The <code>Model</code> contains two submodules as attributes, <code>conv1</code> and <code>conv2</code>. They’re <code>nn.Conv2d</code> (The PyTorch implementation for 2-D convolution)</li>
+<li>The <code>forward()</code> function do the forward-propagation of the model. It receives a tensor <code>x</code> and do two convolution-with-relu operation. And then return the result. </li>
+<li>As for the backward-propagation, that step is calculated automatically by the powerful PyTorch’s auto-gradient technique. You don’t need to care about that.</li>
+</ul>
+<h2 id="load-store-the-model-state-dict"><a href="#load-store-the-model-state-dict" class="headerlink" title="load &#x2F; store the model.state_dict()"></a>load &#x2F; store the model.state_dict()</h2><p>Only model’s attributes that are subclass of <code>nn.Module</code> can be regarded as a valid registered parameters. These parameters are in the <code>model.state_dict()</code>, and can be load and store from&#x2F;to the disk.</p>
+<ul>
+<li><code>model.state_dict()</code>:</li>
+</ul>
+<p>The <code>state_dict()</code> is an <code>OrderedDict</code>. It contains the key value pair like “Parameter Name: Tensor”</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">model.state_dict()</span><br><span class="line"></span><br><span class="line">model.state_dict().keys()</span><br><span class="line"><span class="comment"># OUTPUT:</span></span><br><span class="line"><span class="comment"># odict_keys([&#x27;conv1.weight&#x27;, &#x27;conv1.bias&#x27;, &#x27;conv2.weight&#x27;, &#x27;conv2.bias&#x27;])</span></span><br><span class="line"></span><br><span class="line">model.state_dict().values()</span><br><span class="line"><span class="comment"># OUTPUT:</span></span><br><span class="line"><span class="comment"># odict_values([tensor([[[[ 1.0481e-01, -2.3481e-02,  9.1083e-02,  1.9955e-01,  1.0437e-01], ... ...</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Use the following code to <strong>store</strong> the parameters of the model <code>Model</code> above to the disk:</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.save(model.state_dict(), <span class="string">&#x27;model.pth&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Use the following code to <strong>load</strong> the parameters from the disk:</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model.load_state_dict(torch.load(<span class="string">&#x27;model.pth&#x27;</span>))</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Common-Submodules"><a href="#Common-Submodules" class="headerlink" title="Common Submodules"></a>Common Submodules</h2><p>This subsection introduces some common submodules used. As mentioned above, to make them as valid registered parameters, they are subclass of <code>nn.Module</code> or are type <code>nn.Parameter</code>.</p>
+<h3 id="clone-the-module"><a href="#clone-the-module" class="headerlink" title="clone the module"></a>clone the module</h3><p>The module should be copied (cloned) by the <code>copy.deepcopy</code> method. </p>
+<ul>
+<li>Shallow copy (wrong!)</li>
+</ul>
+<p>The model is only shallow copied. We can see that the two models’ <code>conv1</code> Tensor are the same one!!!</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> copy</span><br><span class="line">model = Model()</span><br><span class="line">model2 = copy.copy(model) <span class="comment"># shallow copy</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(model.conv1), <span class="built_in">id</span>(model2.conv1))</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">2755774917472</span> <span class="number">2755774917472</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Deep copy (right!)</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> copy</span><br><span class="line">model = Model()</span><br><span class="line">model2 = copy.deepcopy(model) <span class="comment"># deep copy</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">id</span>(model.conv1), <span class="built_in">id</span>(model2.conv1))</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">2755774915552</span> <span class="number">2755774916272</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Example:</li>
+</ul>
+<p>This is the code from <a target="_blank" rel="noopener" href="https://github.com/facebookresearch/detr/blob/main/models/transformer.py#L272">DETR</a>. This copies <code>module</code> for N times, resulting in an <code>nn.ModuleList</code>. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_get_clones</span>(<span class="params">module, N</span>):</span><br><span class="line">    <span class="keyword">return</span> nn.ModuleList([copy.deepcopy(module) <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(N)])</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="nn-ModuleList"><a href="#nn-ModuleList" class="headerlink" title="nn.ModuleList"></a>nn.ModuleList</h3><p><code>nn.ModuleList</code> is a list, but inherited the <code>nn.Module</code>. It can be recognized by the model correctly. </p>
+<ul>
+<li>Wrong example: from the output, we can see the submodule is not registered correctly.</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Model2</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, *args, **kwargs</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="built_in">super</span>().__init__(*args, **kwargs)</span><br><span class="line">        self.mlp = [nn.Linear(<span class="number">10</span>, <span class="number">10</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>)]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(Model2().state_dict().keys())</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">odict_keys([])</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Correct example: from the output, we can see the submodule is registered correctly.</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Model3</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, *args, **kwargs</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">        <span class="built_in">super</span>().__init__(*args, **kwargs)</span><br><span class="line">        self.mlp = nn.ModuleList([nn.Linear(<span class="number">10</span>, <span class="number">10</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>)]) </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(Model3().state_dict().keys())</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">odict_keys([<span class="string">&#x27;mlp.0.weight&#x27;</span>, <span class="string">&#x27;mlp.0.bias&#x27;</span>, ..., <span class="string">&#x27;mlp.9.weight&#x27;</span>, <span class="string">&#x27;mlp.9.bias&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+<p><code>nn.ModuleDict</code> is similar to <code>nn.ModuleList</code>, but a dictionary. </p>
+<h3 id="nn-Parameter"><a href="#nn-Parameter" class="headerlink" title="nn.Parameter"></a>nn.Parameter</h3><p>A plain tensor attributes can not be registered to the model. We need to wrap it with <code>nn.Parameter</code>, to make the model save the tensor’s state correctly. </p>
+<p>The following is modified from the <a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/beginner/nn_tutorial.html#refactor-using-nn-module">official tutorial</a>. In this example, <code>self.weights</code> is merely a <code>torch.Tensor</code>, which cannot be regarded as a model’s <code>state_dict</code>. The <code>self.bias</code> would works normally, because it’s a <code>nn.Parameter</code>.  </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Mnist_Logistic</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.weights = torch.randn(<span class="number">784</span>, <span class="number">10</span>) / math.sqrt(<span class="number">784</span>) <span class="comment"># WRONG</span></span><br><span class="line">        self.bias = nn.Parameter(torch.zeros(<span class="number">10</span>)) <span class="comment"># CORRECT</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, xb</span>):</span><br><span class="line">        <span class="keyword">return</span> xb @ self.weights + self.bias</span><br></pre></td></tr></table></figure>
+
+<p>Check if submodules is correctly regiestered:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(Mnist_Logistic().state_dict().keys())</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">odict_keys([<span class="string">&#x27;bias&#x27;</span>]) <span class="comment"># only `bias` regiestered! no `weights` here</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="nn-Sequential"><a href="#nn-Sequential" class="headerlink" title="nn.Sequential"></a>nn.Sequential</h3><p>This is a sequential container. Data will flow by the submodules contained one by one. An example is shown below.  </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line">model =nn.Sequential(</span><br><span class="line">    nn.Linear(<span class="number">784</span>, <span class="number">128</span>),</span><br><span class="line">    nn.ReLU(),</span><br><span class="line">    nn.Linear(<span class="number">128</span>, <span class="number">64</span>),</span><br><span class="line">    nn.ReLU(),</span><br><span class="line">    nn.Linear(<span class="number">64</span>, <span class="number">10</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="model-apply-weight-init"><a href="#model-apply-weight-init" class="headerlink" title="model.apply() &amp; weight init"></a>model.apply() &amp; weight init</h2><p>Applies <code>fn</code> recursively to every submodule (as returned by <code>model.children()</code>) as well as self. Typical use includes initializing the parameters of a model (see also <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/nn.init.html#nn-init-doc">torch.nn.init</a>).</p>
+<p>A typical example can be:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Model</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">1</span>, <span class="number">20</span>, <span class="number">5</span>)</span><br><span class="line">        self.conv2 = nn.Conv2d(<span class="number">20</span>, <span class="number">20</span>, <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = F.relu(self.conv1(x))</span><br><span class="line">        <span class="keyword">return</span> F.relu(self.conv2(x))</span><br><span class="line">    </span><br><span class="line">model = Model()   </span><br><span class="line"><span class="comment"># do init params with model.apply():</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">init_weights</span>(<span class="params">m</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>(m) == nn.Linear:</span><br><span class="line">        torch.nn.init.xavier_uniform_(m.weight)</span><br><span class="line">        m.bias.data.fill_(<span class="number">0.01</span>)</span><br><span class="line">    <span class="keyword">elif</span> <span class="built_in">type</span>(m) == nn.Conv2d:</span><br><span class="line">        torch.nn.init.xavier_uniform_(m.weight)</span><br><span class="line">        m.bias.data.fill_(<span class="number">0.01</span>)</span><br><span class="line">model.apply(init_weights)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="model-eval-model-train-training"><a href="#model-eval-model-train-training" class="headerlink" title="model.eval() &#x2F; model.train() &#x2F; .training"></a>model.eval() &#x2F; model.train() &#x2F; .training</h2><p>The modules such as <code>BatchNorm</code> and <code>DropOut</code> performs differently on the training and evaluating stage. </p>
+<p>We can use <code>model.train()</code> to set the model to the training stage. Use <code>model.eval()</code> to set the model to the training stage. </p>
+<p>But, what if our <u>own written modules</u> need to perform differently in two stages? The answer is that, <code>nn.Module</code> has an attribute called <code>training</code>. It’s <code>True</code> when training, <code>False</code> otherwise. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Model</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># skipped in this example</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="keyword">if</span> self.training:</span><br><span class="line">            ... <span class="comment"># write the code in training stage here</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ... <span class="comment"># write the code in evaluating/inferencing stage here</span></span><br></pre></td></tr></table></figure>
+
+<p>As we can see, when we called <code>model.train()</code>, actually, all submodules from <code>model</code> would set the <code>training</code> attribute to <code>True</code>, and <code>False</code> otherwise. </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/06/17/Pytorch-Practical-Basics-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1380,64 +1549,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/04/signal-system-with-python/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Future">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Future's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/04/04/signal-system-with-python/" class="post-title-link" itemprop="url">signal system with python</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-04-04 13:39:02" itemprop="dateCreated datePublished" datetime="2023-04-04T13:39:02+08:00">2023-04-04</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1507,7 +1618,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
