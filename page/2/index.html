@@ -1330,7 +1330,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-31 17:28:41" itemprop="dateModified" datetime="2023-05-31T17:28:41+08:00">2023-05-31</time>
+                <time title="Modified: 2023-09-14 11:08:49" itemprop="dateModified" datetime="2023-09-14T11:08:49+08:00">2023-09-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1353,34 +1353,40 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><p>Please refer to the official <a target="_blank" rel="noopener" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html">docs</a>. </p>
-<p>Mirrors: to download faster in China, it’s recommended to add some mirror configs:</p>
+          <h2 id="1-Installation"><a href="#1-Installation" class="headerlink" title="1. Installation"></a>1. Installation</h2><p>Please refer to the official <a target="_blank" rel="noopener" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html">docs</a>. </p>
+<p>After installing it, we can set mirrors which facilitate download speed in China. It’s recommended to add some mirror configs (Run in command line):</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/</span><br><span class="line">conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/ </span><br><span class="line">conda config --<span class="built_in">set</span> show_channel_urls <span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
 
 
 
-<h2 id="Common-commands"><a href="#Common-commands" class="headerlink" title="Common commands"></a>Common commands</h2><h3 id="Create-env"><a href="#Create-env" class="headerlink" title="Create env"></a>Create env</h3><p>Create an environment with <code>&lt;env_name&gt;</code> and python with <code>3.9</code>. </p>
+<h2 id="2-Common-commands"><a href="#2-Common-commands" class="headerlink" title="2. Common commands"></a>2. Common commands</h2><h3 id="2-1-Create-env"><a href="#2-1-Create-env" class="headerlink" title="2.1 Create env"></a>2.1 Create env</h3><p>Create an environment with <code>&lt;env_name&gt;</code> and python with <code>3.9</code>. </p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda create -n &lt;env_name&gt; python=3.9</span><br></pre></td></tr></table></figure>
 
-<h3 id="Activate-env"><a href="#Activate-env" class="headerlink" title="Activate env"></a>Activate env</h3><p>Activate &#x2F; Deactivate the environment <code>&lt;env_name&gt;</code>.</p>
+<h3 id="2-2-Activate-env"><a href="#2-2-Activate-env" class="headerlink" title="2.2 Activate env"></a>2.2 Activate env</h3><p>Activate &#x2F; Deactivate the environment <code>&lt;env_name&gt;</code>.</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># activate</span></span><br><span class="line">conda activate &lt;env_name&gt;</span><br><span class="line"><span class="comment"># deactivate</span></span><br><span class="line">conda deactivate &lt;env_name&gt;</span><br></pre></td></tr></table></figure>
 
-<h3 id="Remove-env"><a href="#Remove-env" class="headerlink" title="Remove env"></a>Remove env</h3><p>Remove the environment <code>&lt;env_name&gt;</code>.</p>
+<h3 id="2-3-Remove-env"><a href="#2-3-Remove-env" class="headerlink" title="2.3 Remove env"></a>2.3 Remove env</h3><p>Remove the environment <code>&lt;env_name&gt;</code>.</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda remove -n &lt;env_name&gt; --all</span><br></pre></td></tr></table></figure>
 
-<h3 id="Install-packages"><a href="#Install-packages" class="headerlink" title="Install packages"></a>Install packages</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># with conda</span></span><br><span class="line">conda install &lt;packages&gt;</span><br><span class="line"><span class="comment"># with pip</span></span><br><span class="line">pip install &lt;packages&gt;</span><br><span class="line"><span class="comment"># with pip and mirrors</span></span><br><span class="line">pip install &lt;packages&gt; -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br></pre></td></tr></table></figure>
+<h3 id="2-4-Clone-env"><a href="#2-4-Clone-env" class="headerlink" title="2.4 Clone env"></a>2.4 Clone env</h3><p>Clone an existing environment, to a new one. So you don’t need to install package one by one. This command is a variant of <code>conda create</code>.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda create -n &lt;new_name&gt; --<span class="built_in">clone</span> &lt;old_name&gt;</span><br></pre></td></tr></table></figure>
 
-<h3 id="Update-packages"><a href="#Update-packages" class="headerlink" title="Update packages"></a>Update packages</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda update &lt;packages&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="2-5-Install-packages"><a href="#2-5-Install-packages" class="headerlink" title="2.5 Install packages"></a>2.5 Install packages</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># with conda</span></span><br><span class="line">conda install &lt;packages&gt;</span><br><span class="line"><span class="comment"># with pip</span></span><br><span class="line">pip install &lt;packages&gt;</span><br><span class="line"><span class="comment"># with pip and mirrors</span></span><br><span class="line">pip install &lt;packages&gt; -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br></pre></td></tr></table></figure>
 
-<h3 id="List-packages-in-env"><a href="#List-packages-in-env" class="headerlink" title="List packages in env"></a>List packages in env</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda list</span><br></pre></td></tr></table></figure>
+<h3 id="2-6-Update-packages"><a href="#2-6-Update-packages" class="headerlink" title="2.6 Update packages"></a>2.6 Update packages</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda update &lt;packages&gt;</span><br></pre></td></tr></table></figure>
 
-<h3 id="List-all-envs"><a href="#List-all-envs" class="headerlink" title="List all envs"></a>List all envs</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda info --envs</span><br></pre></td></tr></table></figure>
+<p>To update all packages, use:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda update --all</span><br></pre></td></tr></table></figure>
 
-<h3 id="Clean-caches"><a href="#Clean-caches" class="headerlink" title="Clean caches"></a>Clean caches</h3><p>The downloaded caches occupies the storage data. We may clean them by the following commands:</p>
+<h3 id="2-7-List-packages-in-env"><a href="#2-7-List-packages-in-env" class="headerlink" title="2.7 List packages in env"></a>2.7 List packages in env</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda list</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-8-List-all-envs"><a href="#2-8-List-all-envs" class="headerlink" title="2.8 List all envs"></a>2.8 List all envs</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda info --envs</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-9-Clean-caches"><a href="#2-9-Clean-caches" class="headerlink" title="2.9 Clean caches"></a>2.9 Clean caches</h3><p>The downloaded caches occupies the storage data. We may clean them by the following commands:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda clean --all</span><br></pre></td></tr></table></figure>
 
-<h3 id="Export-env-configs"><a href="#Export-env-configs" class="headerlink" title="Export env configs"></a>Export env configs</h3><p>Export the current environment configs to a yaml file, then we can follow the yaml file to create another environment.</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># change to the desired env</span></span><br><span class="line">conda activate &lt;env_name&gt;</span><br><span class="line"><span class="comment"># export </span></span><br><span class="line">conda <span class="built_in">env</span> <span class="built_in">export</span> &gt; environment.yml</span><br><span class="line"><span class="comment"># import and create</span></span><br><span class="line">conda <span class="built_in">env</span> create -f environment.yml</span><br></pre></td></tr></table></figure>
+<h3 id="2-10-Export-Import-env-configs"><a href="#2-10-Export-Import-env-configs" class="headerlink" title="2.10 Export &#x2F; Import env configs"></a>2.10 Export &#x2F; Import env configs</h3><p>Export the current environment configs to a yaml file, then we can follow the yaml file to create another environment.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># change to the desired env</span></span><br><span class="line">conda activate &lt;env_name&gt;</span><br><span class="line"><span class="comment"># export </span></span><br><span class="line">conda <span class="built_in">env</span> <span class="built_in">export</span> &gt; environment.yml</span><br><span class="line"></span><br><span class="line"><span class="comment"># import and create</span></span><br><span class="line">conda <span class="built_in">env</span> create -f environment.yml</span><br><span class="line"><span class="comment"># Then, you&#x27;ll have a full environment like in environment.yml</span></span><br></pre></td></tr></table></figure>
 
 
       
