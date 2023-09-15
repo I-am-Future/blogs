@@ -21,15 +21,19 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Future&#39;s blog">
-<meta property="og:url" content="http://example.com/categories/Others/index.html">
+  <meta name="description" content="ImagesImage: just like OS image, can be used to create a container.  Create image by:  .tar file, with  docker load -i &lt;tar_file&gt; command. Dockerfile script, with docker build -t   command.  Lis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker Quick Reference">
+<meta property="og:url" content="http://example.com/2023/09/15/Docker-QRH/index.html">
 <meta property="og:site_name" content="Future&#39;s blog">
+<meta property="og:description" content="ImagesImage: just like OS image, can be used to create a container.  Create image by:  .tar file, with  docker load -i &lt;tar_file&gt; command. Dockerfile script, with docker build -t   command.  Lis">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-09-15T10:14:35.000Z">
+<meta property="article:modified_time" content="2023-09-15T11:50:12.594Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/categories/Others/">
+<link rel="canonical" href="http://example.com/2023/09/15/Docker-QRH/">
 
 
 <script id="page-configurations">
@@ -37,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Category: Others | Future's blog</title>
+  <title>Docker Quick Reference | Future's blog</title>
   
 
 
@@ -173,51 +177,115 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">Others
-          <small>Category</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/15/Docker-QRH/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker Quick Reference
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-09-15 18:14:35 / Modified: 19:50:12" itemprop="dateCreated datePublished" datetime="2023-09-15T18:14:35+08:00">2023-09-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/QRH/" itemprop="url" rel="index"><span itemprop="name">QRH</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2023</span>
+        <h2 id="Images"><a href="#Images" class="headerlink" title="Images"></a>Images</h2><p><strong>Image:</strong> just like OS image, can be used to create a container. </p>
+<p><strong>Create image</strong> by:</p>
+<ol>
+<li><code>.tar</code> file, with  <code>docker load -i &lt;tar_file&gt;</code> command.</li>
+<li><code>Dockerfile</code> script, with <code>docker build -t  </code> command.</li>
+</ol>
+<p><strong>List images:</strong> Use <code>docker images</code> to show all available images on the device.</p>
+<h2 id="Container"><a href="#Container" class="headerlink" title="Container"></a>Container</h2><p><strong>Container:</strong> An instance running the OS. built from image. </p>
+<p><strong>Create from image</strong> by <code>docker run</code> command. You can pass in some configuration. (Note some config are fixed after creation. Be careful!) :</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -d -p &lt;localport&gt;:&lt;dockerport&gt; --gpus all --name &lt;name&gt; --volume &lt;/path/host/directory&gt;:&lt;/path/container/directory&gt; &lt;IMAGE ID&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-d</code> means “detach”, running the docker container in the backend. </li>
+<li><code>-p &lt;hostport&gt;:&lt;dockerport&gt;</code> means forward the docker’s port <code>&lt;dockerport&gt;</code> to the host machine’s port <code>&lt;hostport&gt;</code>. Usually, we forward <code>22</code> port for ssh connection.</li>
+<li><code>--gpus all</code> means all host’s GPU are visible to the container.</li>
+<li><code>--name &lt;name&gt;</code> indicates the name of the container. It will be shown in the <code>docker ps</code> and other places.</li>
+<li><code>--volume &lt;/path/host/directory&gt;:&lt;/path/container/directory&gt;</code> indicates which host directory are shared with container’s directory, therefore, you can access it in both the container and host.</li>
+<li><code>&lt;IMAGE ID&gt;</code> is the id of the image to be built.</li>
+</ul>
+<p><strong>List containers:</strong> Use <code>docker ps -a</code> to check status of all containers. Use <code>docker ps</code> to check all running containers. </p>
+<p><strong>Three ways</strong> to interact with the container:</p>
+<ol>
+<li>Docker desktop’s shell</li>
+<li><code>docker exec -it &lt;container id&gt; bash</code></li>
+<li>SSH, if you have set so</li>
+</ol>
+<p><strong>Start the container:</strong> By <code>docker start &lt;CONTAINER ID&gt;</code>, or do it in docker desktop.</p>
+<p><strong>Stop the container:</strong> By <code>docker stop &lt;CONTAINER ID&gt;</code>, or do it in docker desktop.</p>
+<p>More info: please see the official cheat sheet at <a target="_blank" rel="noopener" href="https://docs.docker.com/get-started/docker_cheatsheet.pdf">here</a>.</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-03-21T20:22:19+08:00"
-              content="2023-03-21">
-          03-21
-        </time>
-      </div>
+      <footer class="post-footer">
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/03/21/Redirect-other-webpages/" itemprop="url">
-            <span itemprop="name">我在其他平台发的文章链接</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/09/13/welcome-page/" rel="prev" title="Welcome to my Blog!">
+      <i class="fa fa-chevron-left"></i> Welcome to my Blog!
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
@@ -270,6 +338,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Images"><span class="nav-number">1.</span> <span class="nav-text">Images</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Container"><span class="nav-number">2.</span> <span class="nav-text">Container</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

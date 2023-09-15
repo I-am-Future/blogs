@@ -252,6 +252,103 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/15/Docker-QRH/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/09/15/Docker-QRH/" class="post-title-link" itemprop="url">Docker Quick Reference</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-09-15 18:14:35 / Modified: 19:50:12" itemprop="dateCreated datePublished" datetime="2023-09-15T18:14:35+08:00">2023-09-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/QRH/" itemprop="url" rel="index"><span itemprop="name">QRH</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Images"><a href="#Images" class="headerlink" title="Images"></a>Images</h2><p><strong>Image:</strong> just like OS image, can be used to create a container. </p>
+<p><strong>Create image</strong> by:</p>
+<ol>
+<li><code>.tar</code> file, with  <code>docker load -i &lt;tar_file&gt;</code> command.</li>
+<li><code>Dockerfile</code> script, with <code>docker build -t  </code> command.</li>
+</ol>
+<p><strong>List images:</strong> Use <code>docker images</code> to show all available images on the device.</p>
+<h2 id="Container"><a href="#Container" class="headerlink" title="Container"></a>Container</h2><p><strong>Container:</strong> An instance running the OS. built from image. </p>
+<p><strong>Create from image</strong> by <code>docker run</code> command. You can pass in some configuration. (Note some config are fixed after creation. Be careful!) :</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -d -p &lt;localport&gt;:&lt;dockerport&gt; --gpus all --name &lt;name&gt; --volume &lt;/path/host/directory&gt;:&lt;/path/container/directory&gt; &lt;IMAGE ID&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-d</code> means “detach”, running the docker container in the backend. </li>
+<li><code>-p &lt;hostport&gt;:&lt;dockerport&gt;</code> means forward the docker’s port <code>&lt;dockerport&gt;</code> to the host machine’s port <code>&lt;hostport&gt;</code>. Usually, we forward <code>22</code> port for ssh connection.</li>
+<li><code>--gpus all</code> means all host’s GPU are visible to the container.</li>
+<li><code>--name &lt;name&gt;</code> indicates the name of the container. It will be shown in the <code>docker ps</code> and other places.</li>
+<li><code>--volume &lt;/path/host/directory&gt;:&lt;/path/container/directory&gt;</code> indicates which host directory are shared with container’s directory, therefore, you can access it in both the container and host.</li>
+<li><code>&lt;IMAGE ID&gt;</code> is the id of the image to be built.</li>
+</ul>
+<p><strong>List containers:</strong> Use <code>docker ps -a</code> to check status of all containers. Use <code>docker ps</code> to check all running containers. </p>
+<p><strong>Three ways</strong> to interact with the container:</p>
+<ol>
+<li>Docker desktop’s shell</li>
+<li><code>docker exec -it &lt;container id&gt; bash</code></li>
+<li>SSH, if you have set so</li>
+</ol>
+<p><strong>Start the container:</strong> By <code>docker start &lt;CONTAINER ID&gt;</code>, or do it in docker desktop.</p>
+<p><strong>Stop the container:</strong> By <code>docker stop &lt;CONTAINER ID&gt;</code>, or do it in docker desktop.</p>
+<p>More info: please see the official cheat sheet at <a target="_blank" rel="noopener" href="https://docs.docker.com/get-started/docker_cheatsheet.pdf">here</a>.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/09/07/Pandas-MySQL-Leetcode-Practice-Notes-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1372,110 +1469,10 @@ $$-->
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/26/An-Obscure-RuntimeError-for-CUDA-error-out-of-memory/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Future">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Future's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/07/26/An-Obscure-RuntimeError-for-CUDA-error-out-of-memory/" class="post-title-link" itemprop="url">An Obscure RuntimeError for CUDA error: out of memory</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-07-26 21:02:18" itemprop="dateCreated datePublished" datetime="2023-07-26T21:02:18+08:00">2023-07-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-09-06 16:19:30" itemprop="dateModified" datetime="2023-09-06T16:19:30+08:00">2023-09-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Problem-Solving/" itemprop="url" rel="index"><span itemprop="name">Problem Solving</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Problem"><a href="#Problem" class="headerlink" title="Problem"></a>Problem</h2><p>Today when I was running PyTorch scripts, I met a strange problem: </p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = torch.rand(<span class="number">2</span>, <span class="number">2</span>).to(<span class="string">&#x27;cuda:1&#x27;</span>)</span><br><span class="line">......</span><br><span class="line">torch.cuda.synchronize()</span><br></pre></td></tr></table></figure>
-
-<p>but result in the following error:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  File <span class="string">&quot;....../test.py&quot;</span>, line 67, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    torch.cuda.synchronize()</span><br><span class="line">  File <span class="string">&quot;....../miniconda3/envs/py39/lib/python3.9/site-packages/torch/cuda/__init__.py&quot;</span>, line 495, <span class="keyword">in</span> synchronize</span><br><span class="line">    <span class="built_in">return</span> torch._C._cuda_synchronize()</span><br><span class="line">RuntimeError: CUDA error: out of memory</span><br></pre></td></tr></table></figure>
-
-<p>but It’s clear that GPU1 has enough memory (we only need to allocate 16 bytes!):</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">|===============================+======================+======================|</span><br><span class="line">|   0  NVIDIA GeForce ...  Off  | 00000000:1A:00.0 Off |                  N/A |</span><br><span class="line">| 75%   73C    P2   303W / 350W |  24222MiB / 24268MiB |     64%      Default |</span><br><span class="line">|                               |                      |                  N/A |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br><span class="line">|   1  NVIDIA GeForce ...  Off  | 00000000:1B:00.0 Off |                  N/A |</span><br><span class="line">| 90%   80C    P2   328W / 350W |  15838MiB / 24268MiB |     92%      Default |</span><br><span class="line">|                               |                      |                  N/A |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br></pre></td></tr></table></figure>
-
-<p>And normally, when we fail to allocate the memory for tensors, the error is:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CUDA out of memory. Tried to allocate 16.00 MiB (GPU 0; 6.00 GiB total capacity; 4.54 GiB already allocated; 14.94 MiB free; 4.64 GiB reserved <span class="keyword">in</span> total by PyTorch)</span><br></pre></td></tr></table></figure>
-
-<p>But our error message is much “simpler”. So what happened?</p>
-<h2 id="Possible-Answer"><a href="#Possible-Answer" class="headerlink" title="Possible Answer"></a>Possible Answer</h2><p>This confused me for some time. According to this <a target="_blank" rel="noopener" href="https://discuss.pytorch.org/t/pytorch-cuda-synchronize-out-of-memory/9502">website</a>:</p>
-<blockquote>
-<p>When you initially do a CUDA call, it’ll create a cuda context and a THC context on the primary GPU (GPU0), and for that i think it needs 200 MB or so. That’s right at the edge of how much memory you have left. </p>
-</blockquote>
-<p>Surprisingly, in my case, GPU0 has occupied <code>24222MiB / 24268MiB</code> memory. So there is no more memory for the context. In addition, this makes sense that out error message is <code>RuntimeError: CUDA error: out of memory</code>, not the message that tensallocation failed. </p>
-<h2 id="Possible-Solution"><a href="#Possible-Solution" class="headerlink" title="Possible Solution"></a>Possible Solution</h2><p>Set the <code>CUDA_VISIBLE_DEVICES</code> environment variable. We need to change primary GPU (GPU0) to other one.</p>
-<h3 id="Method-1"><a href="#Method-1" class="headerlink" title="Method 1"></a>Method 1</h3><p>In the starting python file:</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Do this before `import torch`</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ[<span class="string">&#x27;CUDA_VISIBLE_DEVICES&#x27;</span>] = <span class="string">&#x27;1&#x27;</span> <span class="comment"># set to what you like, e.g., &#x27;1,2,3,4,5,6,7&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="Method-2"><a href="#Method-2" class="headerlink" title="Method 2"></a>Method 2</h3><p>In the shell: </p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Do this before run python</span></span><br><span class="line"><span class="built_in">export</span> CUDA_VISIBLE_DEVICES=1 <span class="comment"># set to what you like, e.g., &#x27;1,2,3,4,5,6,7&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>And then, our program is ready to go. </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1541,7 +1538,7 @@ $$-->
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
