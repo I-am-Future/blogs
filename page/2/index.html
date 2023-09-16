@@ -179,6 +179,118 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/30/Pytorch-Practical-Basics-6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/07/30/Pytorch-Practical-Basics-6/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 6--torch.autograd.Function</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-07-30 20:31:20" itemprop="dateCreated datePublished" datetime="2023-07-30T20:31:20+08:00">2023-07-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-01 20:19:16" itemprop="dateModified" datetime="2023-08-01T20:19:16+08:00">2023-08-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>In this section (and also three sections in the future), we investigate how to use <code>torch.autograd.Function</code> to implement the hand-written operators. The tentative outline is:</p>
+<ul>
+<li><input checked disabled type="checkbox"> This section (6), we talk about the basics of <code>torch.autograd.Function</code>.</li>
+<li><input disabled type="checkbox"> In the next section (7), we’ll talk about mathematic derivation for the “linear layer” operator. </li>
+<li><input disabled type="checkbox"> In the section 8, we talk about writing C++ CUDA extension for the “linear layer” operator. </li>
+<li><input disabled type="checkbox"> In the section 9, we talk details about building the extension to a module, as well as testing. Then we’ll conclude the things we’ve done so far.</li>
+</ul>
+<h1 id="Backgrounds"><a href="#Backgrounds" class="headerlink" title="Backgrounds"></a>Backgrounds</h1><p>This article mainly takes reference of the <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/notes/extending.html#extending-autograd">Official tutorial</a> and summarizes, explains the important points. </p>
+<p>By defining an operator with <code>torch.autograd.Function</code> and implement its forward &#x2F; backward function, we can use this operator with other PyTorch built-in operators together. <strong>The operators defined by <code>torch.autograd.Function</code> can be automatically back-propagated.</strong></p>
+<p>As mentioned in the tutorial, we should use the <code>torch.autograd.Function</code> in the following scenes:</p>
+<ul>
+<li>The computation is from other libraries, so they don’t support differential natively. We should explicitly define its backward functions. </li>
+<li>The PyTorch’s implementation of an operator cannot take benefits from the parallelization. We utilize the PyTorch C++&#x2F;CUDA extension for the better performance.</li>
+</ul>
+<h1 id="Basic-Structure"><a href="#Basic-Structure" class="headerlink" title="Basic Structure"></a>Basic Structure</h1><p>The following is the basic structure of the Function:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Function</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LinearFunction</span>(<span class="title class_ inherited__">Function</span>):</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">ctx, input0, input1, ... , inputN</span>):</span><br><span class="line">        <span class="comment"># Save the input for the backward use. </span></span><br><span class="line">        ctx.save_for_backward(input1, input1, ... , inputN)</span><br><span class="line">        <span class="comment"># Calculate the output0, ... outputM given the inputs.</span></span><br><span class="line">        ......</span><br><span class="line">        <span class="keyword">return</span> output0, ... , outputM</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">backward</span>(<span class="params">ctx, grad_output0, ... , grad_outputM</span>):</span><br><span class="line">        <span class="comment"># Get and unpack the input for the backward use. </span></span><br><span class="line">        input0, input1, ... , inputN = ctx.saved_tensors</span><br><span class="line">        </span><br><span class="line">        grad_input0 = grad_input1 = grad_inputN = <span class="literal">None</span></span><br><span class="line">        <span class="comment"># These needs_input_grad records whether each input need to calculate the gradient. This can improve the efficiency.</span></span><br><span class="line">        <span class="keyword">if</span> ctx.needs_input_grad[<span class="number">0</span>]:</span><br><span class="line">            grad_input0 = ...  <span class="comment"># backward calculation</span></span><br><span class="line">        <span class="keyword">if</span> ctx.needs_input_grad[<span class="number">1</span>]:</span><br><span class="line">            grad_input1 = ...  <span class="comment"># backward calculation</span></span><br><span class="line">        ......</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> grad_input0, grad_input1, grad_inputN</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>The <code>forward</code> and <code>backward</code> functions are <code>staticmethod</code>. The forward function is <code>o0, ..., oM = forward(i0, ..., iN)</code>, calculate the output0 ~ outputM by the input0 ~ inputN. Then the backward function is <code>g_i0, ..., g_iN = backward(g_o0, ..., g_M)</code>, calculate the gradient of input0 ~ gradient of inputM by the gradient of output0 ~ outputN.</p>
+</li>
+<li><p>Since forward and backward are merely functions. We need store the input tensors to the <code>ctx</code> in the forward pass, so that we can get them in the backward functions. See <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/notes/extending.html#combining-forward-context">here</a> to use the alternative way to define <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/autograd.html#torch.autograd.Function"><code>Function</code></a>.</p>
+</li>
+<li><p><code>ctx.needs_input_grad</code> is a tuple of Booleans. It records whether one input needs to calculate the gradient or not. Therefore, we can save computation resources if one tensor doesn’t need gradients. In that case, the return value of backward function for that tensor is <code>None</code>.</p>
+</li>
+</ol>
+<h1 id="Use-it"><a href="#Use-it" class="headerlink" title="Use it"></a>Use it</h1><h2 id="Pure-functions"><a href="#Pure-functions" class="headerlink" title="Pure functions"></a>Pure functions</h2><p>After defining the class, we can use the <code>.apply</code> method to use it. Simply</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Option 1: alias</span></span><br><span class="line">linear = LinearFunction.apply</span><br></pre></td></tr></table></figure>
+<p>or, </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Option 2: wrap in a function, to support default args and keyword args.</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">linear</span>(<span class="params"><span class="built_in">input</span>, weight, bias=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="keyword">return</span> LinearFunction.apply(<span class="built_in">input</span>, weight, bias)</span><br></pre></td></tr></table></figure>
+
+<p>Then call as</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">output = linear(<span class="built_in">input</span>, weight, bias) <span class="comment"># input, weight, bias are all tensors!</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="nn-Module"><a href="#nn-Module" class="headerlink" title="nn.Module"></a>nn.Module</h2><p>In most cases, the weight and bias are parameters that are trainable during the process. We can further wrap this linear function to a Linear module: </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Linear</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, input_features, output_features, bias=<span class="literal">True</span></span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        self.input_features = input_features</span><br><span class="line">        self.output_features = output_features</span><br><span class="line"></span><br><span class="line">        <span class="comment"># nn.Parameters require gradients by default.</span></span><br><span class="line">        self.weight = nn.Parameter(torch.empty(output_features, input_features))</span><br><span class="line">        <span class="keyword">if</span> bias:</span><br><span class="line">            self.bias = nn.Parameter(torch.empty(output_features))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># You should always register all possible parameters, but the</span></span><br><span class="line">            <span class="comment"># optional ones can be None if you want.</span></span><br><span class="line">            self.register_parameter(<span class="string">&#x27;bias&#x27;</span>, <span class="literal">None</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Not a very smart way to initialize weights</span></span><br><span class="line">        nn.init.uniform_(self.weight, -<span class="number">0.1</span>, <span class="number">0.1</span>)</span><br><span class="line">        <span class="keyword">if</span> self.bias <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            nn.init.uniform_(self.bias, -<span class="number">0.1</span>, <span class="number">0.1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, <span class="built_in">input</span></span>):</span><br><span class="line">        <span class="comment"># See the autograd section for explanation of what happens here.</span></span><br><span class="line">        <span class="keyword">return</span> LinearFunction.apply(<span class="built_in">input</span>, self.weight, self.bias)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">extra_repr</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># (Optional)Set the extra information about this module. You can test</span></span><br><span class="line">        <span class="comment"># it by printing an object of this class.</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;input_features=&#123;&#125;, output_features=&#123;&#125;, bias=&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(</span><br><span class="line">            self.input_features, self.output_features, self.bias <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span></span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+
+<p>As mentioned in section 3, 4 of this series, the weight and bias should be <code>nn.Parameter</code> so that they can be recognized correctly. Then we initialize the weights with random variables. </p>
+<p>In the <code>forward</code> functions, we use the defined <code>LinearFunction.apply</code> functions. The backward process will be automatically done just as other PyTorch modules. </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/26/An-Obscure-RuntimeError-for-CUDA-error-out-of-memory/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1503,96 +1615,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/06/CUDA-No-process-but-GPU-memory-occupied/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Future">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Future's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/05/06/CUDA-No-process-but-GPU-memory-occupied/" class="post-title-link" itemprop="url">CUDA No process found but GPU memory occupied</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-05-06 01:07:19" itemprop="dateCreated datePublished" datetime="2023-05-06T01:07:19+08:00">2023-05-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-27 16:43:05" itemprop="dateModified" datetime="2023-05-27T16:43:05+08:00">2023-05-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Problem-Solving/" itemprop="url" rel="index"><span itemprop="name">Problem Solving</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Problem"><a href="#Problem" class="headerlink" title="Problem"></a>Problem</h2><p>when typing <code>nvidia-smi</code>, we find there is GPU memory occupied (See Red Boxes), but we cannot see any relevant process on that GPU (See Orange Boxes).</p>
-<img src="/2023/05/06/CUDA-No-process-but-GPU-memory-occupied/problem.png" alt="problem" style="zoom:50%;">
-
-<h2 id="Possible-Answer"><a href="#Possible-Answer" class="headerlink" title="Possible Answer"></a>Possible Answer</h2><p>This can be caused by <code>torch.distributed</code> and other multi-processing CUDA programs. When the main process terminated, the background process still alive, not killed.</p>
-<ol>
-<li>To figure which processes used the GPU, we can use the following command:</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">fuser -v /dev/nvidia&lt;<span class="built_in">id</span>&gt;</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">                     Users     PID         Command</span><br><span class="line">/dev/nvidia5:        XXXXXX    14701 F...m python</span><br><span class="line">                     XXXXXX    14703 F...m python</span><br><span class="line">                     XXXXXX    14705 F...m python</span><br><span class="line">                     XXXXXX    14706 F...m python</span><br><span class="line">                     XXXXXX    37041 F...m python</span><br><span class="line">                     XXXXXX    37053 F...m python</span><br></pre></td></tr></table></figure>
-
-<p>This will list all of the processes that use GPU. Note that if this is executed from a <strong>normal user</strong>, then only the user’s processes displayed. If this is executed from <strong>root</strong>, then all user’s relevant processes will be displayed.</p>
-<ol start="2">
-<li>Then use the following command to kill the process shown above.</li>
-</ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> -9 [PID]</span><br></pre></td></tr></table></figure>
-
-<p>That will kill the process on the GPU. After killing the processes, you will find the GPU memory is freed. If still occupied, this may be caused by other users. You need to ask other users&#x2F;administrators to kill it manually.</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1662,7 +1684,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">32</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
