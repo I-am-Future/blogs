@@ -276,10 +276,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2023-09-16 10:44:16 / Modified: 11:04:28" itemprop="dateCreated datePublished" datetime="2023-09-16T10:44:16+08:00">2023-09-16</time>
+              <time title="Created: 2023-09-16 10:44:16" itemprop="dateCreated datePublished" datetime="2023-09-16T10:44:16+08:00">2023-09-16</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-09-17 14:24:08" itemprop="dateModified" datetime="2023-09-17T14:24:08+08:00">2023-09-17</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -316,16 +322,21 @@
 <ol>
 <li>set up configs in <code>sshd_config</code></li>
 </ol>
-<p>Use any text editor, like <code>vim</code>, to modify the <code>sshd_config</code> if needed. Some important configs are:</p>
+<p>Use any text editor, like <code>vim</code>, to modify the <code>/etc/ssh/sshd_config</code> if needed. Some important configs are:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># indicates which port listening to</span></span><br><span class="line">Port 22</span><br><span class="line"><span class="comment"># Use public key authentication</span></span><br><span class="line">PubkeyAuthentication <span class="built_in">yes</span></span><br><span class="line"><span class="comment"># Use password authentication</span></span><br><span class="line">PasswordAuthentication <span class="built_in">yes</span></span><br><span class="line"><span class="comment"># Use X11 forwarding to forward a display in the remote shell</span></span><br><span class="line">X11Forwarding <span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
 <ol>
 <li>Start the sshd service:</li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Ubuntu/Debian:</span></span><br><span class="line">sudo systemctl start ssh</span><br><span class="line"><span class="comment"># CentOS:</span></span><br><span class="line">sudo systemctl start sshd</span><br><span class="line"><span class="comment"># Arch Linux:</span></span><br><span class="line">sudo systemctl start sshd</span><br><span class="line"><span class="comment"># Alpine Linux:</span></span><br><span class="line">sudo rc-service sshd start</span><br></pre></td></tr></table></figure>
 <h2 id="2-Connect"><a href="#2-Connect" class="headerlink" title="2. Connect"></a>2. Connect</h2><p>Use <code>ssh -p &lt;port&gt; &lt;username&gt;@&lt;ip_address&gt;</code> to start a SSH connection. </p>
-<h3 id="2-1-WSL"><a href="#2-1-WSL" class="headerlink" title="2.1 WSL"></a>2.1 WSL</h3><p>The WSL is an independently installed operating system running on your machine, so it has a different ip address. To get the ip address, you can use the following command in the host’s powershell:</p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="2-2-Container"><a href="#2-2-Container" class="headerlink" title="2.2 Container"></a>2.2 Container</h3>
+<h3 id="2-1-WSL"><a href="#2-1-WSL" class="headerlink" title="2.1 WSL"></a>2.1 WSL</h3><p><code>&lt;port&gt;</code>: Unless specified in the <code>/etc/ssh/sshd_config</code>, the default port number is 22.</p>
+<p><code>username</code>: The one in the WSL. </p>
+<p>The WSL is an independently installed operating system running on your machine, so it has a different ip address. To get the ip address, you can use the following command in the host’s powershell to get the <code>&lt;ip_address&gt;</code>:</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$wsl_ip</span> = (wsl hostname <span class="literal">-I</span>).trim()</span><br><span class="line"><span class="built_in">Write-Host</span> <span class="string">&quot;WSL Machine IP: &quot;</span><span class="string">&quot;<span class="variable">$wsl_ip</span>&quot;</span><span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-2-Container"><a href="#2-2-Container" class="headerlink" title="2.2 Container"></a>2.2 Container</h3><p><code>&lt;port&gt;</code>: When configuring the container, we usually forward the container’s <code>22</code> port to one in the host machine. Use that port number here.</p>
+<p><code>&lt;username&gt;</code>: Unless create other user, the container has only one default user, <code>root</code>.</p>
+<p><code>ip_address</code>: Since we have port forwarding, the <code>ip_address</code> is the host machine, <code>127.0.0.1</code> (or equivalently, the ip address from command <code>ipconfig</code>)</p>
+
       
     </div>
 
