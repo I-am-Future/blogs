@@ -29,7 +29,7 @@
 <meta property="og:description" content="We usually use WSL and docker container for development. In most cases, when we install the WSL and container, we may need setup the SSH (secure shell) configuration by ourselves. This article shares">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-09-16T02:44:16.000Z">
-<meta property="article:modified_time" content="2023-09-17T06:24:08.553Z">
+<meta property="article:modified_time" content="2023-09-18T03:03:15.336Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 
@@ -215,7 +215,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-09-17 14:24:08" itemprop="dateModified" datetime="2023-09-17T14:24:08+08:00">2023-09-17</time>
+                <time title="Modified: 2023-09-18 11:03:15" itemprop="dateModified" datetime="2023-09-18T11:03:15+08:00">2023-09-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,34 +239,50 @@
 
       
         <p>We usually use WSL and docker container for development. In most cases, when we install the WSL and container, we may need setup the SSH (secure shell) configuration by ourselves. This article shares my experience in setting up SSH in these environments. </p>
-<h2 id="1-Install-amp-Config"><a href="#1-Install-amp-Config" class="headerlink" title="1. Install &amp; Config"></a>1. Install &amp; Config</h2><p><strong>Step 1: Install</strong> (Optional): If your the system has no ssh installed, you may use the package manager (e.g., <code>yum</code>, <code>apk</code>, <code>apt</code> based on which operating system you are using). E.g., </p>
+<h2 id="1-Install-Config"><a href="#1-Install-Config" class="headerlink" title="1. Install &amp; Config"></a>1. Install &amp; Config</h2><p><strong>Step 1: Install</strong> (Optional): If your the system has no ssh installed, you may use the package manager (e.g., <code>yum</code>, <code>apk</code>, <code>apt</code> based on which operating system you are using). E.g., </p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Ubuntu/Debian:</span></span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install openssh-server</span><br><span class="line"><span class="comment"># CentOS 7 and earlier:</span></span><br><span class="line">sudo yum install openssh-server</span><br><span class="line"><span class="comment"># CentOS 8 and later:</span></span><br><span class="line">sudo dnf install openssh-server</span><br><span class="line"><span class="comment"># Arch Linux:</span></span><br><span class="line">sudo pacman -S openssh</span><br><span class="line"><span class="comment"># Alpine Linux:</span></span><br><span class="line">sudo apk add openssh-server</span><br></pre></td></tr></table></figure>
+
 <p><strong>Step 2: Configuring</strong>:</p>
 <ol>
 <li>set up keys for SSH. Run following codes.</li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N <span class="string">&#x27;&#x27;</span></span><br><span class="line">ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N <span class="string">&#x27;&#x27;</span></span><br><span class="line">ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N <span class="string">&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
-<ol>
+
+<ol start="2">
 <li>(Optional): If you haven’t set the password yet, set one first.</li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd &lt;user_name&gt;</span><br></pre></td></tr></table></figure>
-<ol>
+
+<ol start="3">
 <li>set up configs in <code>sshd_config</code></li>
 </ol>
 <p>Use any text editor, like <code>vim</code>, to modify the <code>/etc/ssh/sshd_config</code> if needed. Some important configs are:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># indicates which port listening to</span></span><br><span class="line">Port 22</span><br><span class="line"><span class="comment"># Use public key authentication</span></span><br><span class="line">PubkeyAuthentication <span class="built_in">yes</span></span><br><span class="line"><span class="comment"># Use password authentication</span></span><br><span class="line">PasswordAuthentication <span class="built_in">yes</span></span><br><span class="line"><span class="comment"># Use X11 forwarding to forward a display in the remote shell</span></span><br><span class="line">X11Forwarding <span class="built_in">yes</span></span><br></pre></td></tr></table></figure>
-<ol>
+
+<ol start="4">
 <li>Start the sshd service:</li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Ubuntu/Debian:</span></span><br><span class="line">sudo systemctl start ssh</span><br><span class="line"><span class="comment"># CentOS:</span></span><br><span class="line">sudo systemctl start sshd</span><br><span class="line"><span class="comment"># Arch Linux:</span></span><br><span class="line">sudo systemctl start sshd</span><br><span class="line"><span class="comment"># Alpine Linux:</span></span><br><span class="line">sudo rc-service sshd start</span><br></pre></td></tr></table></figure>
+
 <h2 id="2-Connect"><a href="#2-Connect" class="headerlink" title="2. Connect"></a>2. Connect</h2><p>Use <code>ssh -p &lt;port&gt; &lt;username&gt;@&lt;ip_address&gt;</code> to start a SSH connection. </p>
 <h3 id="2-1-WSL"><a href="#2-1-WSL" class="headerlink" title="2.1 WSL"></a>2.1 WSL</h3><p><code>&lt;port&gt;</code>: Unless specified in the <code>/etc/ssh/sshd_config</code>, the default port number is 22.</p>
 <p><code>username</code>: The one in the WSL. </p>
 <p>The WSL is an independently installed operating system running on your machine, so it has a different ip address. To get the ip address, you can use the following command in the host’s powershell to get the <code>&lt;ip_address&gt;</code>:</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$wsl_ip</span> = (wsl hostname <span class="literal">-I</span>).trim()</span><br><span class="line"><span class="built_in">Write-Host</span> <span class="string">&quot;WSL Machine IP: &quot;</span><span class="string">&quot;<span class="variable">$wsl_ip</span>&quot;</span><span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
-<h3 id="2-2-Container"><a href="#2-2-Container" class="headerlink" title="2.2 Container"></a>2.2 Container</h3><p><code>&lt;port&gt;</code>: When configuring the container, we usually forward the container’s <code>22</code> port to one in the host machine. Use that port number here.</p>
+
+<h3 id="2-2-Container"><a href="#2-2-Container" class="headerlink" title="2.2 Container"></a>2.2 Container</h3><p><code>&lt;port&gt;</code>: When configuring the container, we usually forward the container’s <code>22</code> port to one in the host machine. Use that port number at the host machine.</p>
 <p><code>&lt;username&gt;</code>: Unless create other user, the container has only one default user, <code>root</code>.</p>
-<p><code>ip_address</code>: Since we have port forwarding, the <code>ip_address</code> is the host machine, <code>127.0.0.1</code> (or equivalently, the ip address from command <code>ipconfig</code>)</p>
+<p><code>ip_address</code>: Since we have port forwarding, the <code>ip_address</code> is the host machine, <code>127.0.0.1</code> (or equivalently, the ip address from command <code>ipconfig</code> (Windows), or <code>ifconfig/iwconfig</code> (Linux))</p>
+<h2 id="3-Remote-Visiting"><a href="#3-Remote-Visiting" class="headerlink" title="3 Remote Visiting"></a>3 Remote Visiting</h2><p>In some cases, we may want to visit the WSL&#x2F;docker on this host machine from other machines in the same local network. </p>
+<h3 id="3-1-WSL"><a href="#3-1-WSL" class="headerlink" title="3.1 WSL"></a>3.1 WSL</h3><p><strong>Host Port Forwarding.</strong> Since WSL behaves like a separate machine, it has its own ip address. We should perform port forwarding so that the remote connection to this host machine can be forwarded to the WSL. Run the following command to set port forwarding through Powershell in admin privilage.</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$wsl_ip</span> = (wsl hostname <span class="literal">-I</span>).trim()</span><br><span class="line"></span><br><span class="line"><span class="built_in">Write-Host</span> <span class="string">&quot;WSL Machine IP: &quot;</span><span class="string">&quot;<span class="variable">$wsl_ip</span>&quot;</span><span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">netsh interface portproxy add v4tov4 listenport=<span class="number">2222</span> connectport=<span class="number">22</span> connectaddress=<span class="variable">$wsl_ip</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Firewall rules.</strong> We should set firewall permission rules, so that the connection would not be refused by the host machine. You may search additional online materials for how to allow TCP connection to the <code>&lt;listenport&gt;</code> you defined above, e.g., <a target="_blank" rel="noopener" href="https://supportcenter.lexisnexis.com/app/answers/answer_view/a_id/1081611/~/adding-exceptions-to-the-windows-firewall">here</a>. </p>
+<p><strong>Connect.</strong> Then, we can access by <code>ssh -p 2222 &lt;wsl_username&gt;@&lt;host_ipaddr&gt;</code>. The <code>&lt;host_ipaddr</code> can be obtained by command <code>ipconfig</code> (Windows), or <code>ifconfig/iwconfig</code> (Linux). </p>
+<p>Additional note: if something goes run, use <code>netsh interface portproxy reset</code> to reset the port forwarding. </p>
+<h3 id="3-2-Container"><a href="#3-2-Container" class="headerlink" title="3.2 Container"></a>3.2 Container</h3><p>Connect by <code>ssh -p &lt;port&gt; &lt;wsl_username&gt;@&lt;host_ipaddr&gt;</code>, where:</p>
+<p><code>&lt;port&gt;</code> is the forwarded port number, and </p>
+<p><code>&lt;host_ipaddr&gt;</code> is the host’s ip address in the local network, obtained by command <code>ipconfig</code> (Windows), or <code>ifconfig/iwconfig</code> (Linux). </p>
 
     </div>
 
@@ -344,7 +360,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Install-amp-Config"><span class="nav-number">1.</span> <span class="nav-text">1. Install &amp; Config</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Connect"><span class="nav-number">2.</span> <span class="nav-text">2. Connect</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-WSL"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 WSL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Container"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Container</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Install-Config"><span class="nav-number">1.</span> <span class="nav-text">1. Install &amp; Config</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Connect"><span class="nav-number">2.</span> <span class="nav-text">2. Connect</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-WSL"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 WSL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Container"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Container</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Remote-Visiting"><span class="nav-number">3.</span> <span class="nav-text">3 Remote Visiting</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-WSL"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 WSL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Container"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Container</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
