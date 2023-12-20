@@ -284,7 +284,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-11-03 16:34:09" itemprop="dateModified" datetime="2023-11-03T16:34:09+08:00">2023-11-03</time>
+                <time title="Modified: 2023-12-20 10:11:33" itemprop="dateModified" datetime="2023-12-20T10:11:33+08:00">2023-12-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -307,14 +307,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>In some cases, when we import VM into the Oracle VM VirtualBox Manager, the network is not well configured, and we cannot connect it by SSH&#x2F;other things on host. The default network setting may looks like this:</p>
+          <p>In some cases, when we import VM into the “Oracle VM VirtualBox Manager”, the network is not well configured, and we cannot connect it by SSH&#x2F;other things on the host machine. The default network setting may looks like this:</p>
 <ul>
-<li>The Adapter 1:</li>
+<li>The Adapter 1 (an <code>NAT</code> adapter):</li>
 </ul>
 <img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting1.png" alt="Network-setting1" style="zoom: 50%;">
 
 <ul>
-<li>The Adapter 2-4:</li>
+<li>The Adapter 2-4 (Not Enabled):</li>
 </ul>
 <img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting2.png" alt="Network-setting2" style="zoom:50%;">
 
@@ -325,8 +325,8 @@
 
 <p>There are no available network adapter to the host. </p>
 <h2 id="Method-1-By-Host-only-Adapter"><a href="#Method-1-By-Host-only-Adapter" class="headerlink" title="Method 1: By Host-only Adapter"></a>Method 1: By Host-only Adapter</h2><p><strong>Important!</strong></p>
-<p>Pros: It has a stable IP address, with all ports available. (e.g., setup different services on different ports)</p>
-<p>Cons: The VM cannot be accessed outside of host. (e.g., we cannot <code>ssh host_name@host_ip</code> to connect to the VM)</p>
+<p><em>Pros:</em> It has a stable IP address, with all ports available. (e.g., setup different services on different ports, <code>22, 3389, ...</code>)</p>
+<p><em>Cons:</em> The VM cannot be accessed from machine outside of the host (e.g., we cannot <code>ssh host_name@host_ip</code> to connect to the VM from other machines than host), unless you perform some port forwarding strategies on the host. </p>
 <p><strong>Steps:</strong></p>
 <p>To create a network connection from VM to host, we can set the Adapter 2 like below (Use a “Host-only Adapter”):</p>
 <img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting3.png" alt="Network-setting3" style="zoom:50%;">
@@ -334,12 +334,12 @@
 <p>After typing <code>ip a</code> in the terminal of the VM (assume it is a Linux machine) NOW, the result looks like below:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2: enp0s3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000</span><br><span class="line">    link/ether 08:00:27:b3:8d:9b brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3</span><br><span class="line">       valid_lft 86337sec preferred_lft 86337sec</span><br><span class="line">    inet6 fe80::6dea:8795:c7b1:a1a5/64 scope link noprefixroute </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">3: enp0s8: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000</span><br><span class="line">    link/ether 08:00:27:85:54:b0 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.56.101/24 brd 192.168.56.255 scope global dynamic noprefixroute enp0s8</span><br><span class="line">       valid_lft 537sec preferred_lft 537sec</span><br><span class="line">    inet6 fe80::a598:692:2336:67d9/64 scope link noprefixroute </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
 
-<p>The third network settings, with an ip address <code>192.168.56.101</code>, is the ip address of the “VirtualBox Host-Only Ethernet Adapter”. On the host machine, we can connect it by SSH fluently:</p>
+<p>The third network adapter, with an ip address <code>192.168.56.101</code>, is the ip address of the “VirtualBox Host-Only Ethernet Adapter”. On the host machine, we can connect it by SSH fluently:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh ubuntu@192.168.56.101</span><br></pre></td></tr></table></figure>
 
 <p>By so far, you can connect the machine via SSH well. You can also connect to other services by ip address <code>192.168.56.101</code> on the host machine. </p>
 <h2 id="Method-2-Forward-Port-to-Host"><a href="#Method-2-Forward-Port-to-Host" class="headerlink" title="Method 2: Forward Port to Host"></a>Method 2: Forward Port to Host</h2><p><strong>Important!</strong></p>
-<p>Pros: You can access the net outside of the host machine. </p>
+<p>Pros: You can access the VM outside of the host machine, from a different machine. </p>
 <p>Cons: Only forwarded ports available. Ports may conflict with others. </p>
 <p><strong>Steps:</strong></p>
 <p>Go to the Adapter 1, click the “Advanced” button to expand the menu. Click the “Port Forwarding”.</p>
@@ -348,11 +348,14 @@
 <p>In the “Port Forwarding Rules”, Set up new rules. The “Host Port” is the port number on the host machine. The “Guest Port” is the corresponding port number on the VM. In this example, I forwarded port 4016 on host to the port 22 on the VM.  </p>
 <img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting5.png" alt="Network-setting5" style="zoom:50%;">
 
-<p>After that, you can connect to the VM outside of the host machine. Assume in the local network, my ip address is <code>10.31.38.94</code>. So from the computer in the same local network, type:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -p 4016 ubuntu@10.31.38.94</span><br></pre></td></tr></table></figure>
+<p>After that, you can connect to the VM on the host machine. Type:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -p 4016 ubuntu@127.0.0.1</span><br></pre></td></tr></table></figure>
+
+<p>You can also connect to the VM outside of the host machine. Assume in the local network, my ip address is <code>10.31.38.94</code>. So from the computer in the same local network, type:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -p 4016 ubuntu@10.31.38.94</span><br></pre></td></tr></table></figure>
 
 <p>And everything should go fine. If something goes run, please check whether we have firewall permissions. If not, you can set a firewall rule for port <code>4016</code> (The port number you forwarded). </p>
-<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>You can setup both Method 1 &amp; Method 2!! Then you can experience all of these benefits (connect from other machine, all ports available on local machine, etc.) and avoid the disadvantages. </p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>You can setup both Method 1 &amp; Method 2!! Then you can experience all of these benefits (connect from other machines, all ports available on local machines, etc.) and avoid the disadvantages. </p>
 
       
     </div>
