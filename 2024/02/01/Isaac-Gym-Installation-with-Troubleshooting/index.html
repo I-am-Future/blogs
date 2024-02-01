@@ -30,7 +30,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2024/02/01/Isaac-Gym-Installation-with-Troubleshooting/download.png">
 <meta property="article:published_time" content="2024-02-01T08:52:02.000Z">
-<meta property="article:modified_time" content="2024-02-01T12:01:20.511Z">
+<meta property="article:modified_time" content="2024-02-01T12:57:44.812Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2024/02/01/Isaac-Gym-Installation-with-Troubleshooting/download.png">
@@ -211,7 +211,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2024-02-01 16:52:02 / Modified: 20:01:20" itemprop="dateCreated datePublished" datetime="2024-02-01T16:52:02+08:00">2024-02-01</time>
+              <time title="Created: 2024-02-01 16:52:02 / Modified: 20:57:44" itemprop="dateCreated datePublished" datetime="2024-02-01T16:52:02+08:00">2024-02-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -287,6 +287,7 @@
 <p>As in my machine, installing with latest PyTorch (<code>2.2.0</code>) and CUDA (<code>12.1</code>) is fine. It doesn’t require a former version.</p>
 <h1 id="Test-demo"><a href="#Test-demo" class="headerlink" title="Test demo"></a>Test demo</h1><p>To run the test demo, cd to <code>python/examples</code>, and run:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python joint_monkey.py</span><br></pre></td></tr></table></figure>
+<hr>
 <div class="table-container">
 <table>
 <thead>
@@ -303,6 +304,7 @@
 </div>
 <p><strong>Solution 1:</strong> This is because the module failed to locate the static link library. We can add the corresponding path to the <code>LD_LIBRARY_PATH</code> so that the python could locate the library. </p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># in ~/.bashrc</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/&lt;miniconda_root&gt;/envs/&lt;env_name&gt;/lib:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
+<hr>
 <div class="table-container">
 <table>
 <thead>
@@ -318,6 +320,7 @@
 </table>
 </div>
 <p><strong>Solution 2:</strong> The test programs requires GUI. In the headless server, you may use <code>X11 forwarding</code> (e.g., MobaXterm) or <code>xvfb</code> virtual screen.</p>
+<hr>
 <div class="table-container">
 <table>
 <thead>
@@ -327,7 +330,7 @@
 </thead>
 <tbody>
 <tr>
-<td>After executing <code>python joint_monkey.py</code>, it returns error `Segment Fault”</td>
+<td>After executing <code>python joint_monkey.py</code>, it returns error <code>Segment Fault</code></td>
 </tr>
 </tbody>
 </table>
