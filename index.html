@@ -252,6 +252,236 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/02/01/Isaac-Gym-Installation-with-Troubleshooting/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/02/01/Isaac-Gym-Installation-with-Troubleshooting/" class="post-title-link" itemprop="url">Isaac Gym Installation with Troubleshooting</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-02-01 16:52:02 / Modified: 20:01:20" itemprop="dateCreated datePublished" datetime="2024-02-01T16:52:02+08:00">2024-02-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>This blog is used to record my experience in installing Isaac Gym environment on the Linux Server. I’ll also write down all problems I met with troubleshooting.</p>
+<h1 id="Prerequisite"><a href="#Prerequisite" class="headerlink" title="Prerequisite"></a>Prerequisite</h1><p>The followings are requirements provided by the project pages:</p>
+<blockquote>
+<p>Ubuntu 18.04, or 20.04.<br>Python 3.6, 3.7, or 3.8<br>Minimum recommended NVIDIA driver version: 470.74 (470 or above required)<br>Minimum required hardware: NVIDIA Pascal or later GPU with at least 8gb of VRAM</p>
+</blockquote>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Possible Problems</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Don’t use WSL (Windows Subsystem on Linux)!!! The Nvidia driver on WSL may not support Vulkan well thus causing failure!</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1 id="Download-amp-Install"><a href="#Download-amp-Install" class="headerlink" title="Download &amp; Install"></a>Download &amp; Install</h1><ol>
+<li>Register and download from <a target="_blank" rel="noopener" href="https://developer.nvidia.com/isaac-gym/">https://developer.nvidia.com/isaac-gym/</a>. Press “join now” first, and then fill the form, and finally you are ready to download it.</li>
+</ol>
+<p><img src="/2024/02/01/Isaac-Gym-Installation-with-Troubleshooting/download.png" alt="download" style="zoom:50%;"></p>
+<ol>
+<li>Put the download file, probably named <code>IsaacGym_Preview_4_Package.tar.gz</code> on a proper folder. Then unzip it:</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf IsaacGym_Preview_4_Package.tar.gz</span><br></pre></td></tr></table></figure>
+<ol>
+<li>Go to the unzipped folder, and execute the <code>create_conda_env_rlgpu.sh</code>. This would automatically create a new environment, installed with all packages. </li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./create_conda_env_rlgpu.sh</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Possible Problems</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The shell may stuck at “Solving…” stage. In that case, please follow step 4 below.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ol>
+<li><strong>[Alternative ways for step 3]</strong> If step 3 failed, consider the following method:</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create an env manually.</span></span><br><span class="line">conda create -n rlgpu python=3.8</span><br><span class="line"></span><br><span class="line"><span class="comment"># Go the the subdirectory,</span></span><br><span class="line"><span class="built_in">cd</span> python/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install manually.</span></span><br><span class="line">pip install -e .</span><br></pre></td></tr></table></figure>
+<p>The above code would also install the <code>isaacgym</code>, with necessary dependencies (<code>pytorch</code>, <code>numpy</code>, etc.)</p>
+<p>As in my machine, installing with latest PyTorch (<code>2.2.0</code>) and CUDA (<code>12.1</code>) is fine. It doesn’t require a former version.</p>
+<h1 id="Test-demo"><a href="#Test-demo" class="headerlink" title="Test demo"></a>Test demo</h1><p>To run the test demo, cd to <code>python/examples</code>, and run:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python joint_monkey.py</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Possible Problem 1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>When importing <code>isaacgym</code>, returns error <code>ImportError: libpython3.8.so.1.0: cannot open shared object file: No such file or directory</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Solution 1:</strong> This is because the module failed to locate the static link library. We can add the corresponding path to the <code>LD_LIBRARY_PATH</code> so that the python could locate the library. </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># in ~/.bashrc</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/&lt;miniconda_root&gt;/envs/&lt;env_name&gt;/lib:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Possible Problem 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>After executing <code>python joint_monkey.py</code>, it returns error <code>[Error] [carb.windowing-glfw.plugin] GLFW initialization failed.</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Solution 2:</strong> The test programs requires GUI. In the headless server, you may use <code>X11 forwarding</code> (e.g., MobaXterm) or <code>xvfb</code> virtual screen.</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Possible Problem 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>After executing <code>python joint_monkey.py</code>, it returns error `Segment Fault”</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Solution 3:</strong> There are no direct solutions on the Internet. After my experience, I can give you some possible reasons.</p>
+<ul>
+<li>Newer PyTorch, CUDA version: It should not be a big problem. As for me, I am using PyTorch (<code>2.2.0</code>) and CUDA (<code>12.1</code>), the program stills works!</li>
+<li>Don’t use WSL: By 2/1/2024, the Vulkan has not fully supported on WSL. Therefore, the program may occur such problems. Use Linux machine instead.</li>
+<li>Vulkan Installation: Please make sure the vulkan works fine on the server. You may visit <a target="_blank" rel="noopener" href="https://forums.developer.nvidia.com/t/cannot-run-the-examples/165180/3">here</a> for further information.</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/01/28/Learn-PyTorch-Lightning-with-Example-Codes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/01/28/Learn-PyTorch-Lightning-with-Example-Codes/" class="post-title-link" itemprop="url">Learn PyTorch-Lightning with Example Codes</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-01-28 22:38:31" itemprop="dateCreated datePublished" datetime="2024-01-28T22:38:31+08:00">2024-01-28</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/10/26/Network-Config-for-VirtualBox/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1101,389 +1331,6 @@ select * from fruits;
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/07/Pytorch-Practical-Basics-9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Future">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Future's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/07/Pytorch-Practical-Basics-9/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 9--Compiling and Testing the Module</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-07 14:07:03" itemprop="dateCreated datePublished" datetime="2023-08-07T14:07:03+08:00">2023-08-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-15 19:02:40" itemprop="dateModified" datetime="2023-08-15T19:02:40+08:00">2023-08-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>In the section 6 to 9, we’ll investigate how to use <code>torch.autograd.Function</code> to implement the hand-written operators. The tentative outline is:</p>
-<ul>
-<li><input checked disabled type="checkbox"> In the section 6, we talk about the basics of <code>torch.autograd.Function</code>. <strong>The operators defined by <code>torch.autograd.Function</code> can be automatically back-propagated.</strong></li>
-<li><input checked disabled type="checkbox"> In the last section (7), we’ll talk about <strong>mathematic derivation</strong> for the “linear layer” operator. </li>
-<li><input checked disabled type="checkbox"> In the section (8), we talk about <strong>writing C++ CUDA extension</strong> for the “linear layer” operator. </li>
-<li><input checked disabled type="checkbox"> In this section (9), we talk details about <strong>building the extension</strong> to a python module, as well as <strong>testing</strong> the module. Then we’ll <strong>conclude</strong> the things we’ve done so far.</li>
-</ul>
-<p><strong>Note:</strong></p>
-<ul>
-<li>This blog is written with following reference: <ul>
-<li>PyTorch official tutorial about CUDA extension: <a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/advanced/cpp_extension.html">website</a>.</li>
-<li>YouTube video about writing CUDA extension: <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=l_Rpk6CRJYI">video</a>, <a target="_blank" rel="noopener" href="https://github.com/kwea123/pytorch-cppcuda-tutorial">code</a>.</li>
-</ul>
-</li>
-<li>For how to write CUDA code, you can follow <a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">official documentation</a>, <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/34587739">blogs</a> (In Chinese). You can search by yourself for English tutorials and video tutorials.</li>
-<li>This blog only talk some important points in the matrix multiplication example. Code are picked by pieces for illustration. Whole code is at: <a target="_blank" rel="noopener" href="https://github.com/I-am-Future/PyTorch-Linear-Operator-CUDA">code</a>.</li>
-</ul>
-<h1 id="Python-side-Wrapper"><a href="#Python-side-Wrapper" class="headerlink" title="Python-side Wrapper"></a>Python-side Wrapper</h1><p>Purely using C++ extension functions is not enough in our case. As mentioned in the Section 6, we need to build our operators with <code>torch.autograd.Function</code>. It is not convenient to let the user define the operator wrapper every time, so it’s better if we can write the wrapper in a python module. Then, users can easily import our python module, and using the wrapper class and functions in it.</p>
-<img src="/2023/08/07/Pytorch-Practical-Basics-9/cudaops-struct-improved.drawio.png" alt="cudaops-struct-improved.drawio" style="zoom:50%;">
-
-<p>The python module is at <code>mylinearops/</code>. Follow the section 6, we define some <code>autograd.Function</code> operators and <code>nn.Module</code> modules in the <code>mylinearops/mylinearops.py</code>. Then, we export the operators and modules by the code in the <code>mylinearops/__init__.py</code>:</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> .mylinearops <span class="keyword">import</span> matmul</span><br><span class="line"><span class="keyword">from</span> .mylinearops <span class="keyword">import</span> linearop</span><br><span class="line"><span class="keyword">from</span> .mylinearops <span class="keyword">import</span> LinearLayer</span><br></pre></td></tr></table></figure>
-
-<p>As a result, when user imports the <code>mylinearops</code>, only the <code>matmul</code> (Y &#x3D; XW) function, <code>linearop</code> (Y &#x3D; XW+b) function and <code>LinearLayer</code> module are public to the users. </p>
-<h1 id="Writing-setup-py-and-Building"><a href="#Writing-setup-py-and-Building" class="headerlink" title="Writing setup.py and Building"></a>Writing setup.py and Building</h1><h2 id="setup-py-script"><a href="#setup-py-script" class="headerlink" title="setup.py script"></a>setup.py script</h2><p>The <code>setup.py</code> script is general same for all packages. Next time, you can just copy-paste the code above and modify some key components. </p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> glob</span><br><span class="line"><span class="keyword">import</span> os.path <span class="keyword">as</span> osp</span><br><span class="line"><span class="keyword">from</span> setuptools <span class="keyword">import</span> setup</span><br><span class="line"><span class="keyword">from</span> torch.utils.cpp_extension <span class="keyword">import</span> CUDAExtension, BuildExtension</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ROOT_DIR = osp.dirname(osp.abspath(__file__))</span><br><span class="line">include_dirs = [osp.join(ROOT_DIR, <span class="string">&quot;include&quot;</span>)]</span><br><span class="line"></span><br><span class="line">SRC_DIR = osp.join(ROOT_DIR, <span class="string">&quot;src&quot;</span>)</span><br><span class="line">sources = glob.glob(osp.join(SRC_DIR, <span class="string">&#x27;*.cpp&#x27;</span>))+glob.glob(osp.join(SRC_DIR, <span class="string">&#x27;*.cu&#x27;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">setup(</span><br><span class="line">    name=<span class="string">&#x27;mylinearops&#x27;</span>,</span><br><span class="line">    version=<span class="string">&#x27;1.0&#x27;</span>,</span><br><span class="line">    author=...,</span><br><span class="line">    author_email=...,</span><br><span class="line">    description=<span class="string">&#x27;Hand-written Linear ops for PyTorch&#x27;</span>,</span><br><span class="line">    long_description=<span class="string">&#x27;Simple demo for writing Linear ops in CUDA extensions with PyTorch&#x27;</span>,</span><br><span class="line">    ext_modules=[</span><br><span class="line">        CUDAExtension(</span><br><span class="line">            name=<span class="string">&#x27;mylinearops_cuda&#x27;</span>,</span><br><span class="line">            sources=sources,</span><br><span class="line">            include_dirs=include_dirs,</span><br><span class="line">            extra_compile_args=&#123;<span class="string">&#x27;cxx&#x27;</span>: [<span class="string">&#x27;-O2&#x27;</span>],</span><br><span class="line">                                <span class="string">&#x27;nvcc&#x27;</span>: [<span class="string">&#x27;-O2&#x27;</span>]&#125;</span><br><span class="line">        )</span><br><span class="line">    ],</span><br><span class="line">    py_modules=[<span class="string">&#x27;mylinearops.mylinearops&#x27;</span>],</span><br><span class="line">    cmdclass=&#123;</span><br><span class="line">        <span class="string">&#x27;build_ext&#x27;</span>: BuildExtension</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p>At the beginning, we first get the path information. We get the <code>include_dirs</code> (Where we store our <code>.h</code> headers), <code>sources</code> (Where we store our C++&#x2F;CUDA source code) directory. </p>
-<p>Then, we call the <code>setup</code> function. The parameter explanation are as following:</p>
-<ul>
-<li><code>name</code>: The package name, how do users call this program</li>
-<li><code>version</code>: The version number, decided by the creator</li>
-<li><code>author</code>: The creator’s name</li>
-<li><code>author_email</code>: The creator’s email</li>
-<li><code>description</code>: The package’s description, short version</li>
-<li><code>long_description</code>: The package’s description, long version</li>
-<li><code>ext_modules</code>: <strong>Key</strong> in our building process. When we are building the PyTorch CUDA extension, we should use <code>CUDAExtension</code>, so that the build helper can know how to compile correctly<ul>
-<li><code>name</code>: the CUDA extension name. We import this name in our wrapper to access the cuda functions</li>
-<li><code>sources</code>: the source files</li>
-<li><code>include_dirs</code>: the header files</li>
-<li><code>extra_compile_args</code>: The extra compiling flags. <code>&#123;&#39;cxx&#39;: [&#39;-O2&#39;], nvcc&#39;: [&#39;-O2&#39;]&#125;</code> is commonly used, which means using <code>-O2</code> optimization level when compiling</li>
-</ul>
-</li>
-<li><code>py_modules</code>: The Python modules needed for the package, which is our wrapper, <code>mylinearops</code>. In most cases, the wrapper module has the same name as the overall package name. (<code>&#39;mylinearops.mylinearops&#39;</code> stands for <code>&#39;mylinearops/mylinearops.py&#39;</code>)</li>
-<li><code>cmdclass</code>: When building the PyTorch CUDA extension, we always pass in this: <code>&#123;&#39;build_ext&#39;: BuildExtension&#125;</code></li>
-</ul>
-<h2 id="Building"><a href="#Building" class="headerlink" title="Building"></a>Building</h2><p>Then, we can build the package. We first activate the conda environment where we want to install in:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda activate &lt;target_env&gt;</span><br></pre></td></tr></table></figure>
-
-<p>Then run:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> &lt;proj_root&gt;</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
-
-<p><strong>Note:</strong> Don’t run <code>pip install .</code>, otherwise your python module will not be successfully installed, at least in my case.</p>
-<p>It may take some time to compile it. If the building process ends up with some error message, go and fix them. If it finally displays something as “successfully installed mylinearops”, then you are ready to go.</p>
-<p>To check if the installation is successful, we can try to import it:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ python</span><br><span class="line">Python 3.9.15 (main, Nov 24 2022, 14:31:59) </span><br><span class="line">[GCC 11.2.0] :: Anaconda, Inc. on linux</span><br><span class="line">Type <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> or <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br><span class="line">&gt;&gt;&gt; import mylinearops</span><br><span class="line">&gt;&gt;&gt; <span class="built_in">dir</span>(mylinearops)</span><br><span class="line">[<span class="string">&#x27;LinearLayer&#x27;</span>, <span class="string">&#x27;__builtins__&#x27;</span>, <span class="string">&#x27;__cached__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>, <span class="string">&#x27;__file__&#x27;</span>, <span class="string">&#x27;__loader__&#x27;</span>, <span class="string">&#x27;__name__&#x27;</span>, <span class="string">&#x27;__package__&#x27;</span>, <span class="string">&#x27;__path__&#x27;</span>, <span class="string">&#x27;__spec__&#x27;</span>, <span class="string">&#x27;linearop&#x27;</span>, <span class="string">&#x27;matmul&#x27;</span>, <span class="string">&#x27;mylinearops&#x27;</span>]</span><br><span class="line">&gt;&gt;&gt; </span><br></pre></td></tr></table></figure>
-
-<p>Further testing will be mentioned in the next subsection.</p>
-<h1 id="Module-Testing"><a href="#Module-Testing" class="headerlink" title="Module Testing"></a>Module Testing</h1><p>We will test the forward and backward of <code>matmul</code> and <code>LinearLayer</code> calculations respectively. To verify the answer, we’ll compare our answer with the PyTorch’s implementation or with <code>torch.autograd.gradcheck</code>. To increase the accuracy, we recommend to use <code>double</code> (<code>torch.float64</code>) type instead of <code>float</code> (<code>torch.float32</code>).</p>
-<p>For tensors: create with argument <code>dtype=torch.float64</code>.</p>
-<p>For modules: a good way is to use <code>model.double()</code> to convert all the parameters and buffers to <code>double</code>. </p>
-<h2 id="forward"><a href="#forward" class="headerlink" title="forward"></a>forward</h2><p>A typical method is to use <code>torch.allclose</code> to verify if two tensors are close to each other. We can create the reference answer by PyTorch’s implementation.</p>
-<ul>
-<li><code>matmul</code>:</li>
-</ul>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> mylinearops</span><br><span class="line"></span><br><span class="line">A = torch.randn(<span class="number">20</span>, <span class="number">30</span>, dtype=torch.float64).cuda().requires_grad_()</span><br><span class="line">B = torch.randn(<span class="number">30</span>, <span class="number">40</span>, dtype=torch.float64).cuda().requires_grad_()</span><br><span class="line"></span><br><span class="line">res_my = mylinearops.matmul(A, B)</span><br><span class="line">res_torch = torch.matmul(A, B)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(torch.allclose(res_my, res_torch))</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>LinearLayer</code>:</li>
-</ul>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> mylinearops</span><br><span class="line"></span><br><span class="line">A = torch.randn(<span class="number">40</span>, <span class="number">30</span>, dtype=torch.float64).cuda().requires_grad_() * <span class="number">100</span></span><br><span class="line">linear = mylinearops.LinearLayer(<span class="number">30</span>, <span class="number">50</span>).cuda().double()</span><br><span class="line"></span><br><span class="line">res_my = linear(A)</span><br><span class="line">res_torch = torch.matmul(A, linear.weight) + linear.bias</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(torch.allclose(res_my, res_torch))</span><br><span class="line"><span class="built_in">print</span>(torch.<span class="built_in">max</span>(torch.<span class="built_in">abs</span>(res_my - res_torch)))</span><br></pre></td></tr></table></figure>
-
-<p>It is worthwhile that sometimes, because of the floating number error, the answer from PyTorch is not consistent with the answer from our implementations. We have three methods:</p>
-<ol>
-<li>Pass <code>atol=1e-5, rtol=1e-5</code> into the <code>torch.allclose</code> to increase the tolerance level.</li>
-<li><strong>[Not very recommended]</strong> We can observe the absolute error by <code>torch.max(torch.abs(res_my - res_torch))</code> for reference. If the result is merely 0.01 ~ 0.1, That would be OK in most cases.</li>
-</ol>
-<h2 id="backward"><a href="#backward" class="headerlink" title="backward"></a>backward</h2><p>For backward calculation, we can use <code>torch.autograd.gradcheck</code> to verify the result. If some tensors are only <code>float</code>, an warning will occur:</p>
-<blockquote>
-<p>……&#x2F;torch&#x2F;autograd&#x2F;gradcheck.py:647: UserWarning: Input #0 requires gradient and is not a double precision floating point or complex. This check will likely fail if all the inputs are not of double precision floating point or complex. </p>
-</blockquote>
-<p>So it is recommended to use the <code>double</code> type. Otherwise the check will likely fail.</p>
-<ul>
-<li><code>matmul</code>:</li>
-</ul>
-<p>As mentioned above, for pure calculation functions, we can assign all tensor as <code>double</code> (<code>torch.float64</code>) type. We are ready to go: </p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> mylinearops</span><br><span class="line"></span><br><span class="line">A = torch.randn(<span class="number">20</span>, <span class="number">30</span>, dtype=torch.float64).cuda().requires_grad_()</span><br><span class="line">B = torch.randn(<span class="number">30</span>, <span class="number">40</span>, dtype=torch.float64).cuda().requires_grad_()</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(torch.autograd.gradcheck(mylinearops.matmul, (A, B)))    <span class="comment"># pass</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>LinearLayer</code>:</li>
-</ul>
-<p>As mentioned above, we can use <code>model.double()</code>. We are ready to go: </p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> mylinearops</span><br><span class="line"></span><br><span class="line"><span class="comment">## CHECK for Linear Layer with bias ##</span></span><br><span class="line">A = torch.randn(<span class="number">40</span>, <span class="number">30</span>, dtype=torch.float64).cuda().requires_grad_()</span><br><span class="line">linear = mylinearops.LinearLayer(<span class="number">30</span>, <span class="number">40</span>).cuda().double()</span><br><span class="line"><span class="built_in">print</span>(torch.autograd.gradcheck(linear, (A,)))    <span class="comment"># pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## CHECK for Linear Layer without bias ##</span></span><br><span class="line">A = torch.randn(<span class="number">40</span>, <span class="number">30</span>, dtype=torch.float64).cuda().requires_grad_()</span><br><span class="line">linear_nobias = mylinearops.LinearLayer(<span class="number">30</span>, <span class="number">40</span>, bias=<span class="literal">False</span>).cuda().double()</span><br><span class="line"><span class="built_in">print</span>(torch.autograd.gradcheck(linear_nobias, (A,)))    <span class="comment"># pass</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="Full-Example"><a href="#Full-Example" class="headerlink" title="Full Example"></a>Full Example</h1><p>Now, we use our linear module to build a three layer classic linear model <code>[784, 256, 10]</code>to classify the MNIST digits. See the <code>examples/main.py</code> file. </p>
-<p>Just as the <code>nn.Linear</code>, we create the model by:</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MLP</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>(MLP, self).__init__()</span><br><span class="line">        self.linear1 = mylinearops.LinearLayer(<span class="number">784</span>, <span class="number">256</span>, bias=<span class="literal">True</span>)<span class="comment">#.cuda()</span></span><br><span class="line">        self.linear2 = mylinearops.LinearLayer(<span class="number">256</span>, <span class="number">256</span>, bias=<span class="literal">True</span>)<span class="comment">#.cuda()</span></span><br><span class="line">        self.linear3 = mylinearops.LinearLayer(<span class="number">256</span>, <span class="number">10</span>, bias=<span class="literal">True</span>)<span class="comment">#.cuda()</span></span><br><span class="line">        self.relu = nn.ReLU()</span><br><span class="line">        <span class="comment"># self.softmax = nn.Softmax(dim=1)</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = x.view(-<span class="number">1</span>, <span class="number">784</span>)</span><br><span class="line">        x = self.relu(self.linear1(x))</span><br><span class="line">        x = self.relu(self.linear2(x))</span><br><span class="line">        <span class="comment"># x = self.softmax(self.linear3(x))</span></span><br><span class="line">        x = self.linear3(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
-
-<p>After writing some basic things, we can run our model: <code>python examples/tests.py</code>.</p>
-<p>We also build the model by PyTorch’s <code>nn.Linear</code>. The result logging is:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mylinearops</span></span><br><span class="line">...</span><br><span class="line">Epoch: [10/10], Step: [100/468], Loss: 0.0417, Acc: 0.9844</span><br><span class="line">Epoch: [10/10], Step: [200/468], Loss: 0.0971, Acc: 0.9609</span><br><span class="line">Epoch: [10/10], Step: [300/468], Loss: 0.0759, Acc: 0.9766</span><br><span class="line">Epoch: [10/10], Step: [400/468], Loss: 0.0777, Acc: 0.9766</span><br><span class="line">Time: 23.4661s</span><br><span class="line"></span><br><span class="line"><span class="comment"># torch</span></span><br><span class="line">...</span><br><span class="line">Epoch: [10/10], Step: [100/468], Loss: 0.1048, Acc: 0.9688</span><br><span class="line">Epoch: [10/10], Step: [200/468], Loss: 0.0412, Acc: 0.9844</span><br><span class="line">Epoch: [10/10], Step: [300/468], Loss: 0.0566, Acc: 0.9688</span><br><span class="line">Epoch: [10/10], Step: [400/468], Loss: 0.0217, Acc: 0.9922</span><br><span class="line">Time: 26.5896s</span><br></pre></td></tr></table></figure>
-
-<p>It is surprising that our implementation is even faster than the torch’s one. (But relax, after trying for some repetitions, we find ours is just as fast as the torch’s one). This is because the data scale is relatively small, the computation proportion is small. When the data scale is larger, ours may be slower than torch’s. </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/02/Pytorch-Practical-Basics-8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Future">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Future's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/02/Pytorch-Practical-Basics-8/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 8--Linear Layer Ops on C++/CUDA</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-02 12:03:42" itemprop="dateCreated datePublished" datetime="2023-08-02T12:03:42+08:00">2023-08-02</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-06 19:13:54" itemprop="dateModified" datetime="2023-08-06T19:13:54+08:00">2023-08-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>In the section 6 to 9, we’ll investigate how to use <code>torch.autograd.Function</code> to implement the hand-written operators. The tentative outline is:</p>
-<ul>
-<li><input checked disabled type="checkbox"> In the section 6, we talk about the basics of <code>torch.autograd.Function</code>. <strong>The operators defined by <code>torch.autograd.Function</code> can be automatically back-propagated.</strong></li>
-<li><input checked disabled type="checkbox"> In the last section (7), we’ll talk about <strong>mathematic derivation</strong> for the “linear layer” operator. </li>
-<li><input checked disabled type="checkbox"> In this section (8), we talk about <strong>writing C++ CUDA extension</strong> for the “linear layer” operator. </li>
-<li><input disabled type="checkbox"> In the section 9, we talk details about building the extension to a module, as well as testing. Then we’ll conclude the things we’ve done so far.</li>
-</ul>
-<p><strong>Note:</strong></p>
-<ul>
-<li>This blog is written with following reference: <ul>
-<li>PyTorch official tutorial about CUDA extension: <a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/advanced/cpp_extension.html">website</a>.</li>
-<li>YouTube video about writing CUDA extension: <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=l_Rpk6CRJYI">video</a>, <a target="_blank" rel="noopener" href="https://github.com/kwea123/pytorch-cppcuda-tutorial">code</a>.</li>
-</ul>
-</li>
-<li>For how to write CUDA code, you can follow <a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">official documentation</a>, <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/34587739">blogs</a> (In Chinese). You can search by yourself for English tutorials and video tutorials.</li>
-<li>This blog only talk some important points in the matrix multiplication example. Code are picked by pieces for illustration. Whole code is at: <a target="_blank" rel="noopener" href="https://github.com/I-am-Future/PyTorch-Linear-Operator-CUDA">code</a>.</li>
-</ul>
-<h1 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h1><p>The general structure for our PyTorch C++ &#x2F; CUDA extension looks like following:</p>
-<img src="/2023/08/02/Pytorch-Practical-Basics-8/cudaops-struct.png" alt="cudaops-struct" style="zoom:50%;">
-
-<p>We mainly have three kinds of file: Library interface, Core code on CPU, and Core code on GPU. Let’s explain them in detail:</p>
-<ul>
-<li><p>Library interface (.cpp)</p>
-<ul>
-<li>Contains Functions Interface for Python to call. These functions usually have Tensor input and Tensor return value.</li>
-<li>Contains a standard pybind declaration, since our extension uses pybind to bind the C++ functions for Python. It indicates which functions are needed to be bound.</li>
-</ul>
-</li>
-<li><p>Core code on CPU (.cpp)</p>
-<ul>
-<li>Contains core function to do the calculation. </li>
-<li>Contains wrapper for the core function, serves to creating the result tensor, checking the input shape, etc.</li>
-</ul>
-</li>
-<li><p>Core code on GPU (.cu)</p>
-<ul>
-<li>Contains CUDA kernel function <code>__global__</code> to do the parallel calculation. </li>
-<li>Contains wrapper for the core function, serves to creating the result tensor, checking the input shape, setting the launch configs, launching the kernel, etc.</li>
-</ul>
-</li>
-</ul>
-<p>Then, after we finishing the code, we can use Python build tools to compile the code into a static object library (.so file). Then, we can import them normally in the Python side. We can call the functions we declared in library interface by pybind11.</p>
-<p>In our example <a target="_blank" rel="noopener" href="https://github.com/I-am-Future/PyTorch-Linear-Operator-CUDA">code</a>, we don’t provide code for CPU calculation. We only support GPU. So we only have two files (<code>src/linearops.cpp</code> and <code>src/addmul_kernel.cu</code>)</p>
-<h1 id="Pybind-Interface"><a href="#Pybind-Interface" class="headerlink" title="Pybind Interface"></a>Pybind Interface</h1><p>This is the <code>src/linearops.cpp</code> file in our repo. </p>
-<h2 id="1-Utils-function"><a href="#1-Utils-function" class="headerlink" title="1. Utils function"></a>1. Utils function</h2><p>We usually defines some utility macro functions in our code. They are in the <code>include/utils.h</code> header file. </p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// PyTorch CUDA Utils</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CHECK_CUDA(x) TORCH_CHECK(x.is_cuda(), #x <span class="string">&quot; must be a CUDA tensor&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CHECK_CONTIGUOUS(x) TORCH_CHECK(x.is_contiguous(), #x <span class="string">&quot; must be contiguous&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Kernel Config Utils</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DIV_CEIL(a, b) (((a) + (b) - 1) / (b))</span></span><br></pre></td></tr></table></figure>
-
-<p>The third macro will call first two macros, which are used to make sure the tenser is on the CUDA devices and is contiguous. </p>
-<p>The last macro performs ceil division, which are often used in setting the CUDA kernel launch configurations. </p>
-<h2 id="2-Interface-functions"><a href="#2-Interface-functions" class="headerlink" title="2. Interface functions"></a>2. Interface functions</h2><p>Benefited by pybind, we can simply define functions in C++ and use them in Python. A function looks like</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">torch::Tensor <span class="title">func</span><span class="params">(torch::Tensor a, torch::Tensor b, <span class="type">int</span> c)</span></span>&#123;</span><br><span class="line">    torch::Tensor res;</span><br><span class="line">    ......</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>is relatively same as the Python function below. </p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>(<span class="params">a: torch.Tensor, b: torch.Tensor, c: <span class="built_in">int</span></span>) -&gt; torch.Tensor</span><br><span class="line">	res = ... <span class="comment"># torch.Tensor</span></span><br><span class="line">    ......</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
-
-<p>Then, we can define our matrix multiplication interface as below. Note that we need to implement both the forward and backward functions!</p>
-<ul>
-<li>forward</li>
-</ul>
-<p>Check the input, input size, and then call the CUDA function wrapper.</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">torch::Tensor <span class="title">matmul_forward</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;A, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;B)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(A);</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(B);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">TORCH_CHECK</span>(A.<span class="built_in">size</span>(<span class="number">1</span>) == B.<span class="built_in">size</span>(<span class="number">0</span>), <span class="string">&quot;matmul_fast_forward: shape mismatch&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">matmul_cuda</span>(A, B);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>backward</li>
-</ul>
-<p>Also check the input, input size, and then call the CUDA function wrapper. Note that we calculate the backward of <code>A * B = C</code> for input matrix A, B in two different function. So that when someday we don’t need to calculate the gradient of A, we can just pass it. </p>
-<p>The gradient function derivation is mentioned in last section <a target="_blank" rel="noopener" href="https://i-am-future.github.io/2023/08/01/Pytorch-Practical-Basics-7/#Matrix-multiplication-backward">here</a>. </p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Backward for A gradient */</span></span><br><span class="line"><span class="function">torch::Tensor <span class="title">matmul_dA_backward</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;grad_output, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;A, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;B)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(grad_output);</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(B);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// dL/dB = dL/dY * B^T</span></span><br><span class="line">    <span class="keyword">auto</span> grad_A = <span class="built_in">matmul_cuda</span>(grad_output, <span class="built_in">transpose_cuda</span>(B));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> grad_A;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Backward for B gradient */</span></span><br><span class="line"><span class="function">torch::Tensor <span class="title">matmul_dB_backward</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;grad_output, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;A, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;B)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(grad_output);</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(A);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// dL/dB = A^T * dL/dY</span></span><br><span class="line">    <span class="keyword">auto</span> grad_B = <span class="built_in">matmul_cuda</span>(<span class="built_in">transpose_cuda</span>(A), grad_output);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> grad_B;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="3-Binding"><a href="#3-Binding" class="headerlink" title="3. Binding"></a>3. Binding</h2><p>At the last of the <code>src/linearops.cpp</code>, we use the following code to bind the functions. The first string is the function name in Python side, the second is a function pointer to the function be called, and the last is the docstring for that function in Python side. </p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PYBIND11_MODULE</span>(TORCH_EXTENSION_NAME, m) &#123;</span><br><span class="line">    ......</span><br><span class="line">    m.<span class="built_in">def</span>(<span class="string">&quot;matmul_forward&quot;</span>, &amp;matmul_forward, <span class="string">&quot;Matmul forward&quot;</span>);</span><br><span class="line">    m.<span class="built_in">def</span>(<span class="string">&quot;matmul_dA_backward&quot;</span>, &amp;matmul_dA_backward, <span class="string">&quot;Matmul dA backward&quot;</span>);</span><br><span class="line">    m.<span class="built_in">def</span>(<span class="string">&quot;matmul_dB_backward&quot;</span>, &amp;matmul_dB_backward, <span class="string">&quot;Matmul dB backward&quot;</span>);</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="CUDA-wrapper"><a href="#CUDA-wrapper" class="headerlink" title="CUDA wrapper"></a>CUDA wrapper</h1><p>This is the <code>src/addmul_kernel.cu</code> file in our repo. </p>
-<p>The wrapper for matrix multiplication looks like below: </p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">torch::Tensor <span class="title">matmul_cuda</span><span class="params">(torch::Tensor A, torch::Tensor B)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1. Get metadata</span></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> m = A.<span class="built_in">size</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> n = A.<span class="built_in">size</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> p = B.<span class="built_in">size</span>(<span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. Create output tensor</span></span><br><span class="line">    <span class="keyword">auto</span> result = torch::<span class="built_in">empty</span>(&#123;m, p&#125;, A.<span class="built_in">options</span>());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. Set launch configuration</span></span><br><span class="line">    <span class="type">const</span> dim3 blockSize = <span class="built_in">dim3</span>(BLOCK_SIZE, BLOCK_SIZE);</span><br><span class="line">    <span class="type">const</span> dim3 gridSize = <span class="built_in">dim3</span>(<span class="built_in">DIV_CEIL</span>(m, BLOCK_SIZE), <span class="built_in">DIV_CEIL</span>(p, BLOCK_SIZE));</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 4. Call the cuda kernel launcher</span></span><br><span class="line">    <span class="built_in">AT_DISPATCH_FLOATING_TYPES</span>(A.<span class="built_in">type</span>(), <span class="string">&quot;matmul_cuda&quot;</span>, </span><br><span class="line">    ([&amp;] &#123;</span><br><span class="line">        matmul_fw_kernel&lt;<span class="type">scalar_t</span>&gt;&lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(</span><br><span class="line">            A.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">            B.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">            result.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">            m, p</span><br><span class="line">        );</span><br><span class="line">    &#125;));</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 5. Return the value</span></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>And here, we’ll talk in details: </p>
-<h2 id="1-Get-metadata"><a href="#1-Get-metadata" class="headerlink" title="1. Get metadata"></a>1. Get metadata</h2><p>Just as the tensor in PyTorch, we can use <code>Tensor.size(0)</code> to axis the shape size of dimension 0.</p>
-<p>Note that we have checked the dimension match at the interface side, we don’t need to check it here.</p>
-<h2 id="2-Create-output-tensor"><a href="#2-Create-output-tensor" class="headerlink" title="2. Create output tensor"></a>2. Create output tensor</h2><p>We can do operation in-place or create a new tensor for output. Use the following code to create a tensor shape <code>m x p</code>, with same dtype &#x2F; device as <code>A</code>. </p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> result = torch::<span class="built_in">empty</span>(&#123;m, p&#125;, A.<span class="built_in">options</span>());</span><br></pre></td></tr></table></figure>
-
-<p>In other situations, when we want special dtype &#x2F; device, we can follow the declaration as below:</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch::<span class="built_in">empty</span>(&#123;m, p&#125;, torch::<span class="built_in">dtype</span>(torch::kInt32).<span class="built_in">device</span>(feats.<span class="built_in">device</span>()))</span><br></pre></td></tr></table></figure>
-
-<p><code>torch.empty</code> only allocate the memory, but not initialize the entries to 0. Because sometimes, we’ll fill into the result tensors in the kernel functions, so it is not necessary to initialize as 0. </p>
-<h2 id="3-Set-launch-configuration"><a href="#3-Set-launch-configuration" class="headerlink" title="3. Set launch configuration"></a>3. Set launch configuration</h2><p>You should know some basic CUDA knowledges before understand this part. Basically here, we are setting the launch configuration based on the input matrix size. We are using the macro functions defined before.</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> dim3 blockSize = <span class="built_in">dim3</span>(BLOCK_SIZE, BLOCK_SIZE);</span><br><span class="line"><span class="type">const</span> dim3 gridSize = <span class="built_in">dim3</span>(<span class="built_in">DIV_CEIL</span>(m, BLOCK_SIZE), <span class="built_in">DIV_CEIL</span>(p, BLOCK_SIZE));</span><br></pre></td></tr></table></figure>
-
-<p>We set each thread block size to <code>16 x 16</code>. Then, we set the number of blocks according to the input size. </p>
-<h2 id="4-Call-the-cuda-kernel-launcher"><a href="#4-Call-the-cuda-kernel-launcher" class="headerlink" title="4. Call the cuda kernel launcher"></a>4. Call the cuda kernel launcher</h2><p>Unlike normal cuda programs, we use <code>ATen</code>‘s function to start the kernel. This is a standard operation, and you can copy-paste it to anywhere. </p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">AT_DISPATCH_FLOATING_TYPES</span>(A.<span class="built_in">type</span>(), <span class="string">&quot;matmul_cuda&quot;</span>, </span><br><span class="line">                           ([&amp;] &#123;</span><br><span class="line">                               matmul_fw_kernel&lt;<span class="type">scalar_t</span>&gt;&lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(</span><br><span class="line">                                   A.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">                                   B.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">                                   result.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">                                   m, p</span><br><span class="line">                               );</span><br><span class="line">                           &#125;));</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>This function is named <code>AT_DISPATCH_FLOATING_TYPES</code>, meaning the inside kernel will support floating types, i.e., <code>float (32bit)</code> and <code>double (64bit)</code>.   For <code>float16</code>, you can use <code>AT_DISPATCH_ALL_TYPES_AND_HALF</code>. For int (<code>int (32bit)</code> and <code>long long (64 bit)</code> and more, use <code>AT_DISPATCH_INTEGRAL_TYPES</code>. </p>
-</li>
-<li><p>The first argument <code>A.type()</code>, indicates the actual chosen type in the runtime. </p>
-</li>
-<li><p>The second argument <code>matmul_cuda</code> can be used for error reporting.</p>
-</li>
-<li><p>The last argument, which is a lambda function, is the actual function to be called. Basically in this function, we start the kernel by the following statement:</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">matmul_fw_kernel&lt;<span class="type">scalar_t</span>&gt;&lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(</span><br><span class="line">A.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">B.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">result.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">m, p</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>matmul_fw_kernel</code> is the kernel function name.</li>
-<li><code>&lt;scalar_t&gt;</code> is the template parameter, will be replaced to all possible types in the outside <code>AT_DISPATCH_FLOATING_TYPES</code>.</li>
-<li><code>&lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;</code> passed in the launch configuration</li>
-<li>In the parameter list, if that is a <code>Tensor</code>, we should pass in the packed accessor, which convenient indexing operation in the kernel.<ul>
-<li><code>&lt;scalar_t&gt;</code> is the template parameter.</li>
-<li><code>2</code> means the <code>Tensor.ndimension=2</code>.</li>
-<li><code>torch::RestrictPtrTraits</code> means the pointer (tensor memory) would not not overlap. It enables some optimization. Usually not change.</li>
-<li><code>size_t</code> indicates the index type. Usually not change.</li>
-</ul>
-</li>
-<li>if the parameter is integer <code>m, p</code>, just pass it in as normal.</li>
-</ul>
-</li>
-</ul>
-<h2 id="5-Return-the-value"><a href="#5-Return-the-value" class="headerlink" title="5. Return the value"></a>5. Return the value</h2><p>If we have more then one return value, we can set the return type to <code>std::vector&lt;torch::Tensor&gt;</code>. Then we return with <code>&#123;xxx, yyy&#125;</code>. </p>
-<h1 id="CUDA-kernel"><a href="#CUDA-kernel" class="headerlink" title="CUDA kernel"></a>CUDA kernel</h1><p>This is the <code>src/addmul_kernel.cu</code> file in our repo. </p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="type">scalar_t</span>&gt;</span><br><span class="line"><span class="function">__global__ <span class="type">void</span> <span class="title">matmul_fw_kernel</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::PackedTensorAccessor&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt; A,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::PackedTensorAccessor&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt; B,</span></span></span><br><span class="line"><span class="params"><span class="function">    torch::PackedTensorAccessor&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt; result,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> <span class="type">int</span> m, <span class="type">const</span> <span class="type">int</span> p</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> row = blockIdx.x * blockDim.x + threadIdx.x;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> col = blockIdx.y * blockDim.y + threadIdx.y;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (row &gt;= m || col &gt;= p) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">scalar_t</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; A.<span class="built_in">size</span>(<span class="number">1</span>); i++) &#123;</span><br><span class="line">        sum += A[row][i] * B[i][col];</span><br><span class="line">    &#125;</span><br><span class="line">    result[row][col] = sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>We define it as a template function <code>template &lt;typename scalar_t&gt;</code>, so that our kernel function can support different type of input tensor. </li>
-<li>Usually we’ll set the input <code>PackedTensorAccessor</code> with <code>const</code>, to avoid some unexpected modification on them. </li>
-<li>The main code is just a simple CUDA matrix multiplication example. This is very common, you can search online for explanation.</li>
-</ul>
-<h2 id="Ending"><a href="#Ending" class="headerlink" title="Ending"></a>Ending</h2><p>That’s too much things in this section. In the next section, we’ll talk about how to write the <code>setup.py</code> to <strong>compile</strong> the code, letting it be a module for python. </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1553,7 +1400,7 @@ select * from fruits;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

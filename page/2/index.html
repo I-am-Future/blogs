@@ -179,6 +179,389 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/07/Pytorch-Practical-Basics-9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/07/Pytorch-Practical-Basics-9/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 9--Compiling and Testing the Module</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-07 14:07:03" itemprop="dateCreated datePublished" datetime="2023-08-07T14:07:03+08:00">2023-08-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-15 19:02:40" itemprop="dateModified" datetime="2023-08-15T19:02:40+08:00">2023-08-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>In the section 6 to 9, we’ll investigate how to use <code>torch.autograd.Function</code> to implement the hand-written operators. The tentative outline is:</p>
+<ul>
+<li><input checked disabled type="checkbox"> In the section 6, we talk about the basics of <code>torch.autograd.Function</code>. <strong>The operators defined by <code>torch.autograd.Function</code> can be automatically back-propagated.</strong></li>
+<li><input checked disabled type="checkbox"> In the last section (7), we’ll talk about <strong>mathematic derivation</strong> for the “linear layer” operator. </li>
+<li><input checked disabled type="checkbox"> In the section (8), we talk about <strong>writing C++ CUDA extension</strong> for the “linear layer” operator. </li>
+<li><input checked disabled type="checkbox"> In this section (9), we talk details about <strong>building the extension</strong> to a python module, as well as <strong>testing</strong> the module. Then we’ll <strong>conclude</strong> the things we’ve done so far.</li>
+</ul>
+<p><strong>Note:</strong></p>
+<ul>
+<li>This blog is written with following reference: <ul>
+<li>PyTorch official tutorial about CUDA extension: <a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/advanced/cpp_extension.html">website</a>.</li>
+<li>YouTube video about writing CUDA extension: <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=l_Rpk6CRJYI">video</a>, <a target="_blank" rel="noopener" href="https://github.com/kwea123/pytorch-cppcuda-tutorial">code</a>.</li>
+</ul>
+</li>
+<li>For how to write CUDA code, you can follow <a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">official documentation</a>, <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/34587739">blogs</a> (In Chinese). You can search by yourself for English tutorials and video tutorials.</li>
+<li>This blog only talk some important points in the matrix multiplication example. Code are picked by pieces for illustration. Whole code is at: <a target="_blank" rel="noopener" href="https://github.com/I-am-Future/PyTorch-Linear-Operator-CUDA">code</a>.</li>
+</ul>
+<h1 id="Python-side-Wrapper"><a href="#Python-side-Wrapper" class="headerlink" title="Python-side Wrapper"></a>Python-side Wrapper</h1><p>Purely using C++ extension functions is not enough in our case. As mentioned in the Section 6, we need to build our operators with <code>torch.autograd.Function</code>. It is not convenient to let the user define the operator wrapper every time, so it’s better if we can write the wrapper in a python module. Then, users can easily import our python module, and using the wrapper class and functions in it.</p>
+<img src="/2023/08/07/Pytorch-Practical-Basics-9/cudaops-struct-improved.drawio.png" alt="cudaops-struct-improved.drawio" style="zoom:50%;">
+
+<p>The python module is at <code>mylinearops/</code>. Follow the section 6, we define some <code>autograd.Function</code> operators and <code>nn.Module</code> modules in the <code>mylinearops/mylinearops.py</code>. Then, we export the operators and modules by the code in the <code>mylinearops/__init__.py</code>:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> .mylinearops <span class="keyword">import</span> matmul</span><br><span class="line"><span class="keyword">from</span> .mylinearops <span class="keyword">import</span> linearop</span><br><span class="line"><span class="keyword">from</span> .mylinearops <span class="keyword">import</span> LinearLayer</span><br></pre></td></tr></table></figure>
+
+<p>As a result, when user imports the <code>mylinearops</code>, only the <code>matmul</code> (Y &#x3D; XW) function, <code>linearop</code> (Y &#x3D; XW+b) function and <code>LinearLayer</code> module are public to the users. </p>
+<h1 id="Writing-setup-py-and-Building"><a href="#Writing-setup-py-and-Building" class="headerlink" title="Writing setup.py and Building"></a>Writing setup.py and Building</h1><h2 id="setup-py-script"><a href="#setup-py-script" class="headerlink" title="setup.py script"></a>setup.py script</h2><p>The <code>setup.py</code> script is general same for all packages. Next time, you can just copy-paste the code above and modify some key components. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> glob</span><br><span class="line"><span class="keyword">import</span> os.path <span class="keyword">as</span> osp</span><br><span class="line"><span class="keyword">from</span> setuptools <span class="keyword">import</span> setup</span><br><span class="line"><span class="keyword">from</span> torch.utils.cpp_extension <span class="keyword">import</span> CUDAExtension, BuildExtension</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ROOT_DIR = osp.dirname(osp.abspath(__file__))</span><br><span class="line">include_dirs = [osp.join(ROOT_DIR, <span class="string">&quot;include&quot;</span>)]</span><br><span class="line"></span><br><span class="line">SRC_DIR = osp.join(ROOT_DIR, <span class="string">&quot;src&quot;</span>)</span><br><span class="line">sources = glob.glob(osp.join(SRC_DIR, <span class="string">&#x27;*.cpp&#x27;</span>))+glob.glob(osp.join(SRC_DIR, <span class="string">&#x27;*.cu&#x27;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">setup(</span><br><span class="line">    name=<span class="string">&#x27;mylinearops&#x27;</span>,</span><br><span class="line">    version=<span class="string">&#x27;1.0&#x27;</span>,</span><br><span class="line">    author=...,</span><br><span class="line">    author_email=...,</span><br><span class="line">    description=<span class="string">&#x27;Hand-written Linear ops for PyTorch&#x27;</span>,</span><br><span class="line">    long_description=<span class="string">&#x27;Simple demo for writing Linear ops in CUDA extensions with PyTorch&#x27;</span>,</span><br><span class="line">    ext_modules=[</span><br><span class="line">        CUDAExtension(</span><br><span class="line">            name=<span class="string">&#x27;mylinearops_cuda&#x27;</span>,</span><br><span class="line">            sources=sources,</span><br><span class="line">            include_dirs=include_dirs,</span><br><span class="line">            extra_compile_args=&#123;<span class="string">&#x27;cxx&#x27;</span>: [<span class="string">&#x27;-O2&#x27;</span>],</span><br><span class="line">                                <span class="string">&#x27;nvcc&#x27;</span>: [<span class="string">&#x27;-O2&#x27;</span>]&#125;</span><br><span class="line">        )</span><br><span class="line">    ],</span><br><span class="line">    py_modules=[<span class="string">&#x27;mylinearops.mylinearops&#x27;</span>],</span><br><span class="line">    cmdclass=&#123;</span><br><span class="line">        <span class="string">&#x27;build_ext&#x27;</span>: BuildExtension</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>At the beginning, we first get the path information. We get the <code>include_dirs</code> (Where we store our <code>.h</code> headers), <code>sources</code> (Where we store our C++&#x2F;CUDA source code) directory. </p>
+<p>Then, we call the <code>setup</code> function. The parameter explanation are as following:</p>
+<ul>
+<li><code>name</code>: The package name, how do users call this program</li>
+<li><code>version</code>: The version number, decided by the creator</li>
+<li><code>author</code>: The creator’s name</li>
+<li><code>author_email</code>: The creator’s email</li>
+<li><code>description</code>: The package’s description, short version</li>
+<li><code>long_description</code>: The package’s description, long version</li>
+<li><code>ext_modules</code>: <strong>Key</strong> in our building process. When we are building the PyTorch CUDA extension, we should use <code>CUDAExtension</code>, so that the build helper can know how to compile correctly<ul>
+<li><code>name</code>: the CUDA extension name. We import this name in our wrapper to access the cuda functions</li>
+<li><code>sources</code>: the source files</li>
+<li><code>include_dirs</code>: the header files</li>
+<li><code>extra_compile_args</code>: The extra compiling flags. <code>&#123;&#39;cxx&#39;: [&#39;-O2&#39;], nvcc&#39;: [&#39;-O2&#39;]&#125;</code> is commonly used, which means using <code>-O2</code> optimization level when compiling</li>
+</ul>
+</li>
+<li><code>py_modules</code>: The Python modules needed for the package, which is our wrapper, <code>mylinearops</code>. In most cases, the wrapper module has the same name as the overall package name. (<code>&#39;mylinearops.mylinearops&#39;</code> stands for <code>&#39;mylinearops/mylinearops.py&#39;</code>)</li>
+<li><code>cmdclass</code>: When building the PyTorch CUDA extension, we always pass in this: <code>&#123;&#39;build_ext&#39;: BuildExtension&#125;</code></li>
+</ul>
+<h2 id="Building"><a href="#Building" class="headerlink" title="Building"></a>Building</h2><p>Then, we can build the package. We first activate the conda environment where we want to install in:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda activate &lt;target_env&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Then run:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> &lt;proj_root&gt;</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note:</strong> Don’t run <code>pip install .</code>, otherwise your python module will not be successfully installed, at least in my case.</p>
+<p>It may take some time to compile it. If the building process ends up with some error message, go and fix them. If it finally displays something as “successfully installed mylinearops”, then you are ready to go.</p>
+<p>To check if the installation is successful, we can try to import it:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ python</span><br><span class="line">Python 3.9.15 (main, Nov 24 2022, 14:31:59) </span><br><span class="line">[GCC 11.2.0] :: Anaconda, Inc. on linux</span><br><span class="line">Type <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> or <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br><span class="line">&gt;&gt;&gt; import mylinearops</span><br><span class="line">&gt;&gt;&gt; <span class="built_in">dir</span>(mylinearops)</span><br><span class="line">[<span class="string">&#x27;LinearLayer&#x27;</span>, <span class="string">&#x27;__builtins__&#x27;</span>, <span class="string">&#x27;__cached__&#x27;</span>, <span class="string">&#x27;__doc__&#x27;</span>, <span class="string">&#x27;__file__&#x27;</span>, <span class="string">&#x27;__loader__&#x27;</span>, <span class="string">&#x27;__name__&#x27;</span>, <span class="string">&#x27;__package__&#x27;</span>, <span class="string">&#x27;__path__&#x27;</span>, <span class="string">&#x27;__spec__&#x27;</span>, <span class="string">&#x27;linearop&#x27;</span>, <span class="string">&#x27;matmul&#x27;</span>, <span class="string">&#x27;mylinearops&#x27;</span>]</span><br><span class="line">&gt;&gt;&gt; </span><br></pre></td></tr></table></figure>
+
+<p>Further testing will be mentioned in the next subsection.</p>
+<h1 id="Module-Testing"><a href="#Module-Testing" class="headerlink" title="Module Testing"></a>Module Testing</h1><p>We will test the forward and backward of <code>matmul</code> and <code>LinearLayer</code> calculations respectively. To verify the answer, we’ll compare our answer with the PyTorch’s implementation or with <code>torch.autograd.gradcheck</code>. To increase the accuracy, we recommend to use <code>double</code> (<code>torch.float64</code>) type instead of <code>float</code> (<code>torch.float32</code>).</p>
+<p>For tensors: create with argument <code>dtype=torch.float64</code>.</p>
+<p>For modules: a good way is to use <code>model.double()</code> to convert all the parameters and buffers to <code>double</code>. </p>
+<h2 id="forward"><a href="#forward" class="headerlink" title="forward"></a>forward</h2><p>A typical method is to use <code>torch.allclose</code> to verify if two tensors are close to each other. We can create the reference answer by PyTorch’s implementation.</p>
+<ul>
+<li><code>matmul</code>:</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> mylinearops</span><br><span class="line"></span><br><span class="line">A = torch.randn(<span class="number">20</span>, <span class="number">30</span>, dtype=torch.float64).cuda().requires_grad_()</span><br><span class="line">B = torch.randn(<span class="number">30</span>, <span class="number">40</span>, dtype=torch.float64).cuda().requires_grad_()</span><br><span class="line"></span><br><span class="line">res_my = mylinearops.matmul(A, B)</span><br><span class="line">res_torch = torch.matmul(A, B)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(torch.allclose(res_my, res_torch))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>LinearLayer</code>:</li>
+</ul>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> mylinearops</span><br><span class="line"></span><br><span class="line">A = torch.randn(<span class="number">40</span>, <span class="number">30</span>, dtype=torch.float64).cuda().requires_grad_() * <span class="number">100</span></span><br><span class="line">linear = mylinearops.LinearLayer(<span class="number">30</span>, <span class="number">50</span>).cuda().double()</span><br><span class="line"></span><br><span class="line">res_my = linear(A)</span><br><span class="line">res_torch = torch.matmul(A, linear.weight) + linear.bias</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(torch.allclose(res_my, res_torch))</span><br><span class="line"><span class="built_in">print</span>(torch.<span class="built_in">max</span>(torch.<span class="built_in">abs</span>(res_my - res_torch)))</span><br></pre></td></tr></table></figure>
+
+<p>It is worthwhile that sometimes, because of the floating number error, the answer from PyTorch is not consistent with the answer from our implementations. We have three methods:</p>
+<ol>
+<li>Pass <code>atol=1e-5, rtol=1e-5</code> into the <code>torch.allclose</code> to increase the tolerance level.</li>
+<li><strong>[Not very recommended]</strong> We can observe the absolute error by <code>torch.max(torch.abs(res_my - res_torch))</code> for reference. If the result is merely 0.01 ~ 0.1, That would be OK in most cases.</li>
+</ol>
+<h2 id="backward"><a href="#backward" class="headerlink" title="backward"></a>backward</h2><p>For backward calculation, we can use <code>torch.autograd.gradcheck</code> to verify the result. If some tensors are only <code>float</code>, an warning will occur:</p>
+<blockquote>
+<p>……&#x2F;torch&#x2F;autograd&#x2F;gradcheck.py:647: UserWarning: Input #0 requires gradient and is not a double precision floating point or complex. This check will likely fail if all the inputs are not of double precision floating point or complex. </p>
+</blockquote>
+<p>So it is recommended to use the <code>double</code> type. Otherwise the check will likely fail.</p>
+<ul>
+<li><code>matmul</code>:</li>
+</ul>
+<p>As mentioned above, for pure calculation functions, we can assign all tensor as <code>double</code> (<code>torch.float64</code>) type. We are ready to go: </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> mylinearops</span><br><span class="line"></span><br><span class="line">A = torch.randn(<span class="number">20</span>, <span class="number">30</span>, dtype=torch.float64).cuda().requires_grad_()</span><br><span class="line">B = torch.randn(<span class="number">30</span>, <span class="number">40</span>, dtype=torch.float64).cuda().requires_grad_()</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(torch.autograd.gradcheck(mylinearops.matmul, (A, B)))    <span class="comment"># pass</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>LinearLayer</code>:</li>
+</ul>
+<p>As mentioned above, we can use <code>model.double()</code>. We are ready to go: </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> mylinearops</span><br><span class="line"></span><br><span class="line"><span class="comment">## CHECK for Linear Layer with bias ##</span></span><br><span class="line">A = torch.randn(<span class="number">40</span>, <span class="number">30</span>, dtype=torch.float64).cuda().requires_grad_()</span><br><span class="line">linear = mylinearops.LinearLayer(<span class="number">30</span>, <span class="number">40</span>).cuda().double()</span><br><span class="line"><span class="built_in">print</span>(torch.autograd.gradcheck(linear, (A,)))    <span class="comment"># pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## CHECK for Linear Layer without bias ##</span></span><br><span class="line">A = torch.randn(<span class="number">40</span>, <span class="number">30</span>, dtype=torch.float64).cuda().requires_grad_()</span><br><span class="line">linear_nobias = mylinearops.LinearLayer(<span class="number">30</span>, <span class="number">40</span>, bias=<span class="literal">False</span>).cuda().double()</span><br><span class="line"><span class="built_in">print</span>(torch.autograd.gradcheck(linear_nobias, (A,)))    <span class="comment"># pass</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="Full-Example"><a href="#Full-Example" class="headerlink" title="Full Example"></a>Full Example</h1><p>Now, we use our linear module to build a three layer classic linear model <code>[784, 256, 10]</code>to classify the MNIST digits. See the <code>examples/main.py</code> file. </p>
+<p>Just as the <code>nn.Linear</code>, we create the model by:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MLP</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>(MLP, self).__init__()</span><br><span class="line">        self.linear1 = mylinearops.LinearLayer(<span class="number">784</span>, <span class="number">256</span>, bias=<span class="literal">True</span>)<span class="comment">#.cuda()</span></span><br><span class="line">        self.linear2 = mylinearops.LinearLayer(<span class="number">256</span>, <span class="number">256</span>, bias=<span class="literal">True</span>)<span class="comment">#.cuda()</span></span><br><span class="line">        self.linear3 = mylinearops.LinearLayer(<span class="number">256</span>, <span class="number">10</span>, bias=<span class="literal">True</span>)<span class="comment">#.cuda()</span></span><br><span class="line">        self.relu = nn.ReLU()</span><br><span class="line">        <span class="comment"># self.softmax = nn.Softmax(dim=1)</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = x.view(-<span class="number">1</span>, <span class="number">784</span>)</span><br><span class="line">        x = self.relu(self.linear1(x))</span><br><span class="line">        x = self.relu(self.linear2(x))</span><br><span class="line">        <span class="comment"># x = self.softmax(self.linear3(x))</span></span><br><span class="line">        x = self.linear3(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+
+<p>After writing some basic things, we can run our model: <code>python examples/tests.py</code>.</p>
+<p>We also build the model by PyTorch’s <code>nn.Linear</code>. The result logging is:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mylinearops</span></span><br><span class="line">...</span><br><span class="line">Epoch: [10/10], Step: [100/468], Loss: 0.0417, Acc: 0.9844</span><br><span class="line">Epoch: [10/10], Step: [200/468], Loss: 0.0971, Acc: 0.9609</span><br><span class="line">Epoch: [10/10], Step: [300/468], Loss: 0.0759, Acc: 0.9766</span><br><span class="line">Epoch: [10/10], Step: [400/468], Loss: 0.0777, Acc: 0.9766</span><br><span class="line">Time: 23.4661s</span><br><span class="line"></span><br><span class="line"><span class="comment"># torch</span></span><br><span class="line">...</span><br><span class="line">Epoch: [10/10], Step: [100/468], Loss: 0.1048, Acc: 0.9688</span><br><span class="line">Epoch: [10/10], Step: [200/468], Loss: 0.0412, Acc: 0.9844</span><br><span class="line">Epoch: [10/10], Step: [300/468], Loss: 0.0566, Acc: 0.9688</span><br><span class="line">Epoch: [10/10], Step: [400/468], Loss: 0.0217, Acc: 0.9922</span><br><span class="line">Time: 26.5896s</span><br></pre></td></tr></table></figure>
+
+<p>It is surprising that our implementation is even faster than the torch’s one. (But relax, after trying for some repetitions, we find ours is just as fast as the torch’s one). This is because the data scale is relatively small, the computation proportion is small. When the data scale is larger, ours may be slower than torch’s. </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/02/Pytorch-Practical-Basics-8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/02/Pytorch-Practical-Basics-8/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 8--Linear Layer Ops on C++/CUDA</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-02 12:03:42" itemprop="dateCreated datePublished" datetime="2023-08-02T12:03:42+08:00">2023-08-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-06 19:13:54" itemprop="dateModified" datetime="2023-08-06T19:13:54+08:00">2023-08-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>In the section 6 to 9, we’ll investigate how to use <code>torch.autograd.Function</code> to implement the hand-written operators. The tentative outline is:</p>
+<ul>
+<li><input checked disabled type="checkbox"> In the section 6, we talk about the basics of <code>torch.autograd.Function</code>. <strong>The operators defined by <code>torch.autograd.Function</code> can be automatically back-propagated.</strong></li>
+<li><input checked disabled type="checkbox"> In the last section (7), we’ll talk about <strong>mathematic derivation</strong> for the “linear layer” operator. </li>
+<li><input checked disabled type="checkbox"> In this section (8), we talk about <strong>writing C++ CUDA extension</strong> for the “linear layer” operator. </li>
+<li><input disabled type="checkbox"> In the section 9, we talk details about building the extension to a module, as well as testing. Then we’ll conclude the things we’ve done so far.</li>
+</ul>
+<p><strong>Note:</strong></p>
+<ul>
+<li>This blog is written with following reference: <ul>
+<li>PyTorch official tutorial about CUDA extension: <a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/advanced/cpp_extension.html">website</a>.</li>
+<li>YouTube video about writing CUDA extension: <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=l_Rpk6CRJYI">video</a>, <a target="_blank" rel="noopener" href="https://github.com/kwea123/pytorch-cppcuda-tutorial">code</a>.</li>
+</ul>
+</li>
+<li>For how to write CUDA code, you can follow <a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">official documentation</a>, <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/34587739">blogs</a> (In Chinese). You can search by yourself for English tutorials and video tutorials.</li>
+<li>This blog only talk some important points in the matrix multiplication example. Code are picked by pieces for illustration. Whole code is at: <a target="_blank" rel="noopener" href="https://github.com/I-am-Future/PyTorch-Linear-Operator-CUDA">code</a>.</li>
+</ul>
+<h1 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h1><p>The general structure for our PyTorch C++ &#x2F; CUDA extension looks like following:</p>
+<img src="/2023/08/02/Pytorch-Practical-Basics-8/cudaops-struct.png" alt="cudaops-struct" style="zoom:50%;">
+
+<p>We mainly have three kinds of file: Library interface, Core code on CPU, and Core code on GPU. Let’s explain them in detail:</p>
+<ul>
+<li><p>Library interface (.cpp)</p>
+<ul>
+<li>Contains Functions Interface for Python to call. These functions usually have Tensor input and Tensor return value.</li>
+<li>Contains a standard pybind declaration, since our extension uses pybind to bind the C++ functions for Python. It indicates which functions are needed to be bound.</li>
+</ul>
+</li>
+<li><p>Core code on CPU (.cpp)</p>
+<ul>
+<li>Contains core function to do the calculation. </li>
+<li>Contains wrapper for the core function, serves to creating the result tensor, checking the input shape, etc.</li>
+</ul>
+</li>
+<li><p>Core code on GPU (.cu)</p>
+<ul>
+<li>Contains CUDA kernel function <code>__global__</code> to do the parallel calculation. </li>
+<li>Contains wrapper for the core function, serves to creating the result tensor, checking the input shape, setting the launch configs, launching the kernel, etc.</li>
+</ul>
+</li>
+</ul>
+<p>Then, after we finishing the code, we can use Python build tools to compile the code into a static object library (.so file). Then, we can import them normally in the Python side. We can call the functions we declared in library interface by pybind11.</p>
+<p>In our example <a target="_blank" rel="noopener" href="https://github.com/I-am-Future/PyTorch-Linear-Operator-CUDA">code</a>, we don’t provide code for CPU calculation. We only support GPU. So we only have two files (<code>src/linearops.cpp</code> and <code>src/addmul_kernel.cu</code>)</p>
+<h1 id="Pybind-Interface"><a href="#Pybind-Interface" class="headerlink" title="Pybind Interface"></a>Pybind Interface</h1><p>This is the <code>src/linearops.cpp</code> file in our repo. </p>
+<h2 id="1-Utils-function"><a href="#1-Utils-function" class="headerlink" title="1. Utils function"></a>1. Utils function</h2><p>We usually defines some utility macro functions in our code. They are in the <code>include/utils.h</code> header file. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// PyTorch CUDA Utils</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CHECK_CUDA(x) TORCH_CHECK(x.is_cuda(), #x <span class="string">&quot; must be a CUDA tensor&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CHECK_CONTIGUOUS(x) TORCH_CHECK(x.is_contiguous(), #x <span class="string">&quot; must be contiguous&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Kernel Config Utils</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DIV_CEIL(a, b) (((a) + (b) - 1) / (b))</span></span><br></pre></td></tr></table></figure>
+
+<p>The third macro will call first two macros, which are used to make sure the tenser is on the CUDA devices and is contiguous. </p>
+<p>The last macro performs ceil division, which are often used in setting the CUDA kernel launch configurations. </p>
+<h2 id="2-Interface-functions"><a href="#2-Interface-functions" class="headerlink" title="2. Interface functions"></a>2. Interface functions</h2><p>Benefited by pybind, we can simply define functions in C++ and use them in Python. A function looks like</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">torch::Tensor <span class="title">func</span><span class="params">(torch::Tensor a, torch::Tensor b, <span class="type">int</span> c)</span></span>&#123;</span><br><span class="line">    torch::Tensor res;</span><br><span class="line">    ......</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>is relatively same as the Python function below. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>(<span class="params">a: torch.Tensor, b: torch.Tensor, c: <span class="built_in">int</span></span>) -&gt; torch.Tensor</span><br><span class="line">	res = ... <span class="comment"># torch.Tensor</span></span><br><span class="line">    ......</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>Then, we can define our matrix multiplication interface as below. Note that we need to implement both the forward and backward functions!</p>
+<ul>
+<li>forward</li>
+</ul>
+<p>Check the input, input size, and then call the CUDA function wrapper.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">torch::Tensor <span class="title">matmul_forward</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;A, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;B)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(A);</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(B);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">TORCH_CHECK</span>(A.<span class="built_in">size</span>(<span class="number">1</span>) == B.<span class="built_in">size</span>(<span class="number">0</span>), <span class="string">&quot;matmul_fast_forward: shape mismatch&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">matmul_cuda</span>(A, B);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>backward</li>
+</ul>
+<p>Also check the input, input size, and then call the CUDA function wrapper. Note that we calculate the backward of <code>A * B = C</code> for input matrix A, B in two different function. So that when someday we don’t need to calculate the gradient of A, we can just pass it. </p>
+<p>The gradient function derivation is mentioned in last section <a target="_blank" rel="noopener" href="https://i-am-future.github.io/2023/08/01/Pytorch-Practical-Basics-7/#Matrix-multiplication-backward">here</a>. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Backward for A gradient */</span></span><br><span class="line"><span class="function">torch::Tensor <span class="title">matmul_dA_backward</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;grad_output, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;A, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;B)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(grad_output);</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(B);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// dL/dB = dL/dY * B^T</span></span><br><span class="line">    <span class="keyword">auto</span> grad_A = <span class="built_in">matmul_cuda</span>(grad_output, <span class="built_in">transpose_cuda</span>(B));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> grad_A;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Backward for B gradient */</span></span><br><span class="line"><span class="function">torch::Tensor <span class="title">matmul_dB_backward</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;grad_output, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;A, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;B)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(grad_output);</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(A);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// dL/dB = A^T * dL/dY</span></span><br><span class="line">    <span class="keyword">auto</span> grad_B = <span class="built_in">matmul_cuda</span>(<span class="built_in">transpose_cuda</span>(A), grad_output);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> grad_B;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Binding"><a href="#3-Binding" class="headerlink" title="3. Binding"></a>3. Binding</h2><p>At the last of the <code>src/linearops.cpp</code>, we use the following code to bind the functions. The first string is the function name in Python side, the second is a function pointer to the function be called, and the last is the docstring for that function in Python side. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PYBIND11_MODULE</span>(TORCH_EXTENSION_NAME, m) &#123;</span><br><span class="line">    ......</span><br><span class="line">    m.<span class="built_in">def</span>(<span class="string">&quot;matmul_forward&quot;</span>, &amp;matmul_forward, <span class="string">&quot;Matmul forward&quot;</span>);</span><br><span class="line">    m.<span class="built_in">def</span>(<span class="string">&quot;matmul_dA_backward&quot;</span>, &amp;matmul_dA_backward, <span class="string">&quot;Matmul dA backward&quot;</span>);</span><br><span class="line">    m.<span class="built_in">def</span>(<span class="string">&quot;matmul_dB_backward&quot;</span>, &amp;matmul_dB_backward, <span class="string">&quot;Matmul dB backward&quot;</span>);</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="CUDA-wrapper"><a href="#CUDA-wrapper" class="headerlink" title="CUDA wrapper"></a>CUDA wrapper</h1><p>This is the <code>src/addmul_kernel.cu</code> file in our repo. </p>
+<p>The wrapper for matrix multiplication looks like below: </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">torch::Tensor <span class="title">matmul_cuda</span><span class="params">(torch::Tensor A, torch::Tensor B)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1. Get metadata</span></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> m = A.<span class="built_in">size</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> n = A.<span class="built_in">size</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> p = B.<span class="built_in">size</span>(<span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. Create output tensor</span></span><br><span class="line">    <span class="keyword">auto</span> result = torch::<span class="built_in">empty</span>(&#123;m, p&#125;, A.<span class="built_in">options</span>());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. Set launch configuration</span></span><br><span class="line">    <span class="type">const</span> dim3 blockSize = <span class="built_in">dim3</span>(BLOCK_SIZE, BLOCK_SIZE);</span><br><span class="line">    <span class="type">const</span> dim3 gridSize = <span class="built_in">dim3</span>(<span class="built_in">DIV_CEIL</span>(m, BLOCK_SIZE), <span class="built_in">DIV_CEIL</span>(p, BLOCK_SIZE));</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 4. Call the cuda kernel launcher</span></span><br><span class="line">    <span class="built_in">AT_DISPATCH_FLOATING_TYPES</span>(A.<span class="built_in">type</span>(), <span class="string">&quot;matmul_cuda&quot;</span>, </span><br><span class="line">    ([&amp;] &#123;</span><br><span class="line">        matmul_fw_kernel&lt;<span class="type">scalar_t</span>&gt;&lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(</span><br><span class="line">            A.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">            B.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">            result.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">            m, p</span><br><span class="line">        );</span><br><span class="line">    &#125;));</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 5. Return the value</span></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>And here, we’ll talk in details: </p>
+<h2 id="1-Get-metadata"><a href="#1-Get-metadata" class="headerlink" title="1. Get metadata"></a>1. Get metadata</h2><p>Just as the tensor in PyTorch, we can use <code>Tensor.size(0)</code> to axis the shape size of dimension 0.</p>
+<p>Note that we have checked the dimension match at the interface side, we don’t need to check it here.</p>
+<h2 id="2-Create-output-tensor"><a href="#2-Create-output-tensor" class="headerlink" title="2. Create output tensor"></a>2. Create output tensor</h2><p>We can do operation in-place or create a new tensor for output. Use the following code to create a tensor shape <code>m x p</code>, with same dtype &#x2F; device as <code>A</code>. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> result = torch::<span class="built_in">empty</span>(&#123;m, p&#125;, A.<span class="built_in">options</span>());</span><br></pre></td></tr></table></figure>
+
+<p>In other situations, when we want special dtype &#x2F; device, we can follow the declaration as below:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch::<span class="built_in">empty</span>(&#123;m, p&#125;, torch::<span class="built_in">dtype</span>(torch::kInt32).<span class="built_in">device</span>(feats.<span class="built_in">device</span>()))</span><br></pre></td></tr></table></figure>
+
+<p><code>torch.empty</code> only allocate the memory, but not initialize the entries to 0. Because sometimes, we’ll fill into the result tensors in the kernel functions, so it is not necessary to initialize as 0. </p>
+<h2 id="3-Set-launch-configuration"><a href="#3-Set-launch-configuration" class="headerlink" title="3. Set launch configuration"></a>3. Set launch configuration</h2><p>You should know some basic CUDA knowledges before understand this part. Basically here, we are setting the launch configuration based on the input matrix size. We are using the macro functions defined before.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> dim3 blockSize = <span class="built_in">dim3</span>(BLOCK_SIZE, BLOCK_SIZE);</span><br><span class="line"><span class="type">const</span> dim3 gridSize = <span class="built_in">dim3</span>(<span class="built_in">DIV_CEIL</span>(m, BLOCK_SIZE), <span class="built_in">DIV_CEIL</span>(p, BLOCK_SIZE));</span><br></pre></td></tr></table></figure>
+
+<p>We set each thread block size to <code>16 x 16</code>. Then, we set the number of blocks according to the input size. </p>
+<h2 id="4-Call-the-cuda-kernel-launcher"><a href="#4-Call-the-cuda-kernel-launcher" class="headerlink" title="4. Call the cuda kernel launcher"></a>4. Call the cuda kernel launcher</h2><p>Unlike normal cuda programs, we use <code>ATen</code>‘s function to start the kernel. This is a standard operation, and you can copy-paste it to anywhere. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">AT_DISPATCH_FLOATING_TYPES</span>(A.<span class="built_in">type</span>(), <span class="string">&quot;matmul_cuda&quot;</span>, </span><br><span class="line">                           ([&amp;] &#123;</span><br><span class="line">                               matmul_fw_kernel&lt;<span class="type">scalar_t</span>&gt;&lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(</span><br><span class="line">                                   A.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">                                   B.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">                                   result.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">                                   m, p</span><br><span class="line">                               );</span><br><span class="line">                           &#125;));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>This function is named <code>AT_DISPATCH_FLOATING_TYPES</code>, meaning the inside kernel will support floating types, i.e., <code>float (32bit)</code> and <code>double (64bit)</code>.   For <code>float16</code>, you can use <code>AT_DISPATCH_ALL_TYPES_AND_HALF</code>. For int (<code>int (32bit)</code> and <code>long long (64 bit)</code> and more, use <code>AT_DISPATCH_INTEGRAL_TYPES</code>. </p>
+</li>
+<li><p>The first argument <code>A.type()</code>, indicates the actual chosen type in the runtime. </p>
+</li>
+<li><p>The second argument <code>matmul_cuda</code> can be used for error reporting.</p>
+</li>
+<li><p>The last argument, which is a lambda function, is the actual function to be called. Basically in this function, we start the kernel by the following statement:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">matmul_fw_kernel&lt;<span class="type">scalar_t</span>&gt;&lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(</span><br><span class="line">A.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">B.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">result.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">m, p</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>matmul_fw_kernel</code> is the kernel function name.</li>
+<li><code>&lt;scalar_t&gt;</code> is the template parameter, will be replaced to all possible types in the outside <code>AT_DISPATCH_FLOATING_TYPES</code>.</li>
+<li><code>&lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;</code> passed in the launch configuration</li>
+<li>In the parameter list, if that is a <code>Tensor</code>, we should pass in the packed accessor, which convenient indexing operation in the kernel.<ul>
+<li><code>&lt;scalar_t&gt;</code> is the template parameter.</li>
+<li><code>2</code> means the <code>Tensor.ndimension=2</code>.</li>
+<li><code>torch::RestrictPtrTraits</code> means the pointer (tensor memory) would not not overlap. It enables some optimization. Usually not change.</li>
+<li><code>size_t</code> indicates the index type. Usually not change.</li>
+</ul>
+</li>
+<li>if the parameter is integer <code>m, p</code>, just pass it in as normal.</li>
+</ul>
+</li>
+</ul>
+<h2 id="5-Return-the-value"><a href="#5-Return-the-value" class="headerlink" title="5. Return the value"></a>5. Return the value</h2><p>If we have more then one return value, we can set the return type to <code>std::vector&lt;torch::Tensor&gt;</code>. Then we return with <code>&#123;xxx, yyy&#125;</code>. </p>
+<h1 id="CUDA-kernel"><a href="#CUDA-kernel" class="headerlink" title="CUDA kernel"></a>CUDA kernel</h1><p>This is the <code>src/addmul_kernel.cu</code> file in our repo. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="type">scalar_t</span>&gt;</span><br><span class="line"><span class="function">__global__ <span class="type">void</span> <span class="title">matmul_fw_kernel</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::PackedTensorAccessor&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt; A,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::PackedTensorAccessor&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt; B,</span></span></span><br><span class="line"><span class="params"><span class="function">    torch::PackedTensorAccessor&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt; result,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> <span class="type">int</span> m, <span class="type">const</span> <span class="type">int</span> p</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> row = blockIdx.x * blockDim.x + threadIdx.x;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> col = blockIdx.y * blockDim.y + threadIdx.y;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (row &gt;= m || col &gt;= p) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">scalar_t</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; A.<span class="built_in">size</span>(<span class="number">1</span>); i++) &#123;</span><br><span class="line">        sum += A[row][i] * B[i][col];</span><br><span class="line">    &#125;</span><br><span class="line">    result[row][col] = sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>We define it as a template function <code>template &lt;typename scalar_t&gt;</code>, so that our kernel function can support different type of input tensor. </li>
+<li>Usually we’ll set the input <code>PackedTensorAccessor</code> with <code>const</code>, to avoid some unexpected modification on them. </li>
+<li>The main code is just a simple CUDA matrix multiplication example. This is very common, you can search online for explanation.</li>
+</ul>
+<h2 id="Ending"><a href="#Ending" class="headerlink" title="Ending"></a>Ending</h2><p>That’s too much things in this section. In the next section, we’ll talk about how to write the <code>setup.py</code> to <strong>compile</strong> the code, letting it be a module for python. </p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/01/Pytorch-Practical-Basics-7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1338,322 +1721,6 @@ $$-->
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/27/Pytorch-Practical-Basics-1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Future">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Future's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/05/27/Pytorch-Practical-Basics-1/" class="post-title-link" itemprop="url">PyTorch Practical Hand-Written Modules Basics 1--Tensor basics (attributes, creation)</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-05-27 11:47:00" itemprop="dateCreated datePublished" datetime="2023-05-27T11:47:00+08:00">2023-05-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-18 23:54:31" itemprop="dateModified" datetime="2023-08-18T23:54:31+08:00">2023-08-18</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>This series would not be a general PyTorch introduction or detailed tutorials. Instead, this would be a very practical introduction to some common basics needed for Implementing Hand-Written Modules. </p>
-<p>This is the First Section of this series, we would like to introduce some tensor basics, including: tensor attributes, tensor creation, and some other things. All the things I mentioned will be practical, but not exhaustive. </p>
-<h1 id="1-Tensor-attributes"><a href="#1-Tensor-attributes" class="headerlink" title="1. Tensor attributes"></a>1. Tensor attributes</h1><p>We introduce 5 key attributes for <code>torch.tensor</code> <code>a</code> here:</p>
-<h2 id="1-1-a-shape"><a href="#1-1-a-shape" class="headerlink" title="1.1 a.shape"></a>1.1 a.shape</h2><ul>
-<li><code>a.shape</code>: Returns the shape of <code>a</code>. The return type is <code>torch.Size</code>. Example:</li>
-</ul>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a = torch.randn(<span class="number">10</span>, <span class="number">20</span>) <span class="comment"># create a 10x20 tensor</span></span><br><span class="line">a.shape</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.Size([<span class="number">10</span>, <span class="number">20</span>])</span><br></pre></td></tr></table></figure>
-
-<p>The <code>torch.Size</code> object supports some tricks:</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># unpack</span></span><br><span class="line">h, w = a.shape</span><br><span class="line">h, w</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">(<span class="number">10</span>, <span class="number">20</span>)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># unpack in function calls</span></span><br><span class="line"><span class="built_in">print</span>(*a.shape)</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">10</span> <span class="number">20</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="1-2-a-ndim"><a href="#1-2-a-ndim" class="headerlink" title="1.2 a.ndim"></a>1.2 a.ndim</h2><ul>
-<li><code>a.ndim</code>: Returns number of dimensions of <code>a</code>.</li>
-</ul>
-<p>It looks like <code>len(a.shape)</code>. It also has a function version, called <code>a.ndimension()</code></p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a.ndim</span><br><span class="line">a.ndimension()</span><br><span class="line"><span class="built_in">len</span>(a.shape)</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="1-3-a-device"><a href="#1-3-a-device" class="headerlink" title="1.3 a.device"></a>1.3 a.device</h2><ul>
-<li><code>a.device</code>: Returns where the <code>a</code> locates.</li>
-</ul>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a.device</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">device(<span class="built_in">type</span>=<span class="string">&#x27;cpu&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>Convert to CUDA by using <code>a = a.to(&#39;cuda:0&#39;)</code>. Convert back to CPU by using <code>a = a.to(&#39;cpu&#39;)</code> or <code>a = a.cpu()</code>.</p>
-<h2 id="1-4-a-dtype"><a href="#1-4-a-dtype" class="headerlink" title="1.4 a.dtype"></a>1.4 a.dtype</h2><ul>
-<li><code>a.dtype</code>: Returns the data type of <code>a</code>.</li>
-</ul>
-<p>The data type of tensor <code>a</code>. It’s very important in PyTorch! Usually, the data type would be <code>torch.float32</code> or <code>torch.int64</code>. Some data type convert method:</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># to float32</span></span><br><span class="line">f = a.<span class="built_in">float</span>()</span><br><span class="line">f.dtype</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.float32</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># to int64</span></span><br><span class="line">l = a.long()</span><br><span class="line">l.dtype</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.int64</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># to int32</span></span><br><span class="line">i = a.<span class="built_in">int</span>()</span><br><span class="line">i.dtype</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.int32</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Also, we can use .to() as well:</span></span><br><span class="line">f = a.to(torch.float32)</span><br><span class="line">f.dtype</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.float32</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="1-5-a-numel"><a href="#1-5-a-numel" class="headerlink" title="1.5 a.numel"></a>1.5 a.numel</h2><ul>
-<li><code>a.numel()</code>: Returns <strong>num</strong>ber of <strong>el</strong>ements in <code>a</code>. Usually used in counting number of parameters in the model.</li>
-</ul>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a.numel()</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">200</span>  <span class="comment"># it&#x27;s 10*20!</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line">model = torchvision.models.resnet50()</span><br><span class="line"><span class="built_in">sum</span>([p.numel() <span class="keyword">for</span> p <span class="keyword">in</span> model.parameters()])</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="number">25557032</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="2-Tensor-creation"><a href="#2-Tensor-creation" class="headerlink" title="2. Tensor creation"></a>2. Tensor creation</h1><p>PyTorch tensors plays key role in writing deep learning programs. Usually, tensor are from two types: data and auxiliary variables (e.g., masks).</p>
-<h2 id="2-1-From-data"><a href="#2-1-From-data" class="headerlink" title="2.1 From data"></a>2.1 From data</h2><p>For the data tensor, they are usually converted from other packages, such as <code>numpy</code>. We have several methods to convert it to <code>torch.tensor</code>.</p>
-<ul>
-<li><p><code>torch.tensor(arr)</code> Returns a deep copy of <code>arr</code>, i.e., the storage data is independent with <code>arr</code>. (Very memory and time consuming, not recommended for most cases)</p>
-</li>
-<li><p><code>torch.from_numpy(arr)</code> Returns a shallow copy tensor, i.e., the storage data is shared with <code>arr</code>. </p>
-</li>
-<li><p><code>torch.as_tensor(arr, dtype=..., device=...)</code> If <code>dtype</code> and <code>device</code> is same as <code>arr</code>, then it behaves like <code>torch.from_numpy()</code> function, shallow copy. Otherwise, it acts like <code>torch.tensor()</code>, deep copy. So using the function is recommended.</p>
-</li>
-</ul>
-<h2 id="2-2-Special-tensors"><a href="#2-2-Special-tensors" class="headerlink" title="2.2 Special tensors"></a>2.2 Special tensors</h2><p>For the special tensors, PyTorch provides some common methods:</p>
-<ul>
-<li>Linear:</li>
-</ul>
-<p>We have <code>torch.linspace</code> and <code>torch.arange</code>. They are easy to understand. Please see the docs <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.linspace.html#torch.linspace">linspace</a> and <a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/generated/torch.arange.html#torch.arange">arange</a>.</p>
-<ul>
-<li>Random:</li>
-</ul>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">torch.randn(<span class="number">1</span>, <span class="number">2</span>) <span class="comment"># normal distribution, shape 1x2</span></span><br><span class="line">torch.rand(<span class="number">1</span>, <span class="number">2</span>)  <span class="comment"># uniform[0, 1) distribution, shape 1x2</span></span><br><span class="line">torch.randint(<span class="number">0</span>, <span class="number">100</span>, (<span class="number">1</span>, <span class="number">2</span>)) <span class="comment"># uniform[0, 100) distribution, shape 1x2</span></span><br></pre></td></tr></table></figure>
-
-<p>These functions also support passing in <code>torch.Size()</code> or a sequence as the size parameter. </p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = torch.randn(<span class="number">10</span>, <span class="number">10</span>) <span class="comment"># a is in shape 10x10</span></span><br><span class="line">torch.randn(a.shape)    <span class="comment"># good!</span></span><br><span class="line">torch.randn([<span class="number">10</span>, <span class="number">10</span>])   <span class="comment"># good!</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Special tensors:</li>
-</ul>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">torch.zeros(<span class="number">10</span>, <span class="number">10</span>) <span class="comment"># all zero tensor, shape 10x10</span></span><br><span class="line">torch.ones(<span class="number">10</span>, <span class="number">10</span>)  <span class="comment"># all one tensor, shape 10x10</span></span><br><span class="line"><span class="comment"># By default, the dtype is float32.</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>xxx_like()</code></li>
-</ul>
-<p>PyTorch has a series of function looks like <code>xxx_like()</code>, such as <code>ones_like()</code>, <code>zeros_like()</code>, <code>randn_like()</code>. These functions generates the tensor with the name, and the <code>dtype</code> and <code>device</code> and <code>layout</code> is same as the passing-in tensor. </p>
-<p><code>torch.rand_like(input)</code> is equivalent to <code>torch.rand(input.size(), dtype=input.dtype, layout=input.layout, device=input.device)</code>.</p>
-<p>An example:</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">arr = torch.tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>], dtype=torch.float64)</span><br><span class="line"><span class="built_in">print</span>(arr.shape) <span class="comment"># torch.Size([3])</span></span><br><span class="line"><span class="built_in">print</span>(arr.dtype) <span class="comment"># torch.float64</span></span><br><span class="line"></span><br><span class="line">z = torch.zeros_like(arr)</span><br><span class="line"><span class="built_in">print</span>(z.shape)   <span class="comment"># torch.Size([3])</span></span><br><span class="line"><span class="built_in">print</span>(z.dtype)   <span class="comment"># torch.float64</span></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/05/07/My-Setup-to-New-Linux-Server-Account/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Future">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Future's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/05/07/My-Setup-to-New-Linux-Server-Account/" class="post-title-link" itemprop="url">My Setup to New Linux Server Account</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-05-07 13:47:38" itemprop="dateCreated datePublished" datetime="2023-05-07T13:47:38+08:00">2023-05-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-09-11 16:29:15" itemprop="dateModified" datetime="2023-09-11T16:29:15+08:00">2023-09-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>In this article, I list some procedures I do when setting up new Linux server account. They’ll be helpful in the later development stages. </p>
-<h1 id="1-Change-the-default-shell"><a href="#1-Change-the-default-shell" class="headerlink" title="1. Change the default shell"></a>1. Change the default shell</h1><p>This step is <strong>optional</strong>. Sometimes the default shell in the machine is merely <code>sh</code>. We can change it to other better shells like <code>bash</code>, <code>zsh</code>, for easier use. </p>
-<h2 id="1-1-Show-the-current-shells"><a href="#1-1-Show-the-current-shells" class="headerlink" title="1.1 Show the current shells"></a>1.1 Show the current shells</h2><p>You can display the current shell name by either the following commands:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$0</span></span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">-bash</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$SHELL</span></span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">/bin/bash</span><br></pre></td></tr></table></figure>
-
-<h2 id="1-2-Get-all-available-shells"><a href="#1-2-Get-all-available-shells" class="headerlink" title="1.2 Get all available shells"></a>1.2 Get all available shells</h2><p>To check what shells are installed, type the following commands:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/shells</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># /etc/shells: valid login shells</span></span><br><span class="line">/bin/sh</span><br><span class="line">/bin/bash</span><br><span class="line">/bin/rbash</span><br><span class="line">/bin/dash</span><br><span class="line">/usr/bin/tmux</span><br><span class="line">/usr/bin/screen</span><br><span class="line">/bin/zsh</span><br><span class="line">/usr/bin/zsh</span><br></pre></td></tr></table></figure>
-
-<h2 id="1-3-Change-the-default-shell"><a href="#1-3-Change-the-default-shell" class="headerlink" title="1.3 Change the default shell"></a>1.3 Change the default shell</h2><p>Use the <code>chsh</code> (<strong>ch</strong>ange <strong>sh</strong>ell) command to change the shell, with <code>-s</code> flag:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chsh -s /bin/bash</span><br><span class="line">Password:</span><br></pre></td></tr></table></figure>
-
-<p>Then type the password of the login account (The password is hidden, just type it, and press Enter). Finally, you can quit the shell, and restart it once. You’ll see the new shell. </p>
-<h1 id="2-Install-conda"><a href="#2-Install-conda" class="headerlink" title="2. Install conda"></a>2. Install conda</h1><p>Python environment is very essential in my workflow, especially in deep learning. Please refer to the official docs:</p>
-<p><a target="_blank" rel="noopener" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html">https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html</a></p>
-<h1 id="3-Setup-ssh-key-password-free-login"><a href="#3-Setup-ssh-key-password-free-login" class="headerlink" title="3. Setup ssh key (password-free login)"></a>3. Setup ssh key (password-free login)</h1><p>Modified from the blog <a target="_blank" rel="noopener" href="https://github.com/bokesyo/CSC4005_2022Fall_Demo/blob/main/docs/Instruction%20on%20Passwordlessly%20Connecting%20to%20Cluster%20by%20Setting%20Up%20SSH%20Key%20Authentification.md">here</a>.</p>
-<p>(Replace <code>&#123;KeyName&#125;</code> to any name you like)</p>
-<h2 id="3-1-Generate-SSH-Key-Pair-on-Your-Local-Machine"><a href="#3-1-Generate-SSH-Key-Pair-on-Your-Local-Machine" class="headerlink" title="3.1. Generate SSH Key Pair on Your Local Machine"></a>3.1. Generate SSH Key Pair on Your Local Machine</h2><p><strong>(macOS Users please do the following)</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Execute the following commands on your LOCAL machine</span></span><br><span class="line"><span class="built_in">cd</span> ~/.ssh</span><br><span class="line">ssh-keygen -t rsa -b 1024 -f <span class="string">&quot;&#123;KeyName&#125;&quot;</span> -C <span class="string">&quot;&#123;Put Any Comment You Like&#125;&quot;</span></span><br><span class="line">ssh-add -K ./&#123;KeyName&#125;</span><br></pre></td></tr></table></figure>
-<p>To check if you make it right, type the following command and you should see a string as the output.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/&#123;KeyName&#125;.pub</span><br></pre></td></tr></table></figure>
-
-<p><strong>(Windows Users please do the following)</strong></p>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Execute the following commands on your local machine</span></span><br><span class="line"><span class="built_in">cd</span> C:\Users\&#123;UserName&#125;\.ssh</span><br><span class="line">ssh<span class="literal">-keygen</span> <span class="literal">-t</span> rsa <span class="literal">-b</span> <span class="number">1024</span> <span class="operator">-f</span> <span class="string">&quot;&#123;KeyName&#125;&quot;</span> <span class="literal">-C</span> <span class="string">&quot;&#123;Put Any Comment You Like&#125;&quot;</span></span><br></pre></td></tr></table></figure>
-<p>To check if you make it right, double click the key file (<code>C:\Users\&#123;UserName&#125;\.ssh\&#123;KeyName&#125;.pub</code>) to view it and you should see a string.</p>
-<p><strong>Notes:</strong></p>
-<ul>
-<li>The commands above are executed on your own computer, instead of the server.</li>
-<li>It is fine to use the SSH key file generated before (eg. id_rsa.pub), if you have.</li>
-<li>ssh-keygen will ask you to set a paraphrase, which improves the security of using SSH key authentication. Type “Enter” for no paraphrase.</li>
-</ul>
-<p><strong>Parameters for ssh-keygen command explanation:</strong></p>
-<ul>
-<li><strong>-t</strong>: type for ssh key generation. Here we use rsa</li>
-<li><strong>-b</strong>: bits</li>
-<li><strong>-f</strong>: name of your ssh key file. You are recommended to set this parameter in case it<br>is conflict with the ssh key file you generated before.</li>
-<li><strong>-C</strong>: comments to distinguish the ssh key file from others</li>
-</ul>
-<h2 id="3-2-Transfer-Your-SSH-Public-Key-File-to-the-Server"><a href="#3-2-Transfer-Your-SSH-Public-Key-File-to-the-Server" class="headerlink" title="3.2. Transfer Your SSH Public Key File to the Server"></a>3.2. Transfer Your SSH Public Key File to the Server</h2><p>We use the <code>scp</code> command to transfer the <strong>public key</strong> generated in the former step to the server. </p>
-<p><code>~/.ssh/&#123;KeyName&#125;.pub</code> is the public key you just generated. <code>&#123;Your Account Name&#125;@&#123;Server ip&#125;</code> is your server account name and ip address. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Execute the following commands on your LOCAL machine</span></span><br><span class="line"><span class="comment"># (macOS)</span></span><br><span class="line">scp ~/.ssh/&#123;KeyName&#125;.pub &#123;Your Account Name&#125;@&#123;Server ip&#125;:~</span><br><span class="line"></span><br><span class="line"><span class="comment"># (windows)</span></span><br><span class="line">scp C:\Users\&#123;UserName&#125;\.ssh\&#123;KeyName&#125;.pub &#123;Your Account Name&#125;@&#123;Server ip&#125;:~</span><br></pre></td></tr></table></figure>
-<p><strong>Notes:</strong></p>
-<ul>
-<li>This command will ask you for password for data transfer. Please make sure that you type in the correct password. If you are Windows user and you want to copy &amp; paste the password for convenience, try “Ctrl + Shift + V” if you fail to paste the password with “Ctrl + V”.</li>
-</ul>
-<h2 id="3-3-Configure-authorized-keys-on-the-Server"><a href="#3-3-Configure-authorized-keys-on-the-Server" class="headerlink" title="3.3. Configure authorized_keys on the Server"></a>3.3. Configure authorized_keys on the Server</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Login the server with password. Do this step in locally to establish a ssh connection</span></span><br><span class="line">ssh &#123;Your Account Name&#125;@&#123;Server ip&#125;</span><br><span class="line"><span class="comment">## All the following commands should be executed on the ssh connection just established. (i.e., execute them on the server)</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/.ssh</span><br><span class="line"><span class="built_in">cat</span> ./&#123;KeyName&#125;.pub &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line"><span class="built_in">rm</span> -f ~/&#123;KeyName&#125;.pub</span><br><span class="line"><span class="built_in">chmod</span> 700 ~/.ssh</span><br><span class="line"><span class="built_in">chmod</span> 600 ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
-<p>To check if you make it right, execute the following command and you should see a string as the output that is the same as in Step-1.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-4-Prepare-for-SSH-Connection-with-Key-Authentication"><a href="#3-4-Prepare-for-SSH-Connection-with-Key-Authentication" class="headerlink" title="3.4. Prepare for SSH Connection with Key Authentication"></a>3.4. Prepare for SSH Connection with Key Authentication</h2><p>Add the following content to <code>~/.ssh/config</code> (In windows, it’s <code>C:\Users\&#123;UserName&#125;\.ssh\config</code>) file on your LOCAL machine:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Host &#123;Any Name You Like&#125;</span><br><span class="line">    HostName &#123;ip&#125;</span><br><span class="line">    IdentityFile ~/.ssh/&#123;KeyName&#125;</span><br><span class="line">    User &#123;Your Account Name&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Notes:</strong></p>
-<ul>
-<li>It is recommended to configure with the Remote SSH extension on VS Code. Please refer to <a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/remote/ssh">Remote Development using SSH</a> for more information.</li>
-</ul>
-<h2 id="3-5-Login-the-Server-Password-free-with-SSH-key-Authentication"><a href="#3-5-Login-the-Server-Password-free-with-SSH-key-Authentication" class="headerlink" title="3.5. Login the Server Password-free with SSH key Authentication"></a>3.5. Login the Server Password-free with SSH key Authentication</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;Your Account Name&#125;@&#123;Server ip&#125;</span><br></pre></td></tr></table></figure>
-<p>or</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;Your Account Name&#125;@&#123;Any Name You Like&#125; <span class="comment"># above in Sec. 4</span></span><br></pre></td></tr></table></figure>
-
-<p>or </p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;Any Name You Like&#125; <span class="comment"># above in Sec. 4</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="4-Set-some-alias"><a href="#4-Set-some-alias" class="headerlink" title="4. Set some alias"></a>4. Set some alias</h1><p>Alias convenient us typing some common commands.</p>
-<p>Add the following to the end of <code>~/.bashrc</code>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> cf=<span class="string">&quot;ls -l | grep &quot;</span>^-<span class="string">&quot; | wc -l&quot;</span></span><br><span class="line"><span class="built_in">alias</span> ns=<span class="string">&quot;nvidia-smi&quot;</span></span><br><span class="line"><span class="built_in">alias</span> py=<span class="string">&quot;python&quot;</span></span><br><span class="line"><span class="built_in">alias</span> act=<span class="string">&quot;conda activate&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>The first alias, <code>cf</code> means count files, can count number of visible files (excluding directories) under the current working directory.</p>
-<p>The second alias, <code>ns</code> is short for <code>nvidia-smi</code> to check for the GPU information.</p>
-<p>The third alias <code>py</code> is short for <code>python</code>.</p>
-<p>The fourth alias <code>act</code> can be used like <code>act py39</code> (activate the conda <code>py39</code> environment)</p>
-<h1 id="5-Configure-the-CUDA-compiler-version"><a href="#5-Configure-the-CUDA-compiler-version" class="headerlink" title="5. Configure the CUDA compiler version"></a>5. Configure the CUDA compiler version</h1><p>This step is <strong>optional</strong>. If you want to compile some PyTorch operators locally, you should set the <code>nvcc</code> version same to the PyTorch runtime version. </p>
-<p>Add the following to the end of <code>~/.bashrc</code>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/usr/local/cuda-11.1/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
-
-<p>Change the CUDA directory (<code>/usr/local/cuda-11.1</code> above) to the one you actually want to use. For example, the PyTorch is compiled under <code>cuda-11.3</code>, you probably want to use <code>nvcc</code> with <code>cuda-11.x</code>, but not <code>cuda-10.2</code>. </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1723,7 +1790,7 @@ $$-->
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

@@ -16,6 +16,123 @@
 ]]></content>
   </entry>
   <entry>
+    <title>Isaac Gym Installation with Troubleshooting</title>
+    <url>/2024/02/01/Isaac-Gym-Installation-with-Troubleshooting/</url>
+    <content><![CDATA[<p>This blog is used to record my experience in installing Isaac Gym environment on the Linux Server. I’ll also write down all problems I met with troubleshooting.</p>
+<h1 id="Prerequisite"><a href="#Prerequisite" class="headerlink" title="Prerequisite"></a>Prerequisite</h1><p>The followings are requirements provided by the project pages:</p>
+<blockquote>
+<p>Ubuntu 18.04, or 20.04.<br>Python 3.6, 3.7, or 3.8<br>Minimum recommended NVIDIA driver version: 470.74 (470 or above required)<br>Minimum required hardware: NVIDIA Pascal or later GPU with at least 8gb of VRAM</p>
+</blockquote>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Possible Problems</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Don’t use WSL (Windows Subsystem on Linux)!!! The Nvidia driver on WSL may not support Vulkan well thus causing failure!</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1 id="Download-amp-Install"><a href="#Download-amp-Install" class="headerlink" title="Download &amp; Install"></a>Download &amp; Install</h1><ol>
+<li>Register and download from <a href="https://developer.nvidia.com/isaac-gym/">https://developer.nvidia.com/isaac-gym/</a>. Press “join now” first, and then fill the form, and finally you are ready to download it.</li>
+</ol>
+<p><img src="/2024/02/01/Isaac-Gym-Installation-with-Troubleshooting/download.png" alt="download" style="zoom:50%;"></p>
+<ol>
+<li>Put the download file, probably named <code>IsaacGym_Preview_4_Package.tar.gz</code> on a proper folder. Then unzip it:</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">tar -xvf IsaacGym_Preview_4_Package.tar.gz</span><br></pre></td></tr></table></figure>
+<ol>
+<li>Go to the unzipped folder, and execute the <code>create_conda_env_rlgpu.sh</code>. This would automatically create a new environment, installed with all packages. </li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">./create_conda_env_rlgpu.sh</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Possible Problems</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The shell may stuck at “Solving…” stage. In that case, please follow step 4 below.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ol>
+<li><strong>[Alternative ways for step 3]</strong> If step 3 failed, consider the following method:</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Create an env manually.</span></span><br><span class="line">conda create -n rlgpu python=3.8</span><br><span class="line"></span><br><span class="line"><span class="comment"># Go the the subdirectory,</span></span><br><span class="line"><span class="built_in">cd</span> python/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install manually.</span></span><br><span class="line">pip install -e .</span><br></pre></td></tr></table></figure>
+<p>The above code would also install the <code>isaacgym</code>, with necessary dependencies (<code>pytorch</code>, <code>numpy</code>, etc.)</p>
+<p>As in my machine, installing with latest PyTorch (<code>2.2.0</code>) and CUDA (<code>12.1</code>) is fine. It doesn’t require a former version.</p>
+<h1 id="Test-demo"><a href="#Test-demo" class="headerlink" title="Test demo"></a>Test demo</h1><p>To run the test demo, cd to <code>python/examples</code>, and run:</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">python joint_monkey.py</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Possible Problem 1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>When importing <code>isaacgym</code>, returns error <code>ImportError: libpython3.8.so.1.0: cannot open shared object file: No such file or directory</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Solution 1:</strong> This is because the module failed to locate the static link library. We can add the corresponding path to the <code>LD_LIBRARY_PATH</code> so that the python could locate the library. </p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="comment"># in ~/.bashrc</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/&lt;miniconda_root&gt;/envs/&lt;env_name&gt;/lib:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Possible Problem 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>After executing <code>python joint_monkey.py</code>, it returns error <code>[Error] [carb.windowing-glfw.plugin] GLFW initialization failed.</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Solution 2:</strong> The test programs requires GUI. In the headless server, you may use <code>X11 forwarding</code> (e.g., MobaXterm) or <code>xvfb</code> virtual screen.</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Possible Problem 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>After executing <code>python joint_monkey.py</code>, it returns error `Segment Fault”</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Solution 3:</strong> There are no direct solutions on the Internet. After my experience, I can give you some possible reasons.</p>
+<ul>
+<li>Newer PyTorch, CUDA version: It should not be a big problem. As for me, I am using PyTorch (<code>2.2.0</code>) and CUDA (<code>12.1</code>), the program stills works!</li>
+<li>Don’t use WSL: By 2/1/2024, the Vulkan has not fully supported on WSL. Therefore, the program may occur such problems. Use Linux machine instead.</li>
+<li>Vulkan Installation: Please make sure the vulkan works fine on the server. You may visit <a href="https://forums.developer.nvidia.com/t/cannot-run-the-examples/165180/3">here</a> for further information.</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Techniques</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Learn PyTorch-Lightning with Example Codes</title>
+    <url>/2024/01/28/Learn-PyTorch-Lightning-with-Example-Codes/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>Network Configuration for VirtualBox</title>
     <url>/2023/10/26/Network-Config-for-VirtualBox/</url>
     <content><![CDATA[<p>In some cases, when we import VM into the “Oracle VM VirtualBox Manager”, the network is not well configured, and we cannot connect it by SSH&#x2F;other things on the host machine. The default network setting may looks like this:</p>
