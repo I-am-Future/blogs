@@ -24,22 +24,22 @@
   <meta name="description" content="In some cases, when we import VM into the “Oracle VM VirtualBox Manager”, the network is not well configured, and we cannot connect it by SSH&#x2F;other things on the host machine. The default network">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Network Configuration for VirtualBox">
-<meta property="og:url" content="https://i-am-future.github.io/blogs/2023/10/25/Network-Config-for-VirtualBox/index.html">
+<meta property="og:url" content="https://i-am-future.github.io/2023/10/25/Network-Config-for-VirtualBox/index.html">
 <meta property="og:site_name" content="Future&#39;s blog">
 <meta property="og:description" content="In some cases, when we import VM into the “Oracle VM VirtualBox Manager”, the network is not well configured, and we cannot connect it by SSH&#x2F;other things on the host machine. The default network">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://i-am-future.github.io/2023/10/26/Network-Config-for-VirtualBox/Network-setting1.png">
-<meta property="og:image" content="https://i-am-future.github.io/2023/10/26/Network-Config-for-VirtualBox/Network-setting2.png">
-<meta property="og:image" content="https://i-am-future.github.io/2023/10/26/Network-Config-for-VirtualBox/Network-setting3.png">
-<meta property="og:image" content="https://i-am-future.github.io/2023/10/26/Network-Config-for-VirtualBox/Network-setting4.png">
-<meta property="og:image" content="https://i-am-future.github.io/2023/10/26/Network-Config-for-VirtualBox/Network-setting5.png">
+<meta property="og:image" content="https://i-am-future.github.io/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting1.png">
+<meta property="og:image" content="https://i-am-future.github.io/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting2.png">
+<meta property="og:image" content="https://i-am-future.github.io/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting3.png">
+<meta property="og:image" content="https://i-am-future.github.io/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting4.png">
+<meta property="og:image" content="https://i-am-future.github.io/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting5.png">
 <meta property="article:published_time" content="2023-10-26T03:42:58.000Z">
 <meta property="article:modified_time" content="2023-12-20T02:11:33.610Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i-am-future.github.io/2023/10/26/Network-Config-for-VirtualBox/Network-setting1.png">
+<meta name="twitter:image" content="https://i-am-future.github.io/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting1.png">
 
-<link rel="canonical" href="https://i-am-future.github.io/blogs/2023/10/25/Network-Config-for-VirtualBox/">
+<link rel="canonical" href="https://i-am-future.github.io/2023/10/25/Network-Config-for-VirtualBox/">
 
 
 <script id="page-configurations">
@@ -190,7 +190,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/10/25/Network-Config-for-VirtualBox/">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2023/10/25/Network-Config-for-VirtualBox/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blogs/images/avatar.gif">
@@ -248,12 +248,12 @@
 <ul>
 <li>The Adapter 1 (an <code>NAT</code> adapter):</li>
 </ul>
-<img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting1.png" alt="Network-setting1" style="zoom: 50%;">
+<img src="/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting1.png" alt="Network-setting1" style="zoom: 50%;">
 
 <ul>
 <li>The Adapter 2-4 (Not Enabled):</li>
 </ul>
-<img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting2.png" alt="Network-setting2" style="zoom:50%;">
+<img src="/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting2.png" alt="Network-setting2" style="zoom:50%;">
 
 <ul>
 <li>After typing <code>ip a</code> in the terminal of the VM (assume it is a Linux machine), the result looks like below:</li>
@@ -266,7 +266,7 @@
 <p><em>Cons:</em> The VM cannot be accessed from machine outside of the host (e.g., we cannot <code>ssh host_name@host_ip</code> to connect to the VM from other machines than host), unless you perform some port forwarding strategies on the host. </p>
 <p><strong>Steps:</strong></p>
 <p>To create a network connection from VM to host, we can set the Adapter 2 like below (Use a “Host-only Adapter”):</p>
-<img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting3.png" alt="Network-setting3" style="zoom:50%;">
+<img src="/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting3.png" alt="Network-setting3" style="zoom:50%;">
 
 <p>After typing <code>ip a</code> in the terminal of the VM (assume it is a Linux machine) NOW, the result looks like below:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2: enp0s3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000</span><br><span class="line">    link/ether 08:00:27:b3:8d:9b brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3</span><br><span class="line">       valid_lft 86337sec preferred_lft 86337sec</span><br><span class="line">    inet6 fe80::6dea:8795:c7b1:a1a5/64 scope link noprefixroute </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">3: enp0s8: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000</span><br><span class="line">    link/ether 08:00:27:85:54:b0 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.56.101/24 brd 192.168.56.255 scope global dynamic noprefixroute enp0s8</span><br><span class="line">       valid_lft 537sec preferred_lft 537sec</span><br><span class="line">    inet6 fe80::a598:692:2336:67d9/64 scope link noprefixroute </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
@@ -280,10 +280,10 @@
 <p>Cons: Only forwarded ports available. Ports may conflict with others. </p>
 <p><strong>Steps:</strong></p>
 <p>Go to the Adapter 1, click the “Advanced” button to expand the menu. Click the “Port Forwarding”.</p>
-<img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting4.png" alt="Network-setting4" style="zoom:50%;">
+<img src="/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting4.png" alt="Network-setting4" style="zoom:50%;">
 
 <p>In the “Port Forwarding Rules”, Set up new rules. The “Host Port” is the port number on the host machine. The “Guest Port” is the corresponding port number on the VM. In this example, I forwarded port 4016 on host to the port 22 on the VM.  </p>
-<img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting5.png" alt="Network-setting5" style="zoom:50%;">
+<img src="/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting5.png" alt="Network-setting5" style="zoom:50%;">
 
 <p>After that, you can connect to the VM on the host machine. Type:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -p 4016 ubuntu@127.0.0.1</span><br></pre></td></tr></table></figure>

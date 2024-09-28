@@ -23,13 +23,13 @@
 
   <meta property="og:type" content="website">
 <meta property="og:title" content="Future&#39;s blog">
-<meta property="og:url" content="https://i-am-future.github.io/blogs/index.html">
+<meta property="og:url" content="https://i-am-future.github.io/index.html">
 <meta property="og:site_name" content="Future&#39;s blog">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://i-am-future.github.io/blogs/">
+<link rel="canonical" href="https://i-am-future.github.io/">
 
 
 <script id="page-configurations">
@@ -179,7 +179,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/09/12/welcome-page/">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2023/09/12/welcome-page/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blogs/images/avatar.gif">
@@ -252,7 +252,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2024/05/27/Compress-Native-System-Screen-Recording/">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2024/05/27/Compress-Native-System-Screen-Recording/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blogs/images/avatar.gif">
@@ -388,7 +388,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2024/02/01/Isaac-Gym-Installation-with-Troubleshooting/">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2024/02/01/Isaac-Gym-Installation-with-Troubleshooting/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blogs/images/avatar.gif">
@@ -442,106 +442,92 @@
 <blockquote>
 <p>Ubuntu 18.04, or 20.04.<br>Python 3.6, 3.7, or 3.8<br>Minimum recommended NVIDIA driver version: 470.74 (470 or above required)<br>Minimum required hardware: NVIDIA Pascal or later GPU with at least 8gb of VRAM</p>
 </blockquote>
-<div class="table-container">
 <table>
 <thead>
 <tr>
 <th>Possible Problems</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>Don’t use WSL (Windows Subsystem on Linux)!!! The Nvidia driver on WSL may not support Vulkan well thus causing failure!</td>
 </tr>
-</tbody>
-</table>
-</div>
-<h1 id="Download-amp-Install"><a href="#Download-amp-Install" class="headerlink" title="Download &amp; Install"></a>Download &amp; Install</h1><ol>
+</tbody></table>
+<h1 id="Download-Install"><a href="#Download-Install" class="headerlink" title="Download &amp; Install"></a>Download &amp; Install</h1><ol>
 <li>Register and download from <a target="_blank" rel="noopener" href="https://developer.nvidia.com/isaac-gym/">https://developer.nvidia.com/isaac-gym/</a>. Press “join now” first, and then fill the form, and finally you are ready to download it.</li>
 </ol>
-<p><img src="/2024/02/01/Isaac-Gym-Installation-with-Troubleshooting/download.png" alt="download" style="zoom:50%;"></p>
-<ol>
+<img src="/blogs/2024/02/01/Isaac-Gym-Installation-with-Troubleshooting/download.png" alt="download" style="zoom:50%;">
+
+<ol start="2">
 <li>Put the download file, probably named <code>IsaacGym_Preview_4_Package.tar.gz</code> on a proper folder. Then unzip it:</li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf IsaacGym_Preview_4_Package.tar.gz</span><br></pre></td></tr></table></figure>
-<ol>
-<li>Go to the unzipped folder, and execute the <code>create_conda_env_rlgpu.sh</code>. This would automatically create a new environment, installed with all packages. </li>
+
+<ol start="3">
+<li>Go to the unzipped folder, and execute the <code>create_conda_env_rlgpu.sh</code>. This would automatically create a new environment, installed with all packages.</li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./create_conda_env_rlgpu.sh</span><br></pre></td></tr></table></figure>
-<div class="table-container">
+
 <table>
 <thead>
 <tr>
 <th>Possible Problems</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>The shell may stuck at “Solving…” stage. In that case, please follow step 4 below.</td>
 </tr>
-</tbody>
-</table>
-</div>
-<ol>
+</tbody></table>
+<ol start="4">
 <li><strong>[Alternative ways for step 3]</strong> If step 3 failed, consider the following method:</li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Create an env manually.</span></span><br><span class="line">conda create -n rlgpu python=3.8</span><br><span class="line"></span><br><span class="line"><span class="comment"># Go the the subdirectory,</span></span><br><span class="line"><span class="built_in">cd</span> python/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install manually.</span></span><br><span class="line">pip install -e .</span><br></pre></td></tr></table></figure>
+
 <p>The above code would also install the <code>isaacgym</code>, with necessary dependencies (<code>pytorch</code>, <code>numpy</code>, etc.)</p>
 <p>As in my machine, installing with latest PyTorch (<code>2.2.0</code>) and CUDA (<code>12.1</code>) is fine. It doesn’t require a former version.</p>
 <h1 id="Test-demo"><a href="#Test-demo" class="headerlink" title="Test demo"></a>Test demo</h1><p>To run the test demo, cd to <code>python/examples</code>, and run:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python joint_monkey.py</span><br></pre></td></tr></table></figure>
+
 <hr>
-<div class="table-container">
 <table>
 <thead>
 <tr>
 <th>Possible Problem 1</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>When importing <code>isaacgym</code>, returns error <code>ImportError: libpython3.8.so.1.0: cannot open shared object file: No such file or directory</code></td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <p><strong>Solution 1:</strong> This is because the module failed to locate the static link library. We can add the corresponding path to the <code>LD_LIBRARY_PATH</code> so that the python could locate the library. </p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># in ~/.bashrc</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/&lt;miniconda_root&gt;/envs/&lt;env_name&gt;/lib:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
+
 <hr>
-<div class="table-container">
 <table>
 <thead>
 <tr>
 <th>Possible Problem 2</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>After executing <code>python joint_monkey.py</code>, it returns error <code>[Error] [carb.windowing-glfw.plugin] GLFW initialization failed.</code></td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <p><strong>Solution 2:</strong> The test programs requires GUI. In the headless server, you may use <code>X11 forwarding</code> (e.g., MobaXterm) or <code>xvfb</code> virtual screen.</p>
 <hr>
-<div class="table-container">
 <table>
 <thead>
 <tr>
 <th>Possible Problem 3</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>After executing <code>python joint_monkey.py</code>, it returns error <code>Segment Fault</code></td>
 </tr>
-</tbody>
-</table>
-</div>
+</tbody></table>
 <p><strong>Solution 3:</strong> There are no direct solutions on the Internet. After my experience, I can give you some possible reasons.</p>
 <ul>
 <li>Newer PyTorch, CUDA version: It should not be a big problem. As for me, I am using PyTorch (<code>2.2.0</code>) and CUDA (<code>12.1</code>), the program stills works!</li>
-<li>Don’t use WSL: By 2/1/2024, the Vulkan has not fully supported on WSL. Therefore, the program may occur such problems. Use Linux machine instead.</li>
+<li>Don’t use WSL: By 2&#x2F;1&#x2F;2024, the Vulkan has not fully supported on WSL. Therefore, the program may occur such problems. Use Linux machine instead.</li>
 <li>Vulkan Installation: Please make sure the vulkan works fine on the server. You may visit <a target="_blank" rel="noopener" href="https://forums.developer.nvidia.com/t/cannot-run-the-examples/165180/3">here</a> for further information.</li>
 </ul>
 
@@ -563,7 +549,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2024/01/28/Learn-PyTorch-Lightning-with-Example-Codes/">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2024/01/28/Learn-PyTorch-Lightning-with-Example-Codes/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blogs/images/avatar.gif">
@@ -673,7 +659,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/10/25/Network-Config-for-VirtualBox/">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2023/10/25/Network-Config-for-VirtualBox/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blogs/images/avatar.gif">
@@ -732,12 +718,12 @@
 <ul>
 <li>The Adapter 1 (an <code>NAT</code> adapter):</li>
 </ul>
-<img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting1.png" alt="Network-setting1" style="zoom: 50%;">
+<img src="/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting1.png" alt="Network-setting1" style="zoom: 50%;">
 
 <ul>
 <li>The Adapter 2-4 (Not Enabled):</li>
 </ul>
-<img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting2.png" alt="Network-setting2" style="zoom:50%;">
+<img src="/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting2.png" alt="Network-setting2" style="zoom:50%;">
 
 <ul>
 <li>After typing <code>ip a</code> in the terminal of the VM (assume it is a Linux machine), the result looks like below:</li>
@@ -750,7 +736,7 @@
 <p><em>Cons:</em> The VM cannot be accessed from machine outside of the host (e.g., we cannot <code>ssh host_name@host_ip</code> to connect to the VM from other machines than host), unless you perform some port forwarding strategies on the host. </p>
 <p><strong>Steps:</strong></p>
 <p>To create a network connection from VM to host, we can set the Adapter 2 like below (Use a “Host-only Adapter”):</p>
-<img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting3.png" alt="Network-setting3" style="zoom:50%;">
+<img src="/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting3.png" alt="Network-setting3" style="zoom:50%;">
 
 <p>After typing <code>ip a</code> in the terminal of the VM (assume it is a Linux machine) NOW, the result looks like below:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2: enp0s3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000</span><br><span class="line">    link/ether 08:00:27:b3:8d:9b brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic noprefixroute enp0s3</span><br><span class="line">       valid_lft 86337sec preferred_lft 86337sec</span><br><span class="line">    inet6 fe80::6dea:8795:c7b1:a1a5/64 scope link noprefixroute </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">3: enp0s8: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000</span><br><span class="line">    link/ether 08:00:27:85:54:b0 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.56.101/24 brd 192.168.56.255 scope global dynamic noprefixroute enp0s8</span><br><span class="line">       valid_lft 537sec preferred_lft 537sec</span><br><span class="line">    inet6 fe80::a598:692:2336:67d9/64 scope link noprefixroute </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br></pre></td></tr></table></figure>
@@ -764,10 +750,10 @@
 <p>Cons: Only forwarded ports available. Ports may conflict with others. </p>
 <p><strong>Steps:</strong></p>
 <p>Go to the Adapter 1, click the “Advanced” button to expand the menu. Click the “Port Forwarding”.</p>
-<img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting4.png" alt="Network-setting4" style="zoom:50%;">
+<img src="/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting4.png" alt="Network-setting4" style="zoom:50%;">
 
 <p>In the “Port Forwarding Rules”, Set up new rules. The “Host Port” is the port number on the host machine. The “Guest Port” is the corresponding port number on the VM. In this example, I forwarded port 4016 on host to the port 22 on the VM.  </p>
-<img src="/2023/10/26/Network-Config-for-VirtualBox/Network-setting5.png" alt="Network-setting5" style="zoom:50%;">
+<img src="/blogs/2023/10/25/Network-Config-for-VirtualBox/Network-setting5.png" alt="Network-setting5" style="zoom:50%;">
 
 <p>After that, you can connect to the VM on the host machine. Type:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -p 4016 ubuntu@127.0.0.1</span><br></pre></td></tr></table></figure>
@@ -796,7 +782,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/09/15/WSL-Container-ssh-Setup/">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2023/09/15/WSL-Container-ssh-Setup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blogs/images/avatar.gif">
@@ -915,7 +901,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/09/15/Docker-QRH/">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2023/09/15/Docker-QRH/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blogs/images/avatar.gif">
@@ -974,12 +960,13 @@
 <p><strong>Create image</strong> by:</p>
 <ol>
 <li><code>.tar</code> file, with  <code>docker load -i &lt;tar_file&gt;</code> command.</li>
-<li><code>Dockerfile</code> script, with <code>docker build -t</code> command.</li>
+<li><code>Dockerfile</code> script, with <code>docker build -t  </code> command.</li>
 </ol>
 <p><strong>List images:</strong> Use <code>docker images</code> to show all available images on the device.</p>
 <h2 id="Container"><a href="#Container" class="headerlink" title="Container"></a>Container</h2><p><strong>Container:</strong> An instance running the OS. built from image. </p>
 <p><strong>Create from image</strong> by <code>docker run</code> command. You can pass in some configuration. (Note some config are fixed after creation. Be careful!) Some common parameters are shown below:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -d -p &lt;localport&gt;:&lt;dockerport&gt; --gpus all --name &lt;name&gt; --volume &lt;/path/host/directory&gt;:&lt;/path/container/directory&gt; &lt;IMAGE ID&gt;</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li><code>-d</code> means “detach”, running the docker container in the backend. </li>
 <li><code>-p &lt;hostport&gt;:&lt;dockerport&gt;</code> means forward the docker’s port <code>&lt;dockerport&gt;</code> to the host machine’s port <code>&lt;hostport&gt;</code>. Usually, we forward <code>22</code> port from container to e.g., <code>2222</code> port in host for ssh connection.</li>
@@ -1017,7 +1004,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/09/07/Pandas-MySQL-Leetcode-Practice-Notes-3/">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2023/09/07/Pandas-MySQL-Leetcode-Practice-Notes-3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blogs/images/avatar.gif">
@@ -1099,7 +1086,7 @@
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># scores is:</span></span><br><span class="line">   <span class="built_in">id</span>  score</span><br><span class="line"><span class="number">0</span>   <span class="number">1</span>    <span class="number">3.5</span></span><br><span class="line"><span class="number">1</span>   <span class="number">2</span>   <span class="number">3.65</span></span><br><span class="line"><span class="number">2</span>   <span class="number">3</span>    <span class="number">4.0</span></span><br><span class="line"><span class="number">3</span>   <span class="number">4</span>   <span class="number">3.85</span></span><br><span class="line"><span class="number">4</span>   <span class="number">5</span>    <span class="number">4.0</span></span><br><span class="line"><span class="number">5</span>   <span class="number">6</span>   <span class="number">3.65</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># create a new column, assign the dense_rank:</span></span><br><span class="line">scores[<span class="string">&#x27;rank&#x27;</span>] = scores[<span class="string">&#x27;score&#x27;</span>].rank(method=<span class="string">&#x27;dense&#x27;</span>, ascending=<span class="literal">False</span>)</span><br><span class="line"><span class="comment"># result is:</span></span><br><span class="line">   <span class="built_in">id</span>  score  rank</span><br><span class="line"><span class="number">0</span>   <span class="number">1</span>    <span class="number">3.5</span>   <span class="number">4.0</span></span><br><span class="line"><span class="number">1</span>   <span class="number">2</span>   <span class="number">3.65</span>   <span class="number">3.0</span></span><br><span class="line"><span class="number">2</span>   <span class="number">3</span>    <span class="number">4.0</span>   <span class="number">1.0</span></span><br><span class="line"><span class="number">3</span>   <span class="number">4</span>   <span class="number">3.85</span>   <span class="number">2.0</span></span><br><span class="line"><span class="number">4</span>   <span class="number">5</span>    <span class="number">4.0</span>   <span class="number">1.0</span></span><br><span class="line"><span class="number">5</span>   <span class="number">6</span>   <span class="number">3.65</span>   <span class="number">3.0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># create a new column, assign the common rank:</span></span><br><span class="line">scores[<span class="string">&#x27;rank&#x27;</span>] = scores[<span class="string">&#x27;score&#x27;</span>].rank(method=<span class="string">&#x27;min&#x27;</span>, ascending=<span class="literal">False</span>)</span><br><span class="line"><span class="comment"># result is:</span></span><br><span class="line">   <span class="built_in">id</span>  score  rank</span><br><span class="line"><span class="number">0</span>   <span class="number">1</span>    <span class="number">3.5</span>   <span class="number">6.0</span></span><br><span class="line"><span class="number">1</span>   <span class="number">2</span>   <span class="number">3.65</span>   <span class="number">4.0</span></span><br><span class="line"><span class="number">2</span>   <span class="number">3</span>    <span class="number">4.0</span>   <span class="number">1.0</span></span><br><span class="line"><span class="number">3</span>   <span class="number">4</span>   <span class="number">3.85</span>   <span class="number">3.0</span></span><br><span class="line"><span class="number">4</span>   <span class="number">5</span>    <span class="number">4.0</span>   <span class="number">1.0</span></span><br><span class="line"><span class="number">5</span>   <span class="number">6</span>   <span class="number">3.65</span>   <span class="number">4.0</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="3-3-row-to-column-conversion"><a href="#3-3-row-to-column-conversion" class="headerlink" title="3.3 row to column conversion"></a>3.3 row to column conversion</h2><h3 id="3-3-1-MySQL"><a href="#3-3-1-MySQL" class="headerlink" title="3.3.1 MySQL"></a>3.3.1 MySQL</h3><p>The idea is quite simple as illustrate below:</p>
-<img src="/2023/09/07/Pandas-MySQL-Leetcode-Practice-Notes-3/q3.png" alt="q3" style="zoom:50%;">
+<img src="/blogs/2023/09/07/Pandas-MySQL-Leetcode-Practice-Notes-3/q3.png" alt="q3" style="zoom:50%;">
 
 <p>First, we extract each column to form a new table corresponding to each store. Then, we concatenate (“Union”) three tables together. Note that when we are extracting the table, we should remove “null” rows.</p>
 <p>Follow this idea, our implementation would be relatively easy:</p>
@@ -1145,7 +1132,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/09/01/Pandas-MySQL-Leetcode-Practice-Notes-2/">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2023/09/01/Pandas-MySQL-Leetcode-Practice-Notes-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blogs/images/avatar.gif">
@@ -1266,7 +1253,7 @@ select * from fruits;
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/08/20/Pandas-MySQL-Leetcode-Practice-Notes-1/">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2023/08/20/Pandas-MySQL-Leetcode-Practice-Notes-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blogs/images/avatar.gif">

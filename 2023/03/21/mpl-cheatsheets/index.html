@@ -24,20 +24,20 @@
   <meta name="description" content="Cheatsheet来自mpl官网的 https:&#x2F;&#x2F;matplotlib.org&#x2F;cheatsheets&#x2F;cheatsheets.pdf 的官方cheatsheet，但是pdf不方便即时查看，遂导出成图片，可以存到相册。图片可以单击后放大查看。 page1:  page2:  这里面覆盖了大部分使用mpl时会用到的函数，详细使用方法可见官网（https:&#x2F;&#x2F;matplotlib.org&#x2F;）。 本">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Matplotlib Quick Reference">
-<meta property="og:url" content="https://i-am-future.github.io/blogs/2023/03/21/mpl-cheatsheets/index.html">
+<meta property="og:url" content="https://i-am-future.github.io/2023/03/21/mpl-cheatsheets/index.html">
 <meta property="og:site_name" content="Future&#39;s blog">
 <meta property="og:description" content="Cheatsheet来自mpl官网的 https:&#x2F;&#x2F;matplotlib.org&#x2F;cheatsheets&#x2F;cheatsheets.pdf 的官方cheatsheet，但是pdf不方便即时查看，遂导出成图片，可以存到相册。图片可以单击后放大查看。 page1:  page2:  这里面覆盖了大部分使用mpl时会用到的函数，详细使用方法可见官网（https:&#x2F;&#x2F;matplotlib.org&#x2F;）。 本">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://i-am-future.github.io/2023/03/21/mpl-cheatsheets/mpl-cheatsheets-1.png">
-<meta property="og:image" content="https://i-am-future.github.io/2023/03/21/mpl-cheatsheets/mpl-cheatsheets-2.png">
-<meta property="og:image" content="https://i-am-future.github.io/2023/03/21/mpl-cheatsheets/cmap.png">
+<meta property="og:image" content="https://i-am-future.github.io/blogs/2023/03/21/mpl-cheatsheets/mpl-cheatsheets/mpl-cheatsheets-1.png">
+<meta property="og:image" content="https://i-am-future.github.io/blogs/2023/03/21/mpl-cheatsheets/mpl-cheatsheets/mpl-cheatsheets-2.png">
+<meta property="og:image" content="https://i-am-future.github.io/blogs/2023/03/21/mpl-cheatsheets/mpl-cheatsheets/cmap.png">
 <meta property="article:published_time" content="2023-03-21T10:37:08.000Z">
 <meta property="article:modified_time" content="2023-05-31T01:30:27.765Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i-am-future.github.io/2023/03/21/mpl-cheatsheets/mpl-cheatsheets-1.png">
+<meta name="twitter:image" content="https://i-am-future.github.io/blogs/2023/03/21/mpl-cheatsheets/mpl-cheatsheets/mpl-cheatsheets-1.png">
 
-<link rel="canonical" href="https://i-am-future.github.io/blogs/2023/03/21/mpl-cheatsheets/">
+<link rel="canonical" href="https://i-am-future.github.io/2023/03/21/mpl-cheatsheets/">
 
 
 <script id="page-configurations">
@@ -188,7 +188,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/03/21/mpl-cheatsheets/">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2023/03/21/mpl-cheatsheets/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blogs/images/avatar.gif">
@@ -244,9 +244,9 @@
       
         <h3 id="Cheatsheet"><a href="#Cheatsheet" class="headerlink" title="Cheatsheet"></a>Cheatsheet</h3><p>来自mpl官网的 <a target="_blank" rel="noopener" href="https://matplotlib.org/cheatsheets/cheatsheets.pdf">https://matplotlib.org/cheatsheets/cheatsheets.pdf</a> 的官方cheatsheet，但是pdf不方便即时查看，遂导出成图片，可以存到相册。图片可以单击后放大查看。</p>
 <p>page1:</p>
-<p><img src="/2023/03/21/mpl-cheatsheets/mpl-cheatsheets-1.png" alt="Cheatsheet"></p>
+<p><img src="/blogs/2023/03/21/mpl-cheatsheets/mpl-cheatsheets/mpl-cheatsheets-1.png" alt="Cheatsheet"></p>
 <p>page2:</p>
-<p><img src="/2023/03/21/mpl-cheatsheets/mpl-cheatsheets-2.png" alt="Cheatsheet"></p>
+<p><img src="/blogs/2023/03/21/mpl-cheatsheets/mpl-cheatsheets/mpl-cheatsheets-2.png" alt="Cheatsheet"></p>
 <p>这里面覆盖了大部分使用mpl时会用到的函数，详细使用方法可见官网（<a target="_blank" rel="noopener" href="https://matplotlib.org/%EF%BC%89%E3%80%82">https://matplotlib.org/）。</a></p>
 <p>本文后续将会挑一些进行额外解释。</p>
 <h3 id="colormap-class"><a href="#colormap-class" class="headerlink" title="colormap class"></a>colormap class</h3><p>colormap是把图变好看的灵魂。属于<code>matplotlib.colors.Colormap()</code>类. 这个类实现了<code>__call__()</code>方法，因此可以传入一个介于0-1之间的数，其返回一个四元组，表示一个RGBA颜色。这个元组可以被mpl的各类画图函数接收。</p>
@@ -257,7 +257,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">cmap = plt.get_cmap(<span class="string">&#x27;magma&#x27;</span>)</span><br><span class="line"></span><br><span class="line">t = np.linspace(<span class="number">0</span>, <span class="number">10</span>, <span class="number">100</span>)</span><br><span class="line">xt = np.sin(t)</span><br><span class="line">normalized_t = t / t.<span class="built_in">max</span>() <span class="comment"># make it into [0, 1]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(t)-<span class="number">1</span>): <span class="comment"># draw piece by piece</span></span><br><span class="line">    plt.plot(t[i:i+<span class="number">2</span>], xt[i:i+<span class="number">2</span>], color=cmap(normalized_t[i]))</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
 
 <p>效果：</p>
-<p><img src="/2023/03/21/mpl-cheatsheets/cmap.png" alt="Cheatsheet"></p>
+<p><img src="/blogs/2023/03/21/mpl-cheatsheets/mpl-cheatsheets/cmap.png" alt="Cheatsheet"></p>
 
     </div>
 

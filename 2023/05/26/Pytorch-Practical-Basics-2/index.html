@@ -24,20 +24,20 @@
   <meta name="description" content="In this section, we will briefly talk about the arithmetic functions in the PyTorch. Then, we will introduce the axis parameter in most of these functions in detail.  Finally, we talk about indexing t">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (Tensor functions, &quot;axis&quot; and indexing)">
-<meta property="og:url" content="https://i-am-future.github.io/blogs/2023/05/26/Pytorch-Practical-Basics-2/index.html">
+<meta property="og:url" content="https://i-am-future.github.io/2023/05/26/Pytorch-Practical-Basics-2/index.html">
 <meta property="og:site_name" content="Future&#39;s blog">
 <meta property="og:description" content="In this section, we will briefly talk about the arithmetic functions in the PyTorch. Then, we will introduce the axis parameter in most of these functions in detail.  Finally, we talk about indexing t">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://i-am-future.github.io/2023/05/27/Pytorch-Practical-Basics-2/dim0.gif">
-<meta property="og:image" content="https://i-am-future.github.io/2023/05/27/Pytorch-Practical-Basics-2/dim1.gif">
-<meta property="og:image" content="https://i-am-future.github.io/2023/05/27/Pytorch-Practical-Basics-2/dim2.gif">
+<meta property="og:image" content="https://i-am-future.github.io/blogs/2023/05/26/Pytorch-Practical-Basics-2/dim0.gif">
+<meta property="og:image" content="https://i-am-future.github.io/blogs/2023/05/26/Pytorch-Practical-Basics-2/dim1.gif">
+<meta property="og:image" content="https://i-am-future.github.io/blogs/2023/05/26/Pytorch-Practical-Basics-2/dim2.gif">
 <meta property="article:published_time" content="2023-05-27T05:32:58.000Z">
 <meta property="article:modified_time" content="2023-06-24T10:55:04.357Z">
 <meta property="article:author" content="Future">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://i-am-future.github.io/2023/05/27/Pytorch-Practical-Basics-2/dim0.gif">
+<meta name="twitter:image" content="https://i-am-future.github.io/blogs/2023/05/26/Pytorch-Practical-Basics-2/dim0.gif">
 
-<link rel="canonical" href="https://i-am-future.github.io/blogs/2023/05/26/Pytorch-Practical-Basics-2/">
+<link rel="canonical" href="https://i-am-future.github.io/2023/05/26/Pytorch-Practical-Basics-2/">
 
 
 <script id="page-configurations">
@@ -188,7 +188,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/05/26/Pytorch-Practical-Basics-2/">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2023/05/26/Pytorch-Practical-Basics-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/blogs/images/avatar.gif">
@@ -276,7 +276,7 @@
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a1 = torch.argmax(a, dim=<span class="number">0</span>)</span><br><span class="line">a1.shape</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.Size([<span class="number">3</span>, <span class="number">4</span>])</span><br></pre></td></tr></table></figure>
 
 <p>See the gif below. If we set <code>dim=0</code>, that means, we apply the <code>argmax</code> function on each yellow vector (they are in the direction of dim0). The original tensor’s shape is 4x3x4, we reduce on the dim0, so now it’s 3x4, containing all results from <code>argmax</code> on the yellow vectors. </p>
-<img src="/2023/05/27/Pytorch-Practical-Basics-2/dim0.gif" alt="dim0" style="zoom: 67%;">
+<img src="/blogs/2023/05/26/Pytorch-Practical-Basics-2/dim0.gif" alt="dim0" style="zoom: 67%;">
 
 
 
@@ -286,7 +286,7 @@
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a2 = torch.argmax(a, dim=<span class="number">1</span>)</span><br><span class="line">a2.shape</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.Size([<span class="number">4</span>, <span class="number">4</span>])</span><br></pre></td></tr></table></figure>
 
 <p>See the gif below. If we set <code>dim=1</code>, that means, we apply the <code>argmax</code> function on each yellow vector (they are in the direction of dim1). The original tensor’s shape is 4x3x4, we reduce on the dim1, so now we will have a result with 4x4 shape. </p>
-<img src="/2023/05/27/Pytorch-Practical-Basics-2/dim1.gif" alt="dim1" style="zoom: 67%;">
+<img src="/blogs/2023/05/26/Pytorch-Practical-Basics-2/dim1.gif" alt="dim1" style="zoom: 67%;">
 
 
 
@@ -296,7 +296,7 @@
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a3 = torch.argmax(a, dim=<span class="number">2</span>)</span><br><span class="line">a3.shape</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">torch.Size([<span class="number">4</span>, <span class="number">3</span>])</span><br></pre></td></tr></table></figure>
 
 <p>See the gif below. If we set <code>dim=2</code>, that means, we apply the <code>argmax</code> function on each yellow vector (they are in the direction of dim2). The original tensor’s shape is 4x3x4, we reduce on the dim2, so now we will have a result with 4x3 shape. </p>
-<img src="/2023/05/27/Pytorch-Practical-Basics-2/dim2.gif" alt="dim2" style="zoom: 67%;">
+<img src="/blogs/2023/05/26/Pytorch-Practical-Basics-2/dim2.gif" alt="dim2" style="zoom: 67%;">
 
 <h3 id="As-member-function"><a href="#As-member-function" class="headerlink" title="As member function"></a>As member function</h3><p>Many functions mentioned above has member function style. For example, the following pairs are equivalent.</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a = torch.randn(<span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line"><span class="comment"># pair1</span></span><br><span class="line">_ = torch.<span class="built_in">sum</span>(a)</span><br><span class="line">_ = a.<span class="built_in">sum</span>()</span><br><span class="line"><span class="comment"># pair2</span></span><br><span class="line">_ = torch.argmax(a, dim=<span class="number">0</span>)</span><br><span class="line">_ = a.argmax(dim=<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
