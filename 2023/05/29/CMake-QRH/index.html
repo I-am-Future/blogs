@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blogs/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blogs/images/time-machine.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blogs/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blogs/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blogs/css/main.css">
+
+
+<link rel="stylesheet" href="/blogs/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"i-am-future.github.io","root":"/blogs/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Learned and made up from video and code. Prerequisite: basic knowledge in C&#x2F;C++. Compile a Basic ProgramSee code here A project root directory must contain a file called CMakeLists.txt, describin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CMake Quick Reference">
+<meta property="og:url" content="https://i-am-future.github.io/blogs/2023/05/29/CMake-QRH/index.html">
+<meta property="og:site_name" content="Future&#39;s blog">
+<meta property="og:description" content="Learned and made up from video and code. Prerequisite: basic knowledge in C&#x2F;C++. Compile a Basic ProgramSee code here A project root directory must contain a file called CMakeLists.txt, describin">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-05-30T02:28:18.000Z">
+<meta property="article:modified_time" content="2023-08-15T11:47:21.876Z">
+<meta property="article:author" content="Future">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://i-am-future.github.io/blogs/2023/05/29/CMake-QRH/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>CMake Quick Reference | Future's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blogs/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Future's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blogs/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blogs/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blogs/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/05/29/CMake-QRH/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blogs/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CMake Quick Reference
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-05-30 10:28:18" itemprop="dateCreated datePublished" datetime="2023-05-30T10:28:18+08:00">2023-05-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-15 19:47:21" itemprop="dateModified" datetime="2023-08-15T19:47:21+08:00">2023-08-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blogs/categories/QRH/" itemprop="url" rel="index"><span itemprop="name">QRH</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Learned and made up from <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1fa411r7zp">video</a> and <a target="_blank" rel="noopener" href="https://github.com/parallel101/course">code</a>.</p>
+<p>Prerequisite: basic knowledge in C&#x2F;C++.</p>
+<h2 id="Compile-a-Basic-Program"><a href="#Compile-a-Basic-Program" class="headerlink" title="Compile a Basic Program"></a>Compile a Basic Program</h2><p><a target="_blank" rel="noopener" href="https://github.com/parallel101/course/tree/master/01/05">See code here</a></p>
+<p>A project root directory must contain a file called <code>CMakeLists.txt</code>, describing the build procedure of the project. </p>
+<p>A typical simple <code>CMakeLists.txt</code> contains the following (assuming we have two source files in the current directory, <code>main.cpp</code> and <code>hello.cpp</code>):</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.12</span>) <span class="comment"># describe the minimum cmake version</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">project</span>(hellocmake LANGUAGES CXX)    <span class="comment"># describe the project name, and lan</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp hello.cpp)</span><br></pre></td></tr></table></figure>
+
+<p>The <code>add_executable</code> function’s signature is <code>add_executable(target, [src files...])</code>, meaning to use all <code>src files</code> to compile the <code>target</code>.</p>
+<p>To build the program, run in the shell:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cmake -B build</span><br><span class="line">cmake --build build</span><br><span class="line"><span class="comment"># run with</span></span><br><span class="line">./build/&lt;program_name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>To clean and rebuild from scratch, just</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf build</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Compile-a-Library-Link-it"><a href="#Compile-a-Library-Link-it" class="headerlink" title="Compile a Library &amp; Link it"></a>Compile a Library &amp; Link it</h2><p><a target="_blank" rel="noopener" href="https://github.com/parallel101/course/tree/master/01/06">See code here</a></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># compile static OR dynamic library</span></span><br><span class="line"><span class="keyword">add_library</span>(hellolib STATIC hello.cpp)</span><br><span class="line"><span class="keyword">add_library</span>(hellolib SHARED hello.cpp)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp)</span><br><span class="line"></span><br><span class="line"><span class="keyword">target_link_libraries</span>(a.out PUBLIC hellolib)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>The <code>add_library</code> function’s signature is <code>add_library(target, STATIC/SHARED [src files...])</code>, meaning to use all <code>src files</code> to compile the static&#x2F;dynamic <code>target</code> library.</li>
+<li>Then, <code>target_link_libraries(a.out PUBLIC hellolib)</code> links the <code>hellolib</code>‘s source to the <code>a.out</code>.</li>
+</ul>
+<h2 id="Compile-a-subdirectory"><a href="#Compile-a-subdirectory" class="headerlink" title="Compile a subdirectory"></a>Compile a subdirectory</h2><p><a target="_blank" rel="noopener" href="https://github.com/parallel101/course/tree/master/01/10">See code here</a></p>
+<p>The sub-directory could contain a set of source codes to compile a library&#x2F;executable.</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># main CMakeLists.txt</span></span><br><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.12</span>)</span><br><span class="line"><span class="keyword">project</span>(hellocmake LANGUAGES CXX)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_subdirectory</span>(hellolib)  <span class="comment"># the name of subdirectory</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(a.out PUBLIC hellolib)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sub-directory CMakeLists.txt</span></span><br><span class="line"><span class="keyword">add_library</span>(hellolib STATIC hello.cpp)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>If the <code>main.cpp</code> uses the headers in the subdirectory <code>hellolib</code>, then <code>main.cpp</code> should write <code>#include &quot;hellolib/hello.h&quot;</code>. To simplify the <code>#include</code> statement, we could add the following to main’s <code>CMakeLists.txt</code>:</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp)</span><br><span class="line"><span class="keyword">target_include_directories</span>(a.out PUBLIC hellolib)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>This is still some complex. If we want to build two executable, we need write the following, with repeated code:</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp)</span><br><span class="line"><span class="keyword">target_include_directories</span>(a.out PUBLIC hellolib)</span><br><span class="line"><span class="keyword">add_executable</span>(b.out main.cpp)</span><br><span class="line"><span class="keyword">target_include_directories</span>(b.out PUBLIC hellolib)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>A solution is to move the <code>target_include_directories()</code> to the subdirectory. Then all the further library&#x2F;executable relied on the <code>hellolib</code> will include this subdirectory. </p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sub-directory</span></span><br><span class="line"><span class="keyword">target_include_directories</span>(hellolib PUBLIC .)</span><br></pre></td></tr></table></figure>
+
+<p>If we change the <code>PUBLIC</code> to <code>PRIVATE</code>, then the further dependent would not have the effects.</p>
+<h2 id="Link-existing-library"><a href="#Link-existing-library" class="headerlink" title="Link existing library"></a>Link existing library</h2><p>For example, use the following code to link the <code>OpenMP</code> library. </p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find_package</span>(OpenMP REQUIRD)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(main PUBLIC OpenMP::OpenMP_CXX)</span><br></pre></td></tr></table></figure>
+
+<p>Use the following code to link the <code>OpenMP</code> library. </p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find_package</span>(OpenCV REQUIRED)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(main <span class="variable">$&#123;OpenCV_LIBS&#125;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Further-options"><a href="#Further-options" class="headerlink" title="Further options"></a>Further options</h2><ul>
+<li>Set release type (Default type is DEBUG):</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_BUILD_TYPE Release)</span><br><span class="line"><span class="comment"># Or set it when building</span></span><br><span class="line">cmake --build build --config Release</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Set C++ standard:</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span>(CMAKE_CXX_STANDARD <span class="number">17</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Set global &#x2F; special macros:</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global</span></span><br><span class="line"><span class="keyword">add_definitions</span>(-DDEBUG) <span class="comment"># -D is not necessary</span></span><br><span class="line"><span class="keyword">add_definitions</span>(DEBUG)</span><br><span class="line"><span class="comment"># special target</span></span><br><span class="line"><span class="keyword">target_compile_definitions</span>(a.out PUBLIC -DDEBUG)</span><br><span class="line"><span class="keyword">target_compile_definitions</span>(a.out PUBLIC DEBUG)</span><br><span class="line"></span><br><span class="line"><span class="comment"># They have the same effect as</span></span><br><span class="line">g++ xx.cpp -DDEBUG <span class="comment"># (define a `DEBUG` macro to the file)</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Set global &#x2F; special compiling options:</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global</span></span><br><span class="line"><span class="keyword">add_compile_options</span>(-O2)</span><br><span class="line"><span class="comment"># special target</span></span><br><span class="line"><span class="keyword">target_compile_options</span>(a.out PUBLIC -O0)</span><br><span class="line"></span><br><span class="line"><span class="comment"># They have the same effect as</span></span><br><span class="line">g++ xx.cpp -O0 <span class="comment"># (add a `-O0` option in the compilation)</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set SIMD and fast-math</span></span><br><span class="line"><span class="keyword">target_compile_options</span>(a.out PUBLIC -ffast-<span class="keyword">math</span> -march=native)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Set global &#x2F; special include directories:</li>
+</ul>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global</span></span><br><span class="line"><span class="keyword">include_directories</span>(hellolib)</span><br><span class="line"><span class="comment"># special target</span></span><br><span class="line"><span class="keyword">target_include_directories</span>(a.out PUBLIC hellolib)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<h2 id="CUDA-with-CMake"><a href="#CUDA-with-CMake" class="headerlink" title="CUDA with CMake"></a>CUDA with CMake</h2><p>A common template can be:</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.10</span>)</span><br><span class="line"><span class="keyword">project</span>(main LANGUAGES CUDA CXX)</span><br><span class="line"></span><br><span class="line"><span class="keyword">SET</span>(CMAKE_CXX_STANDARD <span class="number">17</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CUDA_STANDARD <span class="number">17</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(main main.cu)</span><br><span class="line"><span class="keyword">set_target_properties</span>(main PROPERTIES CUDA_ARCHITECTURES <span class="string">&quot;86&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blogs/2023/05/26/Pytorch-Practical-Basics-2/" rel="prev" title="PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (Tensor functions, "axis" and indexing)">
+      <i class="fa fa-chevron-left"></i> PyTorch Practical Hand-Written Modules Basics 2--Tensor basics (Tensor functions, "axis" and indexing)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blogs/2023/06/17/Pytorch-Practical-Basics-3/" rel="next" title="PyTorch Practical Hand-Written Modules Basics 3--Tensor-wise operations">
+      PyTorch Practical Hand-Written Modules Basics 3--Tensor-wise operations <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Compile-a-Basic-Program"><span class="nav-number">1.</span> <span class="nav-text">Compile a Basic Program</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compile-a-Library-Link-it"><span class="nav-number">2.</span> <span class="nav-text">Compile a Library &amp; Link it</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compile-a-subdirectory"><span class="nav-number">3.</span> <span class="nav-text">Compile a subdirectory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Link-existing-library"><span class="nav-number">4.</span> <span class="nav-text">Link existing library</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Further-options"><span class="nav-number">5.</span> <span class="nav-text">Further options</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CUDA-with-CMake"><span class="nav-number">6.</span> <span class="nav-text">CUDA with CMake</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Future</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blogs/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blogs/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Future</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blogs/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/blogs/lib/velocity/velocity.min.js"></script>
+  <script src="/blogs/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blogs/js/utils.js"></script>
+
+<script src="/blogs/js/motion.js"></script>
+
+
+<script src="/blogs/js/schemes/muse.js"></script>
+
+
+<script src="/blogs/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blogs/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

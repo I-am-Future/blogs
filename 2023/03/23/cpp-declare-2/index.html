@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blogs/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blogs/images/time-machine.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blogs/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blogs/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blogs/css/main.css">
+
+
+<link rel="stylesheet" href="/blogs/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"i-am-future.github.io","root":"/blogs/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="“C&#x2F;C++ 复杂类型声明规则” 将分为两节。第一节介绍螺旋法则声明规范，第二节介绍const的修饰关系。 本节主要解决以下问题： 123const int *a;  &#x2F;&#x2F; a可变嘛? *a可变嘛?int * const a; &#x2F;&#x2F; a可变嘛? *a可变嘛?const int * const a; &#x2F;&#x2F; a可变嘛? *a可变嘛?  这两节内容，我都尝试以一种不用死记硬背，而是理解的方式去">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C&#x2F;C++ 复杂类型声明规则（2）-识读const关键字">
+<meta property="og:url" content="https://i-am-future.github.io/blogs/2023/03/23/cpp-declare-2/index.html">
+<meta property="og:site_name" content="Future&#39;s blog">
+<meta property="og:description" content="“C&#x2F;C++ 复杂类型声明规则” 将分为两节。第一节介绍螺旋法则声明规范，第二节介绍const的修饰关系。 本节主要解决以下问题： 123const int *a;  &#x2F;&#x2F; a可变嘛? *a可变嘛?int * const a; &#x2F;&#x2F; a可变嘛? *a可变嘛?const int * const a; &#x2F;&#x2F; a可变嘛? *a可变嘛?  这两节内容，我都尝试以一种不用死记硬背，而是理解的方式去">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-03-24T03:56:36.000Z">
+<meta property="article:modified_time" content="2023-03-24T04:30:02.910Z">
+<meta property="article:author" content="Future">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://i-am-future.github.io/blogs/2023/03/23/cpp-declare-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>C/C++ 复杂类型声明规则（2）-识读const关键字 | Future's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blogs/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Future's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blogs/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blogs/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blogs/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/03/23/cpp-declare-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blogs/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C/C++ 复杂类型声明规则（2）-识读const关键字
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-03-24 11:56:36 / Modified: 12:30:02" itemprop="dateCreated datePublished" datetime="2023-03-24T11:56:36+08:00">2023-03-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blogs/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>“C&#x2F;C++ 复杂类型声明规则” 将分为两节。第一节介绍螺旋法则声明规范，第二节介绍const的修饰关系。</p>
+<p>本节主要解决以下问题：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> *a;  <span class="comment">// a可变嘛? *a可变嘛?</span></span><br><span class="line"><span class="type">int</span> * <span class="type">const</span> a; <span class="comment">// a可变嘛? *a可变嘛?</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> * <span class="type">const</span> a; <span class="comment">// a可变嘛? *a可变嘛?</span></span><br></pre></td></tr></table></figure>
+
+<p>这两节内容，我都尝试以一种不用死记硬背，而是理解的方式去掌握。</p>
+<p>本文参考自【初中生也能看懂的C&#x2F;C++类型声明规则教学，很简单的！】 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1mB4y1L7HB/">https://www.bilibili.com/video/BV1mB4y1L7HB/</a> 。里面通过一些例子介绍了螺旋法则和对const关键词的判读。我将在此基础上加上我对其的解释，使其变得更加通俗易懂。</p>
+<p>基本解决思路：<strong>const 只修饰右边最近的东西。</strong></p>
+<p>例如<code>const r</code>, 说明<code>r</code>这个变量是const的，不能动。<code>const *r</code>，意为<code>const (*r)</code>，说明<code>*r</code>，r指向的东西，是const的。r自身可以变化。</p>
+<p>再例如，<code>const int r</code>, 说明这个int是const的。这个整数是常量。<code>r</code>是一个整型常量。</p>
+<p>举一些例子：</p>
+<h3 id="例子1"><a href="#例子1" class="headerlink" title="例子1"></a>例子1</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="type">const</span> a1 = <span class="number">5</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> a2 = <span class="number">6</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，两个其实是等价的。对于第一个，<code>a1</code>被const修饰了，所以<code>a1</code>不能变。<code>a1</code>是一个整型变量。所以连起来，<code>a1</code>是一个常量整型变量。对于第二个，可以理解成<code>a2</code>是一个const int，<code>a2</code>是一个常量整型变量。</p>
+<p><strong>所以，不同的声明形式，意义可能相同。</strong></p>
+<h3 id="例子2"><a href="#例子2" class="headerlink" title="例子2"></a>例子2</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="type">const</span> *p1 = &amp;a1;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> *p2 = &amp;a1;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，两个其实也是等价的。对于第一个，<code>*p1</code>被const修饰了，所以<code>*p1</code>不能变。即<code>p1</code>指向的是一个整型常量。对于第二个，可以理解成<code>p2</code>指向一个const int，<code>p2</code>指向的是一个常量整型变量。对于这两个来说，<code>p1</code> <code>p2</code>自己可以变，但是他们指向的不能变。</p>
+<p><strong>一个声明里的多个const，意义可能相同。例如：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> <span class="type">const</span> *p3</span><br></pre></td></tr></table></figure>
+
+<p>这个例子里虽然有两个const，但其实还是只修饰了一个<code>*p3</code>。<code>p3</code>自身没有被const修饰，可以变。</p>
+<h3 id="例子3"><a href="#例子3" class="headerlink" title="例子3"></a>例子3</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> *<span class="type">const</span> r2;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，<code>r2</code>直接被const修饰，所以<code>r2</code>不能变。<code>r2</code>指向一个int，那个int没有额外修饰，所以那个int是可以变的。总之，<code>r2</code>是不能变的，但是<code>r2</code>指向的int是可以变的。</p>
+<h3 id="例子4"><a href="#例子4" class="headerlink" title="例子4"></a>例子4</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> *<span class="type">const</span> r3;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，<code>r3</code>直接被const修饰，所以<code>r3</code>不能变。<code>r3</code>指向一个const int，那个int没有额外修饰，所以那个int是可以变的。总之，<code>r3</code>是不能变的，<code>r3</code>指向的int也不可以变的。</p>
+<h3 id="例子5"><a href="#例子5" class="headerlink" title="例子5"></a>例子5</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> **r5;</span><br></pre></td></tr></table></figure>
+
+<p><code>r5</code>指向一个指向int的指针。这个被指向的指针指向的int是被const所修饰的。所以<code>r5</code>可以变，<code>r5</code>指向的那个（指向int的指针）也是可以变的，但是<code>r5</code>指向的指针指向的int没得变。</p>
+<h3 id="例子6"><a href="#例子6" class="headerlink" title="例子6"></a>例子6</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="type">const</span> * <span class="type">const</span> * <span class="type">const</span> r6;</span><br></pre></td></tr></table></figure>
+
+<p>上面那个例子的升级版。<code>r6</code>指向一个指向int的指针。<code>r6</code>被const修饰，<code>r6</code>不能变。<code>r6</code>指向的（指向int的指针）被const修饰，即<code>*r6</code>不能变。<code>r6</code>指向的指针指向的int，<code>**r6</code>也被const修饰，也不能变。</p>
+<h3 id><a href="#" class="headerlink" title></a></h3>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blogs/2023/03/22/cpp-declare-1/" rel="prev" title="C/C++ 复杂类型声明规则（1）-螺旋法则">
+      <i class="fa fa-chevron-left"></i> C/C++ 复杂类型声明规则（1）-螺旋法则
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blogs/2023/03/30/dict-to-latex-md/" rel="next" title="Convert Python Dictionary to Source Code of Latex and Markdown">
+      Convert Python Dictionary to Source Code of Latex and Markdown <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E5%AD%901"><span class="nav-number">1.</span> <span class="nav-text">例子1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E5%AD%902"><span class="nav-number">2.</span> <span class="nav-text">例子2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E5%AD%903"><span class="nav-number">3.</span> <span class="nav-text">例子3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E5%AD%904"><span class="nav-number">4.</span> <span class="nav-text">例子4</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E5%AD%905"><span class="nav-number">5.</span> <span class="nav-text">例子5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E5%AD%906"><span class="nav-number">6.</span> <span class="nav-text">例子6</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text"></span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Future</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blogs/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blogs/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Future</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blogs/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/blogs/lib/velocity/velocity.min.js"></script>
+  <script src="/blogs/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blogs/js/utils.js"></script>
+
+<script src="/blogs/js/motion.js"></script>
+
+
+<script src="/blogs/js/schemes/muse.js"></script>
+
+
+<script src="/blogs/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blogs/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

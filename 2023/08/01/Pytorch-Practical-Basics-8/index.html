@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blogs/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blogs/images/time-machine.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blogs/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blogs/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blogs/css/main.css">
+
+
+<link rel="stylesheet" href="/blogs/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"i-am-future.github.io","root":"/blogs/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="In the section 6 to 9, we’ll investigate how to use torch.autograd.Function to implement the hand-written operators. The tentative outline is:   In the section 6, we talk about the basics of torch.aut">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PyTorch Practical Hand-Written Modules Basics 8--Linear Layer Ops on C++&#x2F;CUDA">
+<meta property="og:url" content="https://i-am-future.github.io/blogs/2023/08/01/Pytorch-Practical-Basics-8/index.html">
+<meta property="og:site_name" content="Future&#39;s blog">
+<meta property="og:description" content="In the section 6 to 9, we’ll investigate how to use torch.autograd.Function to implement the hand-written operators. The tentative outline is:   In the section 6, we talk about the basics of torch.aut">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i-am-future.github.io/2023/08/02/Pytorch-Practical-Basics-8/cudaops-struct.png">
+<meta property="article:published_time" content="2023-08-02T04:03:42.000Z">
+<meta property="article:modified_time" content="2023-08-06T11:13:54.454Z">
+<meta property="article:author" content="Future">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i-am-future.github.io/2023/08/02/Pytorch-Practical-Basics-8/cudaops-struct.png">
+
+<link rel="canonical" href="https://i-am-future.github.io/blogs/2023/08/01/Pytorch-Practical-Basics-8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>PyTorch Practical Hand-Written Modules Basics 8--Linear Layer Ops on C++/CUDA | Future's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blogs/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Future's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blogs/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blogs/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blogs/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/08/01/Pytorch-Practical-Basics-8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blogs/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PyTorch Practical Hand-Written Modules Basics 8--Linear Layer Ops on C++/CUDA
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-02 12:03:42" itemprop="dateCreated datePublished" datetime="2023-08-02T12:03:42+08:00">2023-08-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-08-06 19:13:54" itemprop="dateModified" datetime="2023-08-06T19:13:54+08:00">2023-08-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blogs/categories/Deep-Learning/" itemprop="url" rel="index"><span itemprop="name">Deep Learning</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>In the section 6 to 9, we’ll investigate how to use <code>torch.autograd.Function</code> to implement the hand-written operators. The tentative outline is:</p>
+<ul>
+<li><input checked disabled type="checkbox"> In the section 6, we talk about the basics of <code>torch.autograd.Function</code>. <strong>The operators defined by <code>torch.autograd.Function</code> can be automatically back-propagated.</strong></li>
+<li><input checked disabled type="checkbox"> In the last section (7), we’ll talk about <strong>mathematic derivation</strong> for the “linear layer” operator. </li>
+<li><input checked disabled type="checkbox"> In this section (8), we talk about <strong>writing C++ CUDA extension</strong> for the “linear layer” operator. </li>
+<li><input disabled type="checkbox"> In the section 9, we talk details about building the extension to a module, as well as testing. Then we’ll conclude the things we’ve done so far.</li>
+</ul>
+<p><strong>Note:</strong></p>
+<ul>
+<li>This blog is written with following reference: <ul>
+<li>PyTorch official tutorial about CUDA extension: <a target="_blank" rel="noopener" href="https://pytorch.org/tutorials/advanced/cpp_extension.html">website</a>.</li>
+<li>YouTube video about writing CUDA extension: <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=l_Rpk6CRJYI">video</a>, <a target="_blank" rel="noopener" href="https://github.com/kwea123/pytorch-cppcuda-tutorial">code</a>.</li>
+</ul>
+</li>
+<li>For how to write CUDA code, you can follow <a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">official documentation</a>, <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/34587739">blogs</a> (In Chinese). You can search by yourself for English tutorials and video tutorials.</li>
+<li>This blog only talk some important points in the matrix multiplication example. Code are picked by pieces for illustration. Whole code is at: <a target="_blank" rel="noopener" href="https://github.com/I-am-Future/PyTorch-Linear-Operator-CUDA">code</a>.</li>
+</ul>
+<h1 id="Overall-Structure"><a href="#Overall-Structure" class="headerlink" title="Overall Structure"></a>Overall Structure</h1><p>The general structure for our PyTorch C++ &#x2F; CUDA extension looks like following:</p>
+<img src="/2023/08/02/Pytorch-Practical-Basics-8/cudaops-struct.png" alt="cudaops-struct" style="zoom:50%;">
+
+<p>We mainly have three kinds of file: Library interface, Core code on CPU, and Core code on GPU. Let’s explain them in detail:</p>
+<ul>
+<li><p>Library interface (.cpp)</p>
+<ul>
+<li>Contains Functions Interface for Python to call. These functions usually have Tensor input and Tensor return value.</li>
+<li>Contains a standard pybind declaration, since our extension uses pybind to bind the C++ functions for Python. It indicates which functions are needed to be bound.</li>
+</ul>
+</li>
+<li><p>Core code on CPU (.cpp)</p>
+<ul>
+<li>Contains core function to do the calculation. </li>
+<li>Contains wrapper for the core function, serves to creating the result tensor, checking the input shape, etc.</li>
+</ul>
+</li>
+<li><p>Core code on GPU (.cu)</p>
+<ul>
+<li>Contains CUDA kernel function <code>__global__</code> to do the parallel calculation. </li>
+<li>Contains wrapper for the core function, serves to creating the result tensor, checking the input shape, setting the launch configs, launching the kernel, etc.</li>
+</ul>
+</li>
+</ul>
+<p>Then, after we finishing the code, we can use Python build tools to compile the code into a static object library (.so file). Then, we can import them normally in the Python side. We can call the functions we declared in library interface by pybind11.</p>
+<p>In our example <a target="_blank" rel="noopener" href="https://github.com/I-am-Future/PyTorch-Linear-Operator-CUDA">code</a>, we don’t provide code for CPU calculation. We only support GPU. So we only have two files (<code>src/linearops.cpp</code> and <code>src/addmul_kernel.cu</code>)</p>
+<h1 id="Pybind-Interface"><a href="#Pybind-Interface" class="headerlink" title="Pybind Interface"></a>Pybind Interface</h1><p>This is the <code>src/linearops.cpp</code> file in our repo. </p>
+<h2 id="1-Utils-function"><a href="#1-Utils-function" class="headerlink" title="1. Utils function"></a>1. Utils function</h2><p>We usually defines some utility macro functions in our code. They are in the <code>include/utils.h</code> header file. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// PyTorch CUDA Utils</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CHECK_CUDA(x) TORCH_CHECK(x.is_cuda(), #x <span class="string">&quot; must be a CUDA tensor&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CHECK_CONTIGUOUS(x) TORCH_CHECK(x.is_contiguous(), #x <span class="string">&quot; must be contiguous&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Kernel Config Utils</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DIV_CEIL(a, b) (((a) + (b) - 1) / (b))</span></span><br></pre></td></tr></table></figure>
+
+<p>The third macro will call first two macros, which are used to make sure the tenser is on the CUDA devices and is contiguous. </p>
+<p>The last macro performs ceil division, which are often used in setting the CUDA kernel launch configurations. </p>
+<h2 id="2-Interface-functions"><a href="#2-Interface-functions" class="headerlink" title="2. Interface functions"></a>2. Interface functions</h2><p>Benefited by pybind, we can simply define functions in C++ and use them in Python. A function looks like</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">torch::Tensor <span class="title">func</span><span class="params">(torch::Tensor a, torch::Tensor b, <span class="type">int</span> c)</span></span>&#123;</span><br><span class="line">    torch::Tensor res;</span><br><span class="line">    ......</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>is relatively same as the Python function below. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">func</span>(<span class="params">a: torch.Tensor, b: torch.Tensor, c: <span class="built_in">int</span></span>) -&gt; torch.Tensor</span><br><span class="line">	res = ... <span class="comment"># torch.Tensor</span></span><br><span class="line">    ......</span><br><span class="line">    <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+
+<p>Then, we can define our matrix multiplication interface as below. Note that we need to implement both the forward and backward functions!</p>
+<ul>
+<li>forward</li>
+</ul>
+<p>Check the input, input size, and then call the CUDA function wrapper.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">torch::Tensor <span class="title">matmul_forward</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;A, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;B)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(A);</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(B);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">TORCH_CHECK</span>(A.<span class="built_in">size</span>(<span class="number">1</span>) == B.<span class="built_in">size</span>(<span class="number">0</span>), <span class="string">&quot;matmul_fast_forward: shape mismatch&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">matmul_cuda</span>(A, B);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>backward</li>
+</ul>
+<p>Also check the input, input size, and then call the CUDA function wrapper. Note that we calculate the backward of <code>A * B = C</code> for input matrix A, B in two different function. So that when someday we don’t need to calculate the gradient of A, we can just pass it. </p>
+<p>The gradient function derivation is mentioned in last section <a href="https://i-am-future.github.io/2023/08/01/Pytorch-Practical-Basics-7/#Matrix-multiplication-backward">here</a>. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Backward for A gradient */</span></span><br><span class="line"><span class="function">torch::Tensor <span class="title">matmul_dA_backward</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;grad_output, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;A, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;B)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(grad_output);</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(B);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// dL/dB = dL/dY * B^T</span></span><br><span class="line">    <span class="keyword">auto</span> grad_A = <span class="built_in">matmul_cuda</span>(grad_output, <span class="built_in">transpose_cuda</span>(B));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> grad_A;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Backward for B gradient */</span></span><br><span class="line"><span class="function">torch::Tensor <span class="title">matmul_dB_backward</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;grad_output, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;A, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::Tensor &amp;B)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(grad_output);</span><br><span class="line">    <span class="built_in">CHECK_INPUT</span>(A);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// dL/dB = A^T * dL/dY</span></span><br><span class="line">    <span class="keyword">auto</span> grad_B = <span class="built_in">matmul_cuda</span>(<span class="built_in">transpose_cuda</span>(A), grad_output);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> grad_B;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Binding"><a href="#3-Binding" class="headerlink" title="3. Binding"></a>3. Binding</h2><p>At the last of the <code>src/linearops.cpp</code>, we use the following code to bind the functions. The first string is the function name in Python side, the second is a function pointer to the function be called, and the last is the docstring for that function in Python side. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PYBIND11_MODULE</span>(TORCH_EXTENSION_NAME, m) &#123;</span><br><span class="line">    ......</span><br><span class="line">    m.<span class="built_in">def</span>(<span class="string">&quot;matmul_forward&quot;</span>, &amp;matmul_forward, <span class="string">&quot;Matmul forward&quot;</span>);</span><br><span class="line">    m.<span class="built_in">def</span>(<span class="string">&quot;matmul_dA_backward&quot;</span>, &amp;matmul_dA_backward, <span class="string">&quot;Matmul dA backward&quot;</span>);</span><br><span class="line">    m.<span class="built_in">def</span>(<span class="string">&quot;matmul_dB_backward&quot;</span>, &amp;matmul_dB_backward, <span class="string">&quot;Matmul dB backward&quot;</span>);</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="CUDA-wrapper"><a href="#CUDA-wrapper" class="headerlink" title="CUDA wrapper"></a>CUDA wrapper</h1><p>This is the <code>src/addmul_kernel.cu</code> file in our repo. </p>
+<p>The wrapper for matrix multiplication looks like below: </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">torch::Tensor <span class="title">matmul_cuda</span><span class="params">(torch::Tensor A, torch::Tensor B)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1. Get metadata</span></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> m = A.<span class="built_in">size</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> n = A.<span class="built_in">size</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> p = B.<span class="built_in">size</span>(<span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. Create output tensor</span></span><br><span class="line">    <span class="keyword">auto</span> result = torch::<span class="built_in">empty</span>(&#123;m, p&#125;, A.<span class="built_in">options</span>());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. Set launch configuration</span></span><br><span class="line">    <span class="type">const</span> dim3 blockSize = <span class="built_in">dim3</span>(BLOCK_SIZE, BLOCK_SIZE);</span><br><span class="line">    <span class="type">const</span> dim3 gridSize = <span class="built_in">dim3</span>(<span class="built_in">DIV_CEIL</span>(m, BLOCK_SIZE), <span class="built_in">DIV_CEIL</span>(p, BLOCK_SIZE));</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 4. Call the cuda kernel launcher</span></span><br><span class="line">    <span class="built_in">AT_DISPATCH_FLOATING_TYPES</span>(A.<span class="built_in">type</span>(), <span class="string">&quot;matmul_cuda&quot;</span>, </span><br><span class="line">    ([&amp;] &#123;</span><br><span class="line">        matmul_fw_kernel&lt;<span class="type">scalar_t</span>&gt;&lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(</span><br><span class="line">            A.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">            B.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">            result.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">            m, p</span><br><span class="line">        );</span><br><span class="line">    &#125;));</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 5. Return the value</span></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>And here, we’ll talk in details: </p>
+<h2 id="1-Get-metadata"><a href="#1-Get-metadata" class="headerlink" title="1. Get metadata"></a>1. Get metadata</h2><p>Just as the tensor in PyTorch, we can use <code>Tensor.size(0)</code> to axis the shape size of dimension 0.</p>
+<p>Note that we have checked the dimension match at the interface side, we don’t need to check it here.</p>
+<h2 id="2-Create-output-tensor"><a href="#2-Create-output-tensor" class="headerlink" title="2. Create output tensor"></a>2. Create output tensor</h2><p>We can do operation in-place or create a new tensor for output. Use the following code to create a tensor shape <code>m x p</code>, with same dtype &#x2F; device as <code>A</code>. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> result = torch::<span class="built_in">empty</span>(&#123;m, p&#125;, A.<span class="built_in">options</span>());</span><br></pre></td></tr></table></figure>
+
+<p>In other situations, when we want special dtype &#x2F; device, we can follow the declaration as below:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch::<span class="built_in">empty</span>(&#123;m, p&#125;, torch::<span class="built_in">dtype</span>(torch::kInt32).<span class="built_in">device</span>(feats.<span class="built_in">device</span>()))</span><br></pre></td></tr></table></figure>
+
+<p><code>torch.empty</code> only allocate the memory, but not initialize the entries to 0. Because sometimes, we’ll fill into the result tensors in the kernel functions, so it is not necessary to initialize as 0. </p>
+<h2 id="3-Set-launch-configuration"><a href="#3-Set-launch-configuration" class="headerlink" title="3. Set launch configuration"></a>3. Set launch configuration</h2><p>You should know some basic CUDA knowledges before understand this part. Basically here, we are setting the launch configuration based on the input matrix size. We are using the macro functions defined before.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> dim3 blockSize = <span class="built_in">dim3</span>(BLOCK_SIZE, BLOCK_SIZE);</span><br><span class="line"><span class="type">const</span> dim3 gridSize = <span class="built_in">dim3</span>(<span class="built_in">DIV_CEIL</span>(m, BLOCK_SIZE), <span class="built_in">DIV_CEIL</span>(p, BLOCK_SIZE));</span><br></pre></td></tr></table></figure>
+
+<p>We set each thread block size to <code>16 x 16</code>. Then, we set the number of blocks according to the input size. </p>
+<h2 id="4-Call-the-cuda-kernel-launcher"><a href="#4-Call-the-cuda-kernel-launcher" class="headerlink" title="4. Call the cuda kernel launcher"></a>4. Call the cuda kernel launcher</h2><p>Unlike normal cuda programs, we use <code>ATen</code>‘s function to start the kernel. This is a standard operation, and you can copy-paste it to anywhere. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">AT_DISPATCH_FLOATING_TYPES</span>(A.<span class="built_in">type</span>(), <span class="string">&quot;matmul_cuda&quot;</span>, </span><br><span class="line">                           ([&amp;] &#123;</span><br><span class="line">                               matmul_fw_kernel&lt;<span class="type">scalar_t</span>&gt;&lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(</span><br><span class="line">                                   A.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">                                   B.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">                                   result.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">                                   m, p</span><br><span class="line">                               );</span><br><span class="line">                           &#125;));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>This function is named <code>AT_DISPATCH_FLOATING_TYPES</code>, meaning the inside kernel will support floating types, i.e., <code>float (32bit)</code> and <code>double (64bit)</code>.   For <code>float16</code>, you can use <code>AT_DISPATCH_ALL_TYPES_AND_HALF</code>. For int (<code>int (32bit)</code> and <code>long long (64 bit)</code> and more, use <code>AT_DISPATCH_INTEGRAL_TYPES</code>. </p>
+</li>
+<li><p>The first argument <code>A.type()</code>, indicates the actual chosen type in the runtime. </p>
+</li>
+<li><p>The second argument <code>matmul_cuda</code> can be used for error reporting.</p>
+</li>
+<li><p>The last argument, which is a lambda function, is the actual function to be called. Basically in this function, we start the kernel by the following statement:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">matmul_fw_kernel&lt;<span class="type">scalar_t</span>&gt;&lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;(</span><br><span class="line">A.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">B.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">result.<span class="built_in">packed_accessor</span>&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt;(),</span><br><span class="line">m, p</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>matmul_fw_kernel</code> is the kernel function name.</li>
+<li><code>&lt;scalar_t&gt;</code> is the template parameter, will be replaced to all possible types in the outside <code>AT_DISPATCH_FLOATING_TYPES</code>.</li>
+<li><code>&lt;&lt;&lt;gridSize, blockSize&gt;&gt;&gt;</code> passed in the launch configuration</li>
+<li>In the parameter list, if that is a <code>Tensor</code>, we should pass in the packed accessor, which convenient indexing operation in the kernel.<ul>
+<li><code>&lt;scalar_t&gt;</code> is the template parameter.</li>
+<li><code>2</code> means the <code>Tensor.ndimension=2</code>.</li>
+<li><code>torch::RestrictPtrTraits</code> means the pointer (tensor memory) would not not overlap. It enables some optimization. Usually not change.</li>
+<li><code>size_t</code> indicates the index type. Usually not change.</li>
+</ul>
+</li>
+<li>if the parameter is integer <code>m, p</code>, just pass it in as normal.</li>
+</ul>
+</li>
+</ul>
+<h2 id="5-Return-the-value"><a href="#5-Return-the-value" class="headerlink" title="5. Return the value"></a>5. Return the value</h2><p>If we have more then one return value, we can set the return type to <code>std::vector&lt;torch::Tensor&gt;</code>. Then we return with <code>&#123;xxx, yyy&#125;</code>. </p>
+<h1 id="CUDA-kernel"><a href="#CUDA-kernel" class="headerlink" title="CUDA kernel"></a>CUDA kernel</h1><p>This is the <code>src/addmul_kernel.cu</code> file in our repo. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="type">scalar_t</span>&gt;</span><br><span class="line"><span class="function">__global__ <span class="type">void</span> <span class="title">matmul_fw_kernel</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::PackedTensorAccessor&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt; A,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> torch::PackedTensorAccessor&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt; B,</span></span></span><br><span class="line"><span class="params"><span class="function">    torch::PackedTensorAccessor&lt;<span class="type">scalar_t</span>, <span class="number">2</span>, torch::RestrictPtrTraits, <span class="type">size_t</span>&gt; result,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">const</span> <span class="type">int</span> m, <span class="type">const</span> <span class="type">int</span> p</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> row = blockIdx.x * blockDim.x + threadIdx.x;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> col = blockIdx.y * blockDim.y + threadIdx.y;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (row &gt;= m || col &gt;= p) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">scalar_t</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; A.<span class="built_in">size</span>(<span class="number">1</span>); i++) &#123;</span><br><span class="line">        sum += A[row][i] * B[i][col];</span><br><span class="line">    &#125;</span><br><span class="line">    result[row][col] = sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>We define it as a template function <code>template &lt;typename scalar_t&gt;</code>, so that our kernel function can support different type of input tensor. </li>
+<li>Usually we’ll set the input <code>PackedTensorAccessor</code> with <code>const</code>, to avoid some unexpected modification on them. </li>
+<li>The main code is just a simple CUDA matrix multiplication example. This is very common, you can search online for explanation.</li>
+</ul>
+<h2 id="Ending"><a href="#Ending" class="headerlink" title="Ending"></a>Ending</h2><p>That’s too much things in this section. In the next section, we’ll talk about how to write the <code>setup.py</code> to <strong>compile</strong> the code, letting it be a module for python. </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blogs/2023/08/01/Pytorch-Practical-Basics-7/" rel="prev" title="PyTorch Practical Hand-Written Modules Basics 7--Mathematics Derivation of Linear Layer">
+      <i class="fa fa-chevron-left"></i> PyTorch Practical Hand-Written Modules Basics 7--Mathematics Derivation of Linear Layer
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blogs/2023/08/06/Pytorch-Practical-Basics-9/" rel="next" title="PyTorch Practical Hand-Written Modules Basics 9--Compiling and Testing the Module">
+      PyTorch Practical Hand-Written Modules Basics 9--Compiling and Testing the Module <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Overall-Structure"><span class="nav-number">1.</span> <span class="nav-text">Overall Structure</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pybind-Interface"><span class="nav-number">2.</span> <span class="nav-text">Pybind Interface</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Utils-function"><span class="nav-number">2.1.</span> <span class="nav-text">1. Utils function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Interface-functions"><span class="nav-number">2.2.</span> <span class="nav-text">2. Interface functions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Binding"><span class="nav-number">2.3.</span> <span class="nav-text">3. Binding</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CUDA-wrapper"><span class="nav-number">3.</span> <span class="nav-text">CUDA wrapper</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Get-metadata"><span class="nav-number">3.1.</span> <span class="nav-text">1. Get metadata</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Create-output-tensor"><span class="nav-number">3.2.</span> <span class="nav-text">2. Create output tensor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Set-launch-configuration"><span class="nav-number">3.3.</span> <span class="nav-text">3. Set launch configuration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Call-the-cuda-kernel-launcher"><span class="nav-number">3.4.</span> <span class="nav-text">4. Call the cuda kernel launcher</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Return-the-value"><span class="nav-number">3.5.</span> <span class="nav-text">5. Return the value</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CUDA-kernel"><span class="nav-number">4.</span> <span class="nav-text">CUDA kernel</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Ending"><span class="nav-number">4.1.</span> <span class="nav-text">Ending</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Future</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blogs/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blogs/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Future</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blogs/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/blogs/lib/velocity/velocity.min.js"></script>
+  <script src="/blogs/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blogs/js/utils.js"></script>
+
+<script src="/blogs/js/motion.js"></script>
+
+
+<script src="/blogs/js/schemes/muse.js"></script>
+
+
+<script src="/blogs/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blogs/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

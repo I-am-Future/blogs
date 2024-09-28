@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/blogs/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blogs/images/time-machine.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blogs/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/blogs/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blogs/css/main.css">
+
+
+<link rel="stylesheet" href="/blogs/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"i-am-future.github.io","root":"/blogs/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="In this article, I list some procedures I do when setting up new Linux server account. They’ll be helpful in the later development stages.  1. Change the default shellThis step is optional. Sometimes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="My Setup to New Linux Server Account">
+<meta property="og:url" content="https://i-am-future.github.io/blogs/2023/05/06/My-Setup-to-New-Linux-Server-Account/index.html">
+<meta property="og:site_name" content="Future&#39;s blog">
+<meta property="og:description" content="In this article, I list some procedures I do when setting up new Linux server account. They’ll be helpful in the later development stages.  1. Change the default shellThis step is optional. Sometimes">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-05-07T05:47:38.000Z">
+<meta property="article:modified_time" content="2024-02-01T13:23:35.779Z">
+<meta property="article:author" content="Future">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://i-am-future.github.io/blogs/2023/05/06/My-Setup-to-New-Linux-Server-Account/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>My Setup to New Linux Server Account | Future's blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blogs/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Future's blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/blogs/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/blogs/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/blogs/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/blogs/2023/05/06/My-Setup-to-New-Linux-Server-Account/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blogs/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          My Setup to New Linux Server Account
+        </h1>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-05-07 13:47:38" itemprop="dateCreated datePublished" datetime="2023-05-07T13:47:38+08:00">2023-05-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-02-01 21:23:35" itemprop="dateModified" datetime="2024-02-01T21:23:35+08:00">2024-02-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blogs/categories/Techniques/" itemprop="url" rel="index"><span itemprop="name">Techniques</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>In this article, I list some procedures I do when setting up new Linux server account. They’ll be helpful in the later development stages. </p>
+<h1 id="1-Change-the-default-shell"><a href="#1-Change-the-default-shell" class="headerlink" title="1. Change the default shell"></a>1. Change the default shell</h1><p>This step is <strong>optional</strong>. Sometimes the default shell in the machine is merely <code>sh</code>. We can change it to other better shells like <code>bash</code>, <code>zsh</code>, for easier use. </p>
+<h2 id="1-1-Show-the-current-shells"><a href="#1-1-Show-the-current-shells" class="headerlink" title="1.1 Show the current shells"></a>1.1 Show the current shells</h2><p>You can display the current shell name by either the following commands:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="variable">$0</span></span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">-bash</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$SHELL</span></span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line">/bin/bash</span><br></pre></td></tr></table></figure>
+<h2 id="1-2-Get-all-available-shells"><a href="#1-2-Get-all-available-shells" class="headerlink" title="1.2 Get all available shells"></a>1.2 Get all available shells</h2><p>To check what shells are installed, type the following commands:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/shells</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># /etc/shells: valid login shells</span></span><br><span class="line">/bin/sh</span><br><span class="line">/bin/bash</span><br><span class="line">/bin/rbash</span><br><span class="line">/bin/dash</span><br><span class="line">/usr/bin/tmux</span><br><span class="line">/usr/bin/screen</span><br><span class="line">/bin/zsh</span><br><span class="line">/usr/bin/zsh</span><br></pre></td></tr></table></figure>
+<h2 id="1-3-Change-the-default-shell"><a href="#1-3-Change-the-default-shell" class="headerlink" title="1.3 Change the default shell"></a>1.3 Change the default shell</h2><p>Use the <code>chsh</code> (<strong>ch</strong>ange <strong>sh</strong>ell) command to change the shell, with <code>-s</code> flag:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chsh -s /bin/bash</span><br><span class="line">Password:</span><br></pre></td></tr></table></figure>
+<p>Then type the password of the login account (The password is hidden, just type it, and press Enter). Finally, you can quit the shell, and restart it once. You’ll see the new shell. </p>
+<h1 id="2-Install-conda"><a href="#2-Install-conda" class="headerlink" title="2. Install conda"></a>2. Install conda</h1><p>Python environment is very essential in my workflow, especially in deep learning. Please refer to the official docs:</p>
+<p><a target="_blank" rel="noopener" href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html">https://docs.conda.io/projects/conda/en/latest/user-guide/install/linux.html</a></p>
+<h1 id="3-Setup-ssh-key-password-free-login"><a href="#3-Setup-ssh-key-password-free-login" class="headerlink" title="3. Setup ssh key (password-free login)"></a>3. Setup ssh key (password-free login)</h1><p>Modified from the blog <a target="_blank" rel="noopener" href="https://github.com/bokesyo/CSC4005_2022Fall_Demo/blob/main/docs/Instruction%20on%20Passwordlessly%20Connecting%20to%20Cluster%20by%20Setting%20Up%20SSH%20Key%20Authentification.md">here</a>.</p>
+<p>(Replace <code>&#123;KeyName&#125;</code> to any name you like)</p>
+<h2 id="3-1-Generate-SSH-Key-Pair-on-Your-Local-Machine"><a href="#3-1-Generate-SSH-Key-Pair-on-Your-Local-Machine" class="headerlink" title="3.1. Generate SSH Key Pair on Your Local Machine"></a>3.1. Generate SSH Key Pair on Your Local Machine</h2><p><strong>(macOS Users please do the following)</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Execute the following commands on your LOCAL machine</span></span><br><span class="line"><span class="built_in">cd</span> ~/.ssh</span><br><span class="line">ssh-keygen -t rsa -b 1024 -f <span class="string">&quot;&#123;KeyName&#125;&quot;</span> -C <span class="string">&quot;&#123;Put Any Comment You Like&#125;&quot;</span></span><br><span class="line">ssh-add -K ./&#123;KeyName&#125;</span><br></pre></td></tr></table></figure>
+<p>To check if you make it right, type the following command and you should see a string as the output.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/&#123;KeyName&#125;.pub</span><br></pre></td></tr></table></figure>
+<p><strong>(Windows Users please do the following)</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Execute the following commands on your local machine</span></span><br><span class="line"><span class="built_in">cd</span> C:\Users\&#123;UserName&#125;\.ssh</span><br><span class="line">ssh<span class="literal">-keygen</span> <span class="literal">-t</span> rsa <span class="literal">-b</span> <span class="number">1024</span> <span class="operator">-f</span> <span class="string">&quot;&#123;KeyName&#125;&quot;</span> <span class="literal">-C</span> <span class="string">&quot;&#123;Put Any Comment You Like&#125;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>To check if you make it right, double click the key file (<code>C:\Users\&#123;UserName&#125;\.ssh\&#123;KeyName&#125;.pub</code>) to view it and you should see a string.</p>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>The commands above are executed on your own computer, instead of the server.</li>
+<li>It is fine to use the SSH key file generated before (eg. id_rsa.pub), if you have.</li>
+<li>ssh-keygen will ask you to set a paraphrase, which improves the security of using SSH key authentication. Type “Enter” for no paraphrase.</li>
+</ul>
+<p><strong>Parameters for ssh-keygen command explanation:</strong></p>
+<ul>
+<li><strong>-t</strong>: type for ssh key generation. Here we use rsa</li>
+<li><strong>-b</strong>: bits</li>
+<li><strong>-f</strong>: name of your ssh key file. You are recommended to set this parameter in case it<br>is conflict with the ssh key file you generated before.</li>
+<li><strong>-C</strong>: comments to distinguish the ssh key file from others</li>
+</ul>
+<h2 id="3-2-Transfer-Your-SSH-Public-Key-File-to-the-Server"><a href="#3-2-Transfer-Your-SSH-Public-Key-File-to-the-Server" class="headerlink" title="3.2. Transfer Your SSH Public Key File to the Server"></a>3.2. Transfer Your SSH Public Key File to the Server</h2><p>We use the <code>scp</code> command to transfer the <strong>public key</strong> generated in the former step to the server. </p>
+<p><code>~/.ssh/&#123;KeyName&#125;.pub</code> is the public key you just generated. <code>&#123;Your Account Name&#125;@&#123;Server ip&#125;</code> is your server account name and ip address. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Execute the following commands on your LOCAL machine</span></span><br><span class="line"><span class="comment"># (macOS)</span></span><br><span class="line">scp ~/.ssh/&#123;KeyName&#125;.pub &#123;Your Account Name&#125;@&#123;Server ip&#125;:~</span><br><span class="line"></span><br><span class="line"><span class="comment"># (windows)</span></span><br><span class="line">scp C:\Users\&#123;UserName&#125;\.ssh\&#123;KeyName&#125;.pub &#123;Your Account Name&#125;@&#123;Server ip&#125;:~</span><br></pre></td></tr></table></figure>
+<p><strong>Notes:</strong></p>
+<ul>
+<li>This command will ask you for password for data transfer. Please make sure that you type in the correct password. If you are Windows user and you want to copy &amp; paste the password for convenience, try “Ctrl + Shift + V” if you fail to paste the password with “Ctrl + V”.</li>
+</ul>
+<h2 id="3-3-Configure-authorized-keys-on-the-Server"><a href="#3-3-Configure-authorized-keys-on-the-Server" class="headerlink" title="3.3. Configure authorized_keys on the Server"></a>3.3. Configure authorized_keys on the Server</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Login the server with password. Do this step in locally to establish a ssh connection</span></span><br><span class="line">ssh &#123;Your Account Name&#125;@&#123;Server ip&#125;</span><br><span class="line"><span class="comment">## All the following commands should be executed on the ssh connection just established. (i.e., execute them on the server)</span></span><br><span class="line"><span class="built_in">mkdir</span> -p ~/.ssh</span><br><span class="line"><span class="built_in">cat</span> ./&#123;KeyName&#125;.pub &gt;&gt; ~/.ssh/authorized_keys</span><br><span class="line"><span class="built_in">rm</span> -f ~/&#123;KeyName&#125;.pub</span><br><span class="line"><span class="built_in">chmod</span> 700 ~/.ssh</span><br><span class="line"><span class="built_in">chmod</span> 600 ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+<p>To check if you make it right, execute the following command and you should see a string as the output that is the same as in Step-1.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ~/.ssh/authorized_keys</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-4-Prepare-for-SSH-Connection-with-Key-Authentication"><a href="#3-4-Prepare-for-SSH-Connection-with-Key-Authentication" class="headerlink" title="3.4. Prepare for SSH Connection with Key Authentication"></a>3.4. Prepare for SSH Connection with Key Authentication</h2><p>Add the following content to <code>~/.ssh/config</code> (In windows, it’s <code>C:\Users\&#123;UserName&#125;\.ssh\config</code>) file on your LOCAL machine:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Host &#123;Any Name You Like&#125;</span><br><span class="line">    HostName &#123;ip&#125;</span><br><span class="line">    IdentityFile ~/.ssh/&#123;KeyName&#125;</span><br><span class="line">    User &#123;Your Account Name&#125;</span><br></pre></td></tr></table></figure><br><strong>Notes:</strong></p>
+<ul>
+<li>It is recommended to configure with the Remote SSH extension on VS Code. Please refer to <a target="_blank" rel="noopener" href="https://code.visualstudio.com/docs/remote/ssh">Remote Development using SSH</a> for more information.</li>
+</ul>
+<h2 id="3-5-Login-the-Server-Password-free-with-SSH-key-Authentication"><a href="#3-5-Login-the-Server-Password-free-with-SSH-key-Authentication" class="headerlink" title="3.5. Login the Server Password-free with SSH key Authentication"></a>3.5. Login the Server Password-free with SSH key Authentication</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;Your Account Name&#125;@&#123;Server ip&#125;</span><br></pre></td></tr></table></figure>
+<p>or<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;Your Account Name&#125;@&#123;Any Name You Like&#125; <span class="comment"># above in Sec. 4</span></span><br></pre></td></tr></table></figure></p>
+<p>or </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh &#123;Any Name You Like&#125; <span class="comment"># above in Sec. 4</span></span><br></pre></td></tr></table></figure>
+<h1 id="4-Set-some-alias"><a href="#4-Set-some-alias" class="headerlink" title="4. Set some alias"></a>4. Set some alias</h1><p>Alias convenient us typing some common commands.</p>
+<p>Add the following to the end of <code>~/.bashrc</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> cf=<span class="string">&quot;ls -l | grep &quot;</span>^-<span class="string">&quot; | wc -l&quot;</span></span><br><span class="line"><span class="built_in">alias</span> ns=<span class="string">&quot;nvidia-smi&quot;</span></span><br><span class="line"><span class="built_in">alias</span> py=<span class="string">&quot;python&quot;</span></span><br><span class="line"><span class="built_in">alias</span> act=<span class="string">&quot;conda activate&quot;</span></span><br></pre></td></tr></table></figure>
+<p>The first alias, <code>cf</code> means count files, can count number of visible files (excluding directories) under the current working directory.</p>
+<p>The second alias, <code>ns</code> is short for <code>nvidia-smi</code> to check for the GPU information.</p>
+<p>The third alias <code>py</code> is short for <code>python</code>.</p>
+<p>The fourth alias <code>act</code> can be used like <code>act py39</code> (activate the conda <code>py39</code> environment)</p>
+<h1 id="5-Configure-the-CUDA-compiler-version"><a href="#5-Configure-the-CUDA-compiler-version" class="headerlink" title="5. Configure the CUDA compiler version"></a>5. Configure the CUDA compiler version</h1><p>This step is <strong>optional</strong>. If you want to compile some PyTorch operators locally, you should set the <code>nvcc</code> version same to the PyTorch runtime version. </p>
+<p>Add the following to the end of <code>~/.bashrc</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/usr/local/cuda-11.1/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
+<p>Change the CUDA directory (<code>/usr/local/cuda-11.1</code> above) to the one you actually want to use. For example, the PyTorch is compiled under <code>cuda-11.3</code>, you probably want to use <code>nvcc</code> with <code>cuda-11.x</code>, but not <code>cuda-10.2</code>. </p>
+<h1 id="6-bashrc-template"><a href="#6-bashrc-template" class="headerlink" title="6. ~/.bashrc template"></a>6. ~/.bashrc template</h1><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># path to some executable</span></span><br><span class="line"><span class="built_in">export</span> PATH=&lt;Your-Path-to-Some-EXE&gt;:<span class="variable">$PATH</span>  </span><br><span class="line"></span><br><span class="line"><span class="comment"># path to cuda, change version to yours</span></span><br><span class="line"><span class="built_in">export</span> PATH=/usr/local/cuda-11.1/bin:<span class="variable">$PATH</span> </span><br><span class="line"></span><br><span class="line"><span class="comment"># path to cuda libraries, change version to yours</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:<span class="variable">$LD_LIBRARY_PATH</span> </span><br><span class="line"></span><br><span class="line"><span class="comment"># path to self-defined temp directory</span></span><br><span class="line"><span class="built_in">export</span> TMPDIR=/&lt;Path-to-Temp-Dir&gt;/tmp</span><br><span class="line"><span class="comment"># path to some common visited places (shortcut)</span></span><br><span class="line"><span class="built_in">export</span> workdir=/&lt;Path-to-Common-Dir&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Shortcuts</span></span><br><span class="line"><span class="built_in">alias</span> countf=<span class="string">&quot;ls -l | grep &quot;</span>^-<span class="string">&quot; | wc -l&quot;</span> <span class="comment"># count files</span></span><br><span class="line"><span class="built_in">alias</span> countd=<span class="string">&quot;ls -l | grep &quot;</span>^d<span class="string">&quot; | wc -l&quot;</span> <span class="comment"># count directories</span></span><br><span class="line"><span class="built_in">alias</span> sized=<span class="string">&quot;du -h --max-depth=1&quot;</span> <span class="comment"># size of each subdirectory</span></span><br><span class="line"><span class="built_in">alias</span> ns=<span class="string">&quot;nvidia-smi&quot;</span> </span><br><span class="line"><span class="built_in">alias</span> py=<span class="string">&quot;python&quot;</span></span><br><span class="line"><span class="built_in">alias</span> act=<span class="string">&quot;conda activate&quot;</span></span><br><span class="line"><span class="built_in">alias</span> pys=<span class="string">&quot;python setup.py install&quot;</span></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/blogs/2023/05/06/Conda-common-commands/" rel="prev" title="Conda Common Commands Quick Reference">
+      <i class="fa fa-chevron-left"></i> Conda Common Commands Quick Reference
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/blogs/2023/05/26/Pytorch-Practical-Basics-1/" rel="next" title="PyTorch Practical Hand-Written Modules Basics 1--Tensor basics (attributes, creation)">
+      PyTorch Practical Hand-Written Modules Basics 1--Tensor basics (attributes, creation) <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Change-the-default-shell"><span class="nav-number">1.</span> <span class="nav-text">1. Change the default shell</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-Show-the-current-shells"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 Show the current shells</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-Get-all-available-shells"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 Get all available shells</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-Change-the-default-shell"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 Change the default shell</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Install-conda"><span class="nav-number">2.</span> <span class="nav-text">2. Install conda</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Setup-ssh-key-password-free-login"><span class="nav-number">3.</span> <span class="nav-text">3. Setup ssh key (password-free login)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-Generate-SSH-Key-Pair-on-Your-Local-Machine"><span class="nav-number">3.1.</span> <span class="nav-text">3.1. Generate SSH Key Pair on Your Local Machine</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-Transfer-Your-SSH-Public-Key-File-to-the-Server"><span class="nav-number">3.2.</span> <span class="nav-text">3.2. Transfer Your SSH Public Key File to the Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-Configure-authorized-keys-on-the-Server"><span class="nav-number">3.3.</span> <span class="nav-text">3.3. Configure authorized_keys on the Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-Prepare-for-SSH-Connection-with-Key-Authentication"><span class="nav-number">3.4.</span> <span class="nav-text">3.4. Prepare for SSH Connection with Key Authentication</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-Login-the-Server-Password-free-with-SSH-key-Authentication"><span class="nav-number">3.5.</span> <span class="nav-text">3.5. Login the Server Password-free with SSH key Authentication</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Set-some-alias"><span class="nav-number">4.</span> <span class="nav-text">4. Set some alias</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Configure-the-CUDA-compiler-version"><span class="nav-number">5.</span> <span class="nav-text">5. Configure the CUDA compiler version</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-bashrc-template"><span class="nav-number">6.</span> <span class="nav-text">6. ~&#x2F;.bashrc template</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Future</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/blogs/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/blogs/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Future</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/blogs/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/blogs/lib/velocity/velocity.min.js"></script>
+  <script src="/blogs/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/blogs/js/utils.js"></script>
+
+<script src="/blogs/js/motion.js"></script>
+
+
+<script src="/blogs/js/schemes/muse.js"></script>
+
+
+<script src="/blogs/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/blogs/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
