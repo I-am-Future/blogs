@@ -179,6 +179,170 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2023/08/20/Pandas-MySQL-Leetcode-Practice-Notes-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blogs/images/avatar.gif">
+      <meta itemprop="name" content="Future">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Future's blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/blogs/2023/08/20/Pandas-MySQL-Leetcode-Practice-Notes-1/" class="post-title-link" itemprop="url">Pandas & MySQL Leetcode Practice Notes 1--Condition Filter & Misc</a>
+        </h2>
+
+        <div class="post-meta">
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-20 20:05:37" itemprop="dateCreated datePublished" datetime="2023-08-20T20:05:37+08:00">2023-08-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-09-02 12:47:00" itemprop="dateModified" datetime="2023-09-02T12:47:00+08:00">2023-09-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/blogs/categories/Pandas-SQL/" itemprop="url" rel="index"><span itemprop="name">Pandas_SQL</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>There are 30 questions to practice Python Pandas and MySQL on <a target="_blank" rel="noopener" href="https://leetcode.cn/studyplan/30-days-of-pandas/">https://leetcode.cn/studyplan/30-days-of-pandas/</a> . These questions basically practice the fundamental skills. Pandas and MySQL are similar in some aspects, and one can write the same functional code in two languages. I’ll practice my skill with these questions, and write notes about the equivalent operations in two languages. </p>
+<p>Accordingly, there are six sections in this section (so will use 6 articles in total):</p>
+<ol>
+<li>Condition Filter &amp; Misc</li>
+<li>String Manipulation</li>
+<li>Data Manipulation</li>
+<li>Data Statistics</li>
+<li>Grouping</li>
+<li>Merging</li>
+</ol>
+<h1 id="1-Condition-Filter-Join-Misc"><a href="#1-Condition-Filter-Join-Misc" class="headerlink" title="1. Condition Filter &amp; Join &amp; Misc"></a>1. Condition Filter &amp; Join &amp; Misc</h1><p>The four related question in this area are:</p>
+<p>Basic <code>where</code> clause filtering, with <code>OR</code> operator: <a target="_blank" rel="noopener" href="https://leetcode.cn/problems/big-countries/">https://leetcode.cn/problems/big-countries/</a></p>
+<p>Basic <code>where</code> clause filtering, with <code>AND</code> operator: <a target="_blank" rel="noopener" href="https://leetcode.cn/problems/recyclable-and-low-fat-products/">https://leetcode.cn/problems/recyclable-and-low-fat-products/</a></p>
+<p>Joining two tables, with <code>where</code> clause filtering null: <a target="_blank" rel="noopener" href="https://leetcode.cn/problems/customers-who-never-order/">https://leetcode.cn/problems/customers-who-never-order/</a></p>
+<p>Basic <code>where</code> clause filtering, with <code>DISTINCT</code> and <code>sort</code>: <a target="_blank" rel="noopener" href="https://leetcode.cn/problems/article-views-i">https://leetcode.cn/problems/article-views-i</a></p>
+<h2 id="1-1-Condition"><a href="#1-1-Condition" class="headerlink" title="1.1 Condition"></a>1.1 Condition</h2><p>Typical condition filter work is asking us to do like this:</p>
+<blockquote>
+<p>Filter the <strong>big</strong> country in World scheme. A country is <strong>big</strong> if:</p>
+<ul>
+<li>it has an area of at least three million (i.e., <code>3000000 km2</code>), or</li>
+<li>it has a population of at least twenty-five million (i.e., <code>25000000</code>).</li>
+</ul>
+</blockquote>
+<p>We’ll use this example to illustrate the point. </p>
+<h3 id="1-1-a-MySQL"><a href="#1-1-a-MySQL" class="headerlink" title="1.1.a MySQL"></a>1.1.a MySQL</h3><p>A typical condition filter in SQL looks like this:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">&lt;</span>col_names<span class="operator">&gt;</span></span><br><span class="line"><span class="keyword">from</span> <span class="operator">&lt;</span>table_name<span class="operator">&gt;</span></span><br><span class="line"><span class="keyword">where</span> (</span><br><span class="line">	<span class="operator">&lt;</span><span class="keyword">condition</span> predicate<span class="operator">&gt;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>SQL allows the use of the logical connectives <strong>and, or, and not</strong>. </p>
+<p>The operands of the logical connectives can be expressions involving the comparison operators <strong>&lt;, &lt;&#x3D;, &gt;, &gt;&#x3D;, &#x3D;, and &lt;&gt;</strong> (Note that, equal symbol is one <code>=</code>, but not <code>==</code>!)</p>
+<p>For example, in the codes above, the answer is</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name, population, area</span><br><span class="line"><span class="keyword">FROM</span> World</span><br><span class="line"><span class="keyword">WHERE</span> area <span class="operator">&gt;=</span> <span class="number">3000000</span> <span class="keyword">OR</span> population <span class="operator">&gt;=</span> <span class="number">25000000</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1-1-b-Pandas"><a href="#1-1-b-Pandas" class="headerlink" title="1.1.b Pandas"></a>1.1.b Pandas</h3><p>Filter operations in pandas is a little bit difference. We should know two basics things first:</p>
+<ul>
+<li>Condition result in Index Series</li>
+</ul>
+<p>If we want to get all data that are greater than 5 in <code>df</code>‘s <code>col1</code> column, the code and result is as below:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(df)</span><br><span class="line"><span class="comment"># OUTPUT:</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">  name  col1  col2</span></span><br><span class="line"><span class="string">0    a     1    10</span></span><br><span class="line"><span class="string">1    b     2     9</span></span><br><span class="line"><span class="string">2    c     3     8</span></span><br><span class="line"><span class="string">3    d     4     7</span></span><br><span class="line"><span class="string">4    e     5     6</span></span><br><span class="line"><span class="string">5    f     6     5</span></span><br><span class="line"><span class="string">6    g     7     4</span></span><br><span class="line"><span class="string">7    h     8     3</span></span><br><span class="line"><span class="string">8    i     9     2</span></span><br><span class="line"><span class="string">9    j    10     1</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(df[<span class="string">&#x27;col1&#x27;</span>] &gt; <span class="number">5</span>)</span><br><span class="line"><span class="comment"># OUTPUT: </span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">0    False</span></span><br><span class="line"><span class="string">1    False</span></span><br><span class="line"><span class="string">2    False</span></span><br><span class="line"><span class="string">3    False</span></span><br><span class="line"><span class="string">4    False</span></span><br><span class="line"><span class="string">5     True</span></span><br><span class="line"><span class="string">6     True</span></span><br><span class="line"><span class="string">7     True</span></span><br><span class="line"><span class="string">8     True</span></span><br><span class="line"><span class="string">9     True</span></span><br><span class="line"><span class="string">Name: col1, dtype: bool</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>As you can see, the result of <code>df[&#39;col1&#39;] &gt; 5</code> is a bool Series with <code>len(df)</code> size. The entry is True only when the corresponding entry at <code>col1</code> satisfies the condition. </p>
+<ul>
+<li>Indexing by the Index Series</li>
+</ul>
+<p>We can pass this bool index series in to the <code>df.loc[]</code>. Then, only the rows with the condition satisfied are displayed:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">a = df.loc[df[<span class="string">&#x27;col1&#x27;</span>] &gt; <span class="number">5</span>]</span><br><span class="line"><span class="built_in">print</span>(a)</span><br><span class="line"><span class="comment"># OUTPUT</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">  name  col1  col2</span></span><br><span class="line"><span class="string">5    f     6     5</span></span><br><span class="line"><span class="string">6    g     7     4</span></span><br><span class="line"><span class="string">7    h     8     3</span></span><br><span class="line"><span class="string">8    i     9     2</span></span><br><span class="line"><span class="string">9    j    10     1</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>By such method, we can do the filtering in the pandas. Note that:</p>
+<p>For the <code>and</code>, <code>or</code> and <code>not</code> logic operators, the corresponding operator in pandas is <code>&amp;</code>, <code>|</code> and <code>~</code>. For example:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cond1 = df[<span class="string">&#x27;col1&#x27;</span>] &gt; <span class="number">5</span></span><br><span class="line">cond2 = df[<span class="string">&#x27;col2&#x27;</span>] &gt; <span class="number">2</span></span><br><span class="line"></span><br><span class="line">b = df.loc[cond1 &amp; cond2]</span><br><span class="line"></span><br><span class="line">c = df.loc[ (df[<span class="string">&#x27;col1&#x27;</span>] &gt; <span class="number">5</span>) &amp; (df[<span class="string">&#x27;col2&#x27;</span>] &gt; <span class="number">2</span>) ]</span><br></pre></td></tr></table></figure>
+
+<p><strong>Note</strong> that the <code>()</code> symbols are necessary because of the operator precedence. For example, in the codes above, the answer is:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cond1 = world[<span class="string">&#x27;area&#x27;</span>] &gt;= <span class="number">300_0000</span></span><br><span class="line">cond2 = world[<span class="string">&#x27;population&#x27;</span>] &gt;= <span class="number">2500_0000</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> world.loc[cond1 | cond2, [<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;population&#x27;</span>, <span class="string">&#x27;area&#x27;</span>]]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="1-2-Misc"><a href="#1-2-Misc" class="headerlink" title="1.2 Misc"></a>1.2 Misc</h2><h3 id="1-2-1-Rename-output-columns"><a href="#1-2-1-Rename-output-columns" class="headerlink" title="1.2.1 Rename output columns"></a>1.2.1 Rename output columns</h3><h4 id="1-2-1-a-MySQL"><a href="#1-2-1-a-MySQL" class="headerlink" title="1.2.1.a MySQL"></a>1.2.1.a MySQL</h4><p>In MySQL, rename a column is very easy. By default, if the command is</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name, population, area</span><br><span class="line"><span class="keyword">FROM</span> World</span><br><span class="line"><span class="keyword">WHERE</span> area <span class="operator">&gt;=</span> <span class="number">3000000</span> <span class="keyword">OR</span> population <span class="operator">&gt;=</span> <span class="number">25000000</span></span><br></pre></td></tr></table></figure>
+
+<p>Then the output columns are named <code>name</code>, <code>population</code>, and <code>area</code>. To rename, just use the <code>as</code> symbol to give a new name as output:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- change name =&gt; Name, population =&gt; Population, area =&gt; Area</span></span><br><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">as</span> Name, population <span class="keyword">as</span> Population, area <span class="keyword">as</span> Area</span><br><span class="line"><span class="keyword">FROM</span> World</span><br><span class="line"><span class="keyword">WHERE</span> area <span class="operator">&gt;=</span> <span class="number">3000000</span> <span class="keyword">OR</span> population <span class="operator">&gt;=</span> <span class="number">25000000</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-1-b-Pandas"><a href="#1-2-1-b-Pandas" class="headerlink" title="1.2.1.b Pandas"></a>1.2.1.b Pandas</h4><p>In pandas, we can use the <code>pd.DataFrame.rename</code> function to rename the columns. The input parameter <code>columns</code> is a <code>dict[str, str]</code>, where <code>key</code> is the old name, and the <code>value</code> is the new name. For example in the example below, we make all names capitalized:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = df.rename(columns=&#123;<span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;Name&#x27;</span>, <span class="string">&#x27;population&#x27;</span>: <span class="string">&#x27;Population&#x27;</span>, <span class="string">&#x27;area&#x27;</span>: <span class="string">&#x27;Area&#x27;</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-2-Swap-output-columns-order"><a href="#1-2-2-Swap-output-columns-order" class="headerlink" title="1.2.2 Swap output columns order"></a>1.2.2 Swap output columns order</h3><h4 id="1-2-2-a-MySQL"><a href="#1-2-2-a-MySQL" class="headerlink" title="1.2.2.a MySQL"></a>1.2.2.a MySQL</h4><p>In SQL, this work is relatively easy. You only need to swap the column names in the <code>select</code> command: </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- show with A, B, C columns </span></span><br><span class="line"><span class="keyword">select</span> A, B, C <span class="keyword">from</span> <span class="keyword">table</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- show with C, B, A columns </span></span><br><span class="line"><span class="keyword">select</span> C, B, A <span class="keyword">from</span> <span class="keyword">table</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-2-b-Pandas"><a href="#1-2-2-b-Pandas" class="headerlink" title="1.2.2.b Pandas"></a>1.2.2.b Pandas</h4><p>The method is relatively similar as the code in MySQL, by:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># show with A, B, C columns </span></span><br><span class="line">df.loc[:, [<span class="string">&#x27;A&#x27;</span>, <span class="string">&#x27;B&#x27;</span>, <span class="string">&#x27;C&#x27;</span>]]</span><br><span class="line"></span><br><span class="line"><span class="comment"># show with C, B, A columns </span></span><br><span class="line">df.loc[:, [<span class="string">&#x27;C&#x27;</span>, <span class="string">&#x27;B&#x27;</span>, <span class="string">&#x27;A&#x27;</span>]]</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-3-Remove-duplicate-rows"><a href="#1-2-3-Remove-duplicate-rows" class="headerlink" title="1.2.3 Remove duplicate rows"></a>1.2.3 Remove duplicate rows</h3><h4 id="1-2-3-a-MySQL"><a href="#1-2-3-a-MySQL" class="headerlink" title="1.2.3.a MySQL"></a>1.2.3.a MySQL</h4><p>It is quite easy to do that: you only need to add <code>DISTINCT</code> keyword. For example: </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">DISTINCT</span> student_id</span><br><span class="line"><span class="keyword">from</span> courses</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-3-b-Pandas"><a href="#1-2-3-b-Pandas" class="headerlink" title="1.2.3.b Pandas"></a>1.2.3.b Pandas</h4><p>The DataFrame has a method called <code>drop_duplicates()</code>. For example: </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">selected_views = selected_views.drop_duplicates()</span><br></pre></td></tr></table></figure>
+
+<p>More advanced usage is use parameter <code>subset</code> to  tell which columns for identifying duplicates, by default use all of the columns. For example, the following code drop the duplicate rows whenever they have same value in column <code>teacher_id</code>, <code>subject_id</code>. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">teacher = teacher.drop_duplicates(subset=[<span class="string">&#x27;teacher_id&#x27;</span>, <span class="string">&#x27;subject_id&#x27;</span>])</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-4-Sort"><a href="#1-2-4-Sort" class="headerlink" title="1.2.4 Sort"></a>1.2.4 Sort</h3><h4 id="1-2-4-a-MySQL"><a href="#1-2-4-a-MySQL" class="headerlink" title="1.2.4.a MySQL"></a>1.2.4.a MySQL</h4><p>In the <code>select</code> statement, add with <code>order by &lt;col&gt; asc/desc</code> statement. <code>&lt;col&gt;</code> indicates sort according to which column, <code>asc</code> means ascending sorting, <code>desc</code> means descending sorting. </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> v.author_id </span><br><span class="line"><span class="keyword">from</span> Views <span class="keyword">as</span> v</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> id <span class="keyword">asc</span></span><br></pre></td></tr></table></figure>
+
+<p>To sort according multiple columns (if first column is the same, sort by second column), do it by:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> v.author_id </span><br><span class="line"><span class="keyword">from</span> Views <span class="keyword">as</span> v</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> id <span class="keyword">asc</span>, col2 <span class="keyword">desc</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-4-b-Pandas"><a href="#1-2-4-b-Pandas" class="headerlink" title="1.2.4.b Pandas"></a>1.2.4.b Pandas</h4><p>Use the <code>pd.DataFrame.sort_values()</code> to sort according to which column(s). If we want to sort from biggest to smallest, use <code>ascending</code> parameter. </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sort by one column, id</span></span><br><span class="line">selected_views = selected_views.sort_values(by=[<span class="string">&#x27;id&#x27;</span>])</span><br><span class="line">selected_views = selected_views.sort_values(by=[<span class="string">&#x27;id&#x27;</span>], ascending=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># sort by two columns</span></span><br><span class="line"><span class="comment"># if first column is the same, sort by second column</span></span><br><span class="line">selected_views = selected_views.sort_values(by=[<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;view_date&#x27;</span>])</span><br><span class="line">selected_views = selected_views.sort_values(by=[<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;view_date&#x27;</span>], ascending=[<span class="literal">True</span>, <span class="literal">False</span>])</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2023/08/15/Pytorch-Practical-Basics-10/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1500,162 +1664,6 @@ $$-->
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://i-am-future.github.io/2023/05/29/CMake-QRH/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/blogs/images/avatar.gif">
-      <meta itemprop="name" content="Future">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Future's blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/blogs/2023/05/29/CMake-QRH/" class="post-title-link" itemprop="url">CMake Quick Reference</a>
-        </h2>
-
-        <div class="post-meta">
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-05-30 10:28:18" itemprop="dateCreated datePublished" datetime="2023-05-30T10:28:18+08:00">2023-05-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-08-15 19:47:21" itemprop="dateModified" datetime="2023-08-15T19:47:21+08:00">2023-08-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/blogs/categories/QRH/" itemprop="url" rel="index"><span itemprop="name">QRH</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Learned and made up from <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1fa411r7zp">video</a> and <a target="_blank" rel="noopener" href="https://github.com/parallel101/course">code</a>.</p>
-<p>Prerequisite: basic knowledge in C&#x2F;C++.</p>
-<h2 id="Compile-a-Basic-Program"><a href="#Compile-a-Basic-Program" class="headerlink" title="Compile a Basic Program"></a>Compile a Basic Program</h2><p><a target="_blank" rel="noopener" href="https://github.com/parallel101/course/tree/master/01/05">See code here</a></p>
-<p>A project root directory must contain a file called <code>CMakeLists.txt</code>, describing the build procedure of the project. </p>
-<p>A typical simple <code>CMakeLists.txt</code> contains the following (assuming we have two source files in the current directory, <code>main.cpp</code> and <code>hello.cpp</code>):</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.12</span>) <span class="comment"># describe the minimum cmake version</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">project</span>(hellocmake LANGUAGES CXX)    <span class="comment"># describe the project name, and lan</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp hello.cpp)</span><br></pre></td></tr></table></figure>
-
-<p>The <code>add_executable</code> function’s signature is <code>add_executable(target, [src files...])</code>, meaning to use all <code>src files</code> to compile the <code>target</code>.</p>
-<p>To build the program, run in the shell:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cmake -B build</span><br><span class="line">cmake --build build</span><br><span class="line"><span class="comment"># run with</span></span><br><span class="line">./build/&lt;program_name&gt;</span><br></pre></td></tr></table></figure>
-
-<p>To clean and rebuild from scratch, just</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf build</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Compile-a-Library-Link-it"><a href="#Compile-a-Library-Link-it" class="headerlink" title="Compile a Library &amp; Link it"></a>Compile a Library &amp; Link it</h2><p><a target="_blank" rel="noopener" href="https://github.com/parallel101/course/tree/master/01/06">See code here</a></p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># compile static OR dynamic library</span></span><br><span class="line"><span class="keyword">add_library</span>(hellolib STATIC hello.cpp)</span><br><span class="line"><span class="keyword">add_library</span>(hellolib SHARED hello.cpp)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp)</span><br><span class="line"></span><br><span class="line"><span class="keyword">target_link_libraries</span>(a.out PUBLIC hellolib)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>The <code>add_library</code> function’s signature is <code>add_library(target, STATIC/SHARED [src files...])</code>, meaning to use all <code>src files</code> to compile the static&#x2F;dynamic <code>target</code> library.</li>
-<li>Then, <code>target_link_libraries(a.out PUBLIC hellolib)</code> links the <code>hellolib</code>‘s source to the <code>a.out</code>.</li>
-</ul>
-<h2 id="Compile-a-subdirectory"><a href="#Compile-a-subdirectory" class="headerlink" title="Compile a subdirectory"></a>Compile a subdirectory</h2><p><a target="_blank" rel="noopener" href="https://github.com/parallel101/course/tree/master/01/10">See code here</a></p>
-<p>The sub-directory could contain a set of source codes to compile a library&#x2F;executable.</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># main CMakeLists.txt</span></span><br><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.12</span>)</span><br><span class="line"><span class="keyword">project</span>(hellocmake LANGUAGES CXX)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_subdirectory</span>(hellolib)  <span class="comment"># the name of subdirectory</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(a.out PUBLIC hellolib)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sub-directory CMakeLists.txt</span></span><br><span class="line"><span class="keyword">add_library</span>(hellolib STATIC hello.cpp)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>If the <code>main.cpp</code> uses the headers in the subdirectory <code>hellolib</code>, then <code>main.cpp</code> should write <code>#include &quot;hellolib/hello.h&quot;</code>. To simplify the <code>#include</code> statement, we could add the following to main’s <code>CMakeLists.txt</code>:</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp)</span><br><span class="line"><span class="keyword">target_include_directories</span>(a.out PUBLIC hellolib)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<p>This is still some complex. If we want to build two executable, we need write the following, with repeated code:</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">add_executable</span>(a.out main.cpp)</span><br><span class="line"><span class="keyword">target_include_directories</span>(a.out PUBLIC hellolib)</span><br><span class="line"><span class="keyword">add_executable</span>(b.out main.cpp)</span><br><span class="line"><span class="keyword">target_include_directories</span>(b.out PUBLIC hellolib)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-
-<p>A solution is to move the <code>target_include_directories()</code> to the subdirectory. Then all the further library&#x2F;executable relied on the <code>hellolib</code> will include this subdirectory. </p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sub-directory</span></span><br><span class="line"><span class="keyword">target_include_directories</span>(hellolib PUBLIC .)</span><br></pre></td></tr></table></figure>
-
-<p>If we change the <code>PUBLIC</code> to <code>PRIVATE</code>, then the further dependent would not have the effects.</p>
-<h2 id="Link-existing-library"><a href="#Link-existing-library" class="headerlink" title="Link existing library"></a>Link existing library</h2><p>For example, use the following code to link the <code>OpenMP</code> library. </p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find_package</span>(OpenMP REQUIRD)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(main PUBLIC OpenMP::OpenMP_CXX)</span><br></pre></td></tr></table></figure>
-
-<p>Use the following code to link the <code>OpenMP</code> library. </p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find_package</span>(OpenCV REQUIRED)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(main <span class="variable">$&#123;OpenCV_LIBS&#125;</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="Further-options"><a href="#Further-options" class="headerlink" title="Further options"></a>Further options</h2><ul>
-<li>Set release type (Default type is DEBUG):</li>
-</ul>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_BUILD_TYPE Release)</span><br><span class="line"><span class="comment"># Or set it when building</span></span><br><span class="line">cmake --build build --config Release</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Set C++ standard:</li>
-</ul>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span>(CMAKE_CXX_STANDARD <span class="number">17</span>)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Set global &#x2F; special macros:</li>
-</ul>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global</span></span><br><span class="line"><span class="keyword">add_definitions</span>(-DDEBUG) <span class="comment"># -D is not necessary</span></span><br><span class="line"><span class="keyword">add_definitions</span>(DEBUG)</span><br><span class="line"><span class="comment"># special target</span></span><br><span class="line"><span class="keyword">target_compile_definitions</span>(a.out PUBLIC -DDEBUG)</span><br><span class="line"><span class="keyword">target_compile_definitions</span>(a.out PUBLIC DEBUG)</span><br><span class="line"></span><br><span class="line"><span class="comment"># They have the same effect as</span></span><br><span class="line">g++ xx.cpp -DDEBUG <span class="comment"># (define a `DEBUG` macro to the file)</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Set global &#x2F; special compiling options:</li>
-</ul>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global</span></span><br><span class="line"><span class="keyword">add_compile_options</span>(-O2)</span><br><span class="line"><span class="comment"># special target</span></span><br><span class="line"><span class="keyword">target_compile_options</span>(a.out PUBLIC -O0)</span><br><span class="line"></span><br><span class="line"><span class="comment"># They have the same effect as</span></span><br><span class="line">g++ xx.cpp -O0 <span class="comment"># (add a `-O0` option in the compilation)</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set SIMD and fast-math</span></span><br><span class="line"><span class="keyword">target_compile_options</span>(a.out PUBLIC -ffast-<span class="keyword">math</span> -march=native)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Set global &#x2F; special include directories:</li>
-</ul>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># global</span></span><br><span class="line"><span class="keyword">include_directories</span>(hellolib)</span><br><span class="line"><span class="comment"># special target</span></span><br><span class="line"><span class="keyword">target_include_directories</span>(a.out PUBLIC hellolib)</span><br></pre></td></tr></table></figure>
-
-
-
-
-<h2 id="CUDA-with-CMake"><a href="#CUDA-with-CMake" class="headerlink" title="CUDA with CMake"></a>CUDA with CMake</h2><p>A common template can be:</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.10</span>)</span><br><span class="line"><span class="keyword">project</span>(main LANGUAGES CUDA CXX)</span><br><span class="line"></span><br><span class="line"><span class="keyword">SET</span>(CMAKE_CXX_STANDARD <span class="number">17</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CUDA_STANDARD <span class="number">17</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(main main.cu)</span><br><span class="line"><span class="keyword">set_target_properties</span>(main PROPERTIES CUDA_ARCHITECTURES <span class="string">&quot;86&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1725,7 +1733,7 @@ $$-->
       <div class="site-state-item site-state-posts">
           <a href="/blogs/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
