@@ -40,7 +40,7 @@
 </ul>
 </li>
 <li><strong>Get the Stack Trace at the Time of the Crash:</strong> <ul>
-<li>Inside GDB, use <code>bt</code> or <code>backtrace</code> to get the function call stack. Usually, locating the part of the call stack that points to your code will reveal the bug.</li>
+<li>Inside GDB, use <code>bt</code> or <code>backtrace</code> to get the function call stack. <u><strong>Usually, locating the part of the call stack that with your code will reveal the bug.</strong></u></li>
 </ul>
 </li>
 <li><strong>Select and Inspect Specific Frames:</strong> <ul>
