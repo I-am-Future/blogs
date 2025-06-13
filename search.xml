@@ -16,6 +16,15 @@
 ]]></content>
   </entry>
   <entry>
+    <title>Ubuntu Startup Software Installation</title>
+    <url>/blogs/2025/06/12/Ubuntu-Start-Installation/</url>
+    <content><![CDATA[<p>Please refer to <a href="Assets/ubuntu_software_install.sh">file</a>.</p>
+]]></content>
+      <categories>
+        <category>Techniques</category>
+      </categories>
+  </entry>
+  <entry>
     <title>OneDrive Storage Clean Up</title>
     <url>/blogs/2025/06/11/OneDrive-Memory-Clean/</url>
     <content><![CDATA[<p>In this blog, I’ll tell how to perform cleaning in the OneDrive, in case the storage is full. OneDrive has a history version system, so if we don’t clean it, it will grow larger and larger.</p>
