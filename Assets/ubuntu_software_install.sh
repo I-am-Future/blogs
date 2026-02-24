@@ -3,31 +3,15 @@
 set -e
 
 # ------------------ Default Configuration ------------------
-INSTALL_BASIC=false
 INSTALL_NV_DRIVER=false
 INSTALL_CUDA_TOOLKIT=false
 INSTALL_MINICONDA=false
 INSTALL_BLE_SH=false
 CUDA_VERSION="12.1"
 
-print_usage() {
-  cat <<EOF
-Usage: $0 [--basic] [--driver] [--cuda=<version>] [--conda] [--ble]
-
-  --basic            Install base system packages (requires sudo).
-  --driver           Install NVIDIA driver (requires sudo).
-  --cuda=<version>   Install CUDA Toolkit for the given version (requires sudo). Default: ${CUDA_VERSION}
-  --conda            Install Miniconda for current user (no sudo).
-  --ble              Install ble.sh for current user (no sudo).
-EOF
-}
-
 # ------------------ Argument Parsing ------------------
 for arg in "$@"; do
   case $arg in
-    --basic)
-      INSTALL_BASIC=true
-      ;;
     --driver)
       INSTALL_NV_DRIVER=true
       ;;
@@ -41,32 +25,22 @@ for arg in "$@"; do
     --ble)
       INSTALL_BLE_SH=true
       ;;
-    -h|--help)
-      print_usage
-      exit 0
-      ;;
     *)
       echo "Unknown argument: $arg"
-      print_usage
+      echo "Usage: $0 [--driver] [--cuda=<version>] [--conda] [--ble]"
       exit 1
       ;;
   esac
 done
 
-# ------------------ Base Tools (now gated by --basic) ------------------
-if $INSTALL_BASIC; then
-  echo "[1] Updating system and installing base packages (requires sudo)..."
-  sudo apt update && sudo apt upgrade -y
-  sudo apt install -y \
-    build-essential git curl wget unzip tmux htop zsh vim net-tools \
-    software-properties-common ca-certificates gnupg lsb-release
-else
-  echo "[1] Skipping base tools (use --basic to install system packages)."
-fi
+# ------------------ Base Tools ------------------
+echo "[1] Updating system and installing base packages..."
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y build-essential git curl wget unzip tmux htop zsh vim net-tools software-properties-common ca-certificates gnupg lsb-release
 
 # ------------------ NVIDIA Driver ------------------
 if $INSTALL_NV_DRIVER; then
-  echo "[2] Installing NVIDIA driver (requires sudo)..."
+  echo "[2] Installing NVIDIA driver..."
   sudo apt --purge remove "*nvidia*" -y || true
   sudo apt update
   sudo apt install -y ubuntu-drivers-common
@@ -77,7 +51,7 @@ fi
 
 # ------------------ CUDA Toolkit ------------------
 if $INSTALL_CUDA_TOOLKIT; then
-  echo "[3] Installing CUDA Toolkit $CUDA_VERSION (requires sudo)..."
+  echo "[3] Installing CUDA Toolkit $CUDA_VERSION..."
 
   CUDA_REPO_PIN="cuda-ubuntu2204.pin"
   wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/${CUDA_REPO_PIN}
@@ -98,18 +72,14 @@ fi
 
 # ------------------ Miniconda ------------------
 if $INSTALL_MINICONDA; then
-  echo "[4] Installing Miniconda (no sudo)..."
+  echo "[4] Installing Miniconda..."
   cd /tmp
   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-  bash miniconda.sh -b -p "$HOME/miniconda"
+  bash miniconda.sh -b -p $HOME/miniconda
   echo 'export PATH="$HOME/miniconda/bin:$PATH"' >> ~/.bashrc
   export PATH="$HOME/miniconda/bin:$PATH"
-  conda init bash || true
-  # Reload shell config for current session if possible
-  if [ -f "$HOME/.bashrc" ]; then
-    # shellcheck disable=SC1090
-    source "$HOME/.bashrc"
-  fi
+  conda init bash
+  source ~/.bashrc
   echo "Miniconda installation complete."
 
   echo "[5] Installing common Python packages via conda..."
@@ -118,7 +88,10 @@ fi
 
 # ------------------ BLE.sh ------------------
 if $INSTALL_BLE_SH; then
-  echo "[#] Installing ble.sh (Bash Line Editor) (no sudo)..."
+  echo "[#] Installing ble.sh (Bash Line Editor)..."
+
+  sudo apt update
+  sudo apt install -y git make gawk
 
   git clone --recursive --depth 1 --shallow-submodules \
     https://github.com/akinomyoga/ble.sh.git /tmp/ble.sh-tmp
@@ -133,6 +106,10 @@ if $INSTALL_BLE_SH; then
   echo "✅ ble.sh installed and configured. Restart terminal or run 'source ~/.bashrc' to start using."
 fi
 
-echo "[✅ DONE] All tasks completed."
-# shellcheck disable=SC1090
-[ -f "$HOME/.bashrc" ] && source "$HOME/.bashrc"
+# ------------------ Additional Software ------------------
+echo "[6] Installing additional software..."
+# sudo snap install code --classic
+# sudo apt install -y vlc gnome-tweaks
+
+echo "[✅ DONE] All tasks completed. Please reboot the system if NVIDIA driver was installed."
+source ~/.bashrc
